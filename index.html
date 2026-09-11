@@ -6,73 +6,92 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>UG College Timetable</title>
 <style>
-:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#17202a;background:#f6f7f9}*{box-sizing:border-box}body{margin:0}.wrap{max-width:1200px;margin:auto;padding:24px 16px}.head{display:flex;justify-content:space-between;gap:16px;align-items:end;flex-wrap:wrap;margin-bottom:14px}.title{margin:0;font-size:clamp(24px,5vw,38px)}.sub{color:#667085;margin:5px 0 0}.controls{display:flex;gap:8px;flex-wrap:wrap}.controls button{border:1px solid #d0d5dd;background:white;border-radius:10px;padding:10px 14px;font-weight:600;cursor:pointer}.controls button.active{background:#17202a;color:white}.batchbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 14px}.batchlabel{font-weight:700;margin-right:4px}.batchbar button{border:1px solid #d0d5dd;background:white;border-radius:10px;padding:10px 16px;font-weight:700;cursor:pointer}.batchbar button.active{background:#17202a;color:white}.table-wrap{overflow:auto;background:white;border:1px solid #e4e7ec;border-radius:14px}.grid{min-width:820px;display:grid;grid-template-columns:110px repeat(6,minmax(145px,1fr))}.cell{padding:12px;border-right:1px solid #eaecf0;border-bottom:1px solid #eaecf0;min-height:82px}.headcell{font-weight:700;background:#f9fafb;min-height:auto;position:sticky;top:0}.time{font-weight:700;white-space:nowrap}.entry{border-left:4px solid #667085;background:#f9fafb;border-radius:8px;padding:8px;margin-bottom:6px}.entry strong{display:block;font-size:14px}.entry small{display:block;color:#667085;margin-top:3px}.batchtag{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#667085}.note{margin:12px 0;color:#667085;font-size:13px}.status{padding:12px;background:white;border:1px solid #e4e7ec;border-radius:10px;margin-bottom:14px}.error{color:#b42318}.muted{color:#98a2b3}
+:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#17202a;background:#f6f7f9}*{box-sizing:border-box}body{margin:0}.wrap{max-width:1200px;margin:auto;padding:24px 16px}.head{display:flex;justify-content:space-between;gap:16px;align-items:end;flex-wrap:wrap;margin-bottom:14px}.title{margin:0;font-size:clamp(24px,5vw,38px)}.sub{color:#667085;margin:5px 0 0}.controls{display:flex;gap:8px;flex-wrap:wrap}.controls button{border:1px solid #d0d5dd;background:white;border-radius:10px;padding:10px 14px;font-weight:600;cursor:pointer}.controls button.active{background:#17202a;color:white}.viewbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 12px}.viewlabel{font-weight:700;margin-right:4px}.batchbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 14px}.batchlabel{font-weight:700;margin-right:4px}.batchbar button{border:1px solid #d0d5dd;background:white;border-radius:10px;padding:10px 16px;font-weight:700;cursor:pointer}.batchbar button.active{background:#17202a;color:white}.table-wrap{overflow:auto;background:white;border:1px solid #e4e7ec;border-radius:14px}.grid{display:grid}.grid.weekly{min-width:820px;grid-template-columns:110px repeat(6,minmax(145px,1fr))}.grid.daily{grid-template-columns:110px minmax(240px,1fr);min-width:350px}.cell{padding:12px;border-right:1px solid #eaecf0;border-bottom:1px solid #eaecf0;min-height:82px}.headcell{font-weight:700;background:#f9fafb;min-height:auto;position:sticky;top:0}.time{font-weight:700;white-space:nowrap}.entry{border-left:4px solid #667085;background:#f9fafb;border-radius:8px;padding:8px;margin-bottom:6px}.entry strong{display:block;font-size:14px}.entry small{display:block;color:#667085;margin-top:3px}.batchtag{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#667085}.note{margin:12px 0;color:#667085;font-size:13px}
 </style>
 </head>
 <body>
 <main class="wrap">
-<div class="head"><div><h1 class="title">UG College Timetable</h1><p class="sub">VII Term · UG Batch · decoded from the official timetable</p></div><div class="controls" id="days"></div></div>
+<div class="head"><div><h1 class="title">UG College Timetable</h1><p class="sub">VII Term · UG Batch · decoded from the official timetable</p></div></div>
+<div class="viewbar"><span class="viewlabel">View:</span><div class="controls" id="views"></div></div>
+<div class="viewbar"><span class="viewlabel">Day:</span><div class="controls" id="days"></div></div>
 <div class="batchbar"><span class="batchlabel">Tutorial batch:</span><div id="batches" class="controls"></div></div>
-<div id="status" class="status">Loading timetable…</div>
 <div class="table-wrap"><div id="grid" class="grid"></div></div>
-<p class="note">Select Batch A, B or C to show only that batch's allocated tutorial subject. Theory, SDL, mentorship and common sessions remain unchanged.</p>
+<p class="note">Batch selection changes only the batch-specific tutorial cells. Theory, SDL, mentorship and common sessions remain unchanged. Source: <code>data/ug_timetable.csv</code>.</p>
 </main>
 <script>
 const DAYS=['MON','TUE','WED','THU','FRI','SAT'];
 const dayNames={MON:'Monday',TUE:'Tuesday',WED:'Wednesday',THU:'Thursday',FRI:'Friday',SAT:'Saturday'};
-const csvUrl='data/ug_timetable.csv?v=2';
+const csvUrl='data/ug_timetable.csv?v=3';
 const batchFields={A:'batch_a_subject',B:'batch_b_subject',C:'batch_c_subject'};
 let rows=[];
 let selectedBatch='A';
+let selectedDay=DAYS[(new Date().getDay()+6)%7] || 'MON';
+let viewMode='daily';
 
 function parseCSV(text){const out=[];let row=[],field='',quoted=false;for(let i=0;i<text.length;i++){const c=text[i],n=text[i+1];if(c==='"'){if(quoted&&n==='"'){field+='"';i++}else quoted=!quoted}else if(c===','&&!quoted){row.push(field);field=''}else if((c==='\n'||c==='\r')&&!quoted){if(c==='\r'&&n==='\n')i++;row.push(field);field='';if(row.some(x=>x.trim()!==''))out.push(row);row=[]}else field+=c}if(field!==''||row.length){row.push(field);out.push(row)}return out}
+function hasBatchAllocation(r){return ['batch_a_subject','batch_b_subject','batch_c_subject'].some(k=>String(r[k]||'').trim()!=='')}
+function subjectFor(r){if(hasBatchAllocation(r))return String(r[batchFields[selectedBatch]]||'').trim();return String(r.department_subject||'').trim()}
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 
-function hasBatchAllocation(r){return ['batch_a_subject','batch_b_subject','batch_c_subject'].some(k=>String(r[k]||'').trim()!=='')}
-function subjectFor(r){const field=batchFields[selectedBatch];if(hasBatchAllocation(r))return String(r[field]||'').trim();return String(r.department_subject||'').trim()}
+function appendEntry(cell,r){
+ const batchSpecific=hasBatchAllocation(r);
+ const subject=subjectFor(r);
+ if(batchSpecific && !subject)return;
+ const e=document.createElement('div');e.className='entry';
+ if(batchSpecific){const tag=document.createElement('span');tag.className='batchtag';tag.textContent='Batch '+selectedBatch;e.append(tag)}
+ const strong=document.createElement('strong');strong.textContent=r.session_type+(subject?' · '+subject:'');e.append(strong);
+ if(r.details && !batchSpecific){const small=document.createElement('small');small.textContent=r.details;e.append(small)}
+ cell.append(e);
+}
 
 function render(){
  const grid=document.getElementById('grid');
  grid.innerHTML='';
+ grid.className='grid '+(viewMode==='daily'?'daily':'weekly');
+ const visibleDays=viewMode==='daily'?[selectedDay]:DAYS;
  const h=document.createElement('div');h.className='cell headcell';h.textContent='Time';grid.append(h);
- DAYS.forEach(d=>{const x=document.createElement('div');x.className='cell headcell';x.textContent=dayNames[d];grid.append(x)});
+ visibleDays.forEach(d=>{const x=document.createElement('div');x.className='cell headcell';x.textContent=dayNames[d];grid.append(x)});
  const times=[...new Set(rows.map(r=>r.start_time+'|'+r.end_time))].sort();
  times.forEach(t=>{
   const [st,en]=t.split('|');
   const tc=document.createElement('div');tc.className='cell time';tc.textContent=st+'–'+en;grid.append(tc);
-  DAYS.forEach(d=>{
+  visibleDays.forEach(d=>{
    const cell=document.createElement('div');cell.className='cell';
-   rows.filter(r=>r.day===d&&r.start_time===st&&r.end_time===en).forEach(r=>{
-    const batchSpecific=hasBatchAllocation(r);
-    const subject=subjectFor(r);
-    // A/B/C selector applies only to rows whose allocation is explicitly split by batch.
-    // Never fall back to department_subject for these rows: that is what caused all 3 subjects to reappear.
-    if(batchSpecific && !subject)return;
-    const e=document.createElement('div');e.className='entry';
-    if(batchSpecific)e.innerHTML='<span class="batchtag">Batch '+selectedBatch+'</span>';
-    const strong=document.createElement('strong');strong.textContent=r.session_type+(subject?' · '+subject:'');e.append(strong);
-    if(r.details && !batchSpecific){const small=document.createElement('small');small.textContent=r.details;e.append(small)}
-    cell.append(e);
-   });
-   if(!cell.children.length)cell.innerHTML='<span class="muted">—</span>';
+   rows.filter(r=>r.day===d&&r.start_time===st&&r.end_time===en).forEach(r=>appendEntry(cell,r));
+   if(!cell.children.length)cell.innerHTML='<span style="color:#98a2b3">—</span>';
    grid.append(cell);
   });
  });
- document.getElementById('status').textContent=rows.length+' timetable entries loaded · showing Batch '+selectedBatch+' tutorials';
 }
 
+function setupViews(){
+ const c=document.getElementById('views');
+ [['daily','Daily'],['weekly','Weekly']].forEach(([mode,label])=>{
+  const b=document.createElement('button');b.type='button';b.textContent=label;
+  b.addEventListener('click',()=>{viewMode=mode;document.querySelectorAll('#views button').forEach(x=>x.classList.remove('active'));b.classList.add('active');render()});
+  c.append(b);
+  if(mode===viewMode)b.classList.add('active');
+ });
+}
+function setupDays(){
+ const c=document.getElementById('days');
+ DAYS.forEach(d=>{
+  const b=document.createElement('button');b.type='button';b.textContent=dayNames[d];b.dataset.day=d;
+  b.addEventListener('click',()=>{selectedDay=d;viewMode='daily';document.querySelectorAll('#days button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('#views button').forEach(x=>x.classList.toggle('active',x.textContent==='Daily'));render()});
+  c.append(b);
+  if(d===selectedDay)b.classList.add('active');
+ });
+}
 function setupBatches(){
  const c=document.getElementById('batches');
  ['A','B','C'].forEach(bn=>{const b=document.createElement('button');b.type='button';b.textContent='Batch '+bn;b.dataset.batch=bn;b.addEventListener('click',()=>{selectedBatch=bn;document.querySelectorAll('#batches button').forEach(x=>x.classList.remove('active'));b.classList.add('active');render()});c.append(b)});
  c.firstChild.classList.add('active');
 }
-function setupDays(){
- const c=document.getElementById('days');
- DAYS.forEach(d=>{const b=document.createElement('button');b.type='button';b.textContent=dayNames[d];b.addEventListener('click',()=>{document.querySelectorAll('#days button').forEach(x=>x.classList.remove('active'));b.classList.add('active');const i=DAYS.indexOf(d)+1;document.querySelectorAll('#grid .cell').forEach((x,k)=>{x.style.display=(k===0||k%7===i)?'block':'none'})});c.append(b)});
- c.firstChild.classList.add('active');
-}
 
-fetch(csvUrl,{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('Could not load CSV');return r.text()}).then(text=>{const a=parseCSV(text);const h=a.shift().map(x=>x.trim());rows=a.map(r=>Object.fromEntries(h.map((k,i)=>[k,(r[i]||'').trim()])));setupBatches();setupDays();render()}).catch(e=>{document.getElementById('status').innerHTML='<span class="error">'+esc(e.message)+'</span>';});
+fetch(csvUrl,{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('Could not load CSV');return r.text()}).then(text=>{
+ const a=parseCSV(text);const h=a.shift().map(x=>x.trim());rows=a.map(r=>Object.fromEntries(h.map((k,i)=>[k,(r[i]||'').trim()])));
+ setupViews();setupDays();setupBatches();render();
+}).catch(e=>{document.getElementById('grid').innerHTML='<div class="cell" style="grid-column:1/-1">'+esc(e.message)+'</div>';});
 </script>
 </body>
 </html>
