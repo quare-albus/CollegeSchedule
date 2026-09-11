@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>UG College Timetable</title>
 <style>
-:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#17202a;background:#f6f7f9}*{box-sizing:border-box}body{margin:0}.wrap{max-width:1200px;margin:auto;padding:24px 16px}.head{display:flex;justify-content:space-between;gap:16px;align-items:end;flex-wrap:wrap;margin-bottom:14px}.title{margin:0;font-size:clamp(24px,5vw,38px)}.sub{color:#667085;margin:5px 0 0}.controls{display:flex;gap:8px;flex-wrap:wrap}.controls button{border:1px solid #d0d5dd;background:white;border-radius:10px;padding:10px 14px;font-weight:600;cursor:pointer}.controls button.active{background:#17202a;color:white}.viewbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 12px}.viewlabel{font-weight:700;margin-right:4px}.datebar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 12px}.datebar input{border:1px solid #d0d5dd;background:white;border-radius:10px;padding:10px 12px;font:inherit}.batchbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 14px}.batchlabel{font-weight:700;margin-right:4px}.batchbar button{border:1px solid #d0d5dd;background:white;border-radius:10px;padding:10px 16px;font-weight:700;cursor:pointer}.batchbar button.active{background:#17202a;color:white}.table-wrap{overflow:auto;background:white;border:1px solid #e4e7ec;border-radius:14px}.grid{display:grid}.grid.weekly{min-width:820px;grid-template-columns:110px repeat(6,minmax(145px,1fr))}.grid.daily{grid-template-columns:110px minmax(240px,1fr);min-width:350px}.cell{padding:12px;border-right:1px solid #eaecf0;border-bottom:1px solid #eaecf0;min-height:82px}.headcell{font-weight:700;background:#f9fafb;min-height:auto;position:sticky;top:0}.time{font-weight:700;white-space:nowrap}.entry{border-left:4px solid #667085;background:#f9fafb;border-radius:8px;padding:8px;margin-bottom:6px}.entry strong{display:block;font-size:14px}.entry small{display:block;color:#667085;margin-top:3px}.batchtag{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#667085}.rule{font-size:11px;color:#667085;margin-top:3px}.note{margin:12px 0;color:#667085;font-size:13px}
+:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#17202a;background:#f6f7f9}*{box-sizing:border-box}body{margin:0}.wrap{max-width:1200px;margin:auto;padding:24px 16px}.head{display:flex;justify-content:space-between;gap:16px;align-items:end;flex-wrap:wrap;margin-bottom:14px}.title{margin:0;font-size:clamp(24px,5vw,38px)}.sub{color:#667085;margin:5px 0 0}.controls{display:flex;gap:8px;flex-wrap:wrap}.controls button{border:1px solid #d0d5dd;background:white;border-radius:10px;padding:10px 14px;font-weight:600;cursor:pointer}.controls button.active{background:#17202a;color:white}.viewbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 12px}.viewlabel{font-weight:700;margin-right:4px}.datebar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 12px}.datebar input{border:1px solid #d0d5dd;background:white;border-radius:10px;padding:10px 12px;font:inherit}.batchbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 14px}.batchlabel{font-weight:700;margin-right:4px}.batchbar button{border:1px solid #d0d5dd;background:white;border-radius:10px;padding:10px 16px;font-weight:700;cursor:pointer}.batchbar button.active{background:#17202a;color:white}.table-wrap{overflow:auto;background:white;border:1px solid #e4e7ec;border-radius:14px}.grid{display:grid}.grid.weekly{min-width:820px;grid-template-columns:110px repeat(6,minmax(145px,1fr))}.grid.daily{grid-template-columns:110px minmax(240px,1fr);min-width:350px}.cell{padding:12px;border-right:1px solid #eaecf0;border-bottom:1px solid #eaecf0;min-height:82px}.headcell{font-weight:700;background:#f9fafb;min-height:auto;position:sticky;top:0}.time{font-weight:700;white-space:nowrap}.entry{border-left:4px solid #667085;background:#f9fafb;border-radius:8px;padding:8px;margin-bottom:6px}.entry strong{display:block;font-size:14px}.entry small{display:block;color:#667085;margin-top:3px}.batchtag{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#667085}.noduty{color:#98a2b3;font-size:13px}.note{margin:12px 0;color:#667085;font-size:13px}
 </style>
 </head>
 <body>
@@ -30,35 +30,29 @@ let selectedBatch='A';
 let selectedDate=new Date();
 let selectedDay=jsDayToCode[selectedDate.getDay()] || 'MON';
 let viewMode='daily';
-
 function pad(n){return String(n).padStart(2,'0')}
 function isoDate(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
 function parseDate(v){const [y,m,day]=v.split('-').map(Number);return new Date(y,m-1,day)}
 function nextDateForDay(code){const target=DAYS.indexOf(code)+1;let d=new Date(selectedDate);let cur=d.getDay();let diff=(target-cur+7)%7;if(diff===0&&cur===0)diff=1;d.setDate(d.getDate()+diff);return d}
 function parseCSV(text){const out=[];let row=[],field='',quoted=false;for(let i=0;i<text.length;i++){const c=text[i],n=text[i+1];if(c==='"'){if(quoted&&n==='"'){field+='"';i++}else quoted=!quoted}else if(c===','&&!quoted){row.push(field);field=''}else if((c==='\n'||c==='\r')&&!quoted){if(c==='\r'&&n==='\n')i++;row.push(field);field='';if(row.some(x=>x.trim()!==''))out.push(row);row=[]}else field+=c}if(field!==''||row.length){row.push(field);out.push(row)}return out}
 function hasBatchAllocation(r){return ['batch_a_subject','batch_b_subject','batch_c_subject'].some(k=>String(r[k]||'').trim()!=='')}
-function dayMatches(rule,day){return String(rule||'').split(',').some(part=>{part=part.trim();if(!part)return false;const m=part.match(/^(\d+)\s*-\s*(\d+)$/);if(m)return day>=+m[1]&&day<=+m[2];return +part===day})}
+function dayMatches(rule,day){return String(rule||'').split(',').some(part=>{part=part.trim();if(!part)return false;const m=part.match(/^(\d+)\s*-\s*(\d+)$/);if(m)return day>=+m[1]&&day<=+m[2];return /^\d+$/.test(part)&&+part===day})}
 function conditionalSubject(r){
  const subjects=String(r.department_subject||'').split(';').map(x=>x.trim()).filter(Boolean);
- const rules=String(r.day_of_month||'').split(';').map(x=>x.trim());
+ const rules=String(r.day_of_month||'').split(';').map(x=>x.trim()).filter(Boolean);
  if(!r.day_of_month)return String(r.department_subject||'').trim();
  if(viewMode==='weekly')return subjects.map((s,i)=>rules[i]?s+' ('+rules[i]+' day'+(rules[i].includes('-')?'s':'')+' of month)':s).join('; ');
  const day=selectedDate.getDate();
  const idx=rules.findIndex(rule=>dayMatches(rule,day));
  return idx>=0?(subjects[idx]||''):'';
 }
-function subjectFor(r){
- if(hasBatchAllocation(r))return String(r[batchFields[selectedBatch]]||'').trim();
- return conditionalSubject(r);
-}
+function subjectFor(r){if(hasBatchAllocation(r))return String(r[batchFields[selectedBatch]]||'').trim();return conditionalSubject(r)}
 function appendEntry(cell,r){
- const batchSpecific=hasBatchAllocation(r);
- const subject=subjectFor(r);
+ const batchSpecific=hasBatchAllocation(r), subject=subjectFor(r);
  if(!subject)return;
  const e=document.createElement('div');e.className='entry';
  if(batchSpecific){const tag=document.createElement('span');tag.className='batchtag';tag.textContent='Batch '+selectedBatch;e.append(tag)}
- const strong=document.createElement('strong');strong.textContent=r.session_type+(subject?' · '+subject:'');e.append(strong);
- if(r.details && !batchSpecific && !r.day_of_month){const small=document.createElement('small');small.textContent=r.details;e.append(small)}
+ const strong=document.createElement('strong');strong.textContent=r.session_type+' · '+subject;e.append(strong);
  cell.append(e);
 }
 function render(){
@@ -67,7 +61,7 @@ function render(){
  const h=document.createElement('div');h.className='cell headcell';h.textContent='Time';grid.append(h);
  visibleDays.forEach(d=>{const x=document.createElement('div');x.className='cell headcell';x.textContent=dayNames[d];grid.append(x)});
  const times=[...new Set(rows.map(r=>r.start_time+'|'+r.end_time))].sort();
- times.forEach(t=>{const [st,en]=t.split('|');const tc=document.createElement('div');tc.className='cell time';tc.textContent=st+'–'+en;grid.append(tc);visibleDays.forEach(d=>{const cell=document.createElement('div');cell.className='cell';rows.filter(r=>r.day===d&&r.start_time===st&&r.end_time===en).forEach(r=>appendEntry(cell,r));if(!cell.children.length)cell.innerHTML='<span style="color:#98a2b3">—</span>';grid.append(cell)})});
+ times.forEach(t=>{const [st,en]=t.split('|');const tc=document.createElement('div');tc.className='cell time';tc.textContent=st+'–'+en;grid.append(tc);visibleDays.forEach(d=>{const cell=document.createElement('div');cell.className='cell';const matching=rows.filter(r=>r.day===d&&r.start_time===st&&r.end_time===en);matching.forEach(r=>appendEntry(cell,r));if(!cell.children.length){const dateSpecific=matching.some(r=>String(r.day_of_month||'').trim()!=='');const n=document.createElement('span');n.className='noduty';n.textContent=dateSpecific&&viewMode==='daily'?'No session scheduled on this day':'—';cell.append(n)}grid.append(cell)})});
 }
 function setupViews(){const c=document.getElementById('views');[['daily','Daily'],['weekly','Weekly']].forEach(([mode,label])=>{const b=document.createElement('button');b.type='button';b.textContent=label;b.addEventListener('click',()=>{viewMode=mode;document.querySelectorAll('#views button').forEach(x=>x.classList.remove('active'));b.classList.add('active');render()});c.append(b);if(mode===viewMode)b.classList.add('active')})}
 function setupDate(){const input=document.getElementById('date');input.value=isoDate(selectedDate);input.addEventListener('change',()=>{if(!input.value)return;selectedDate=parseDate(input.value);selectedDay=jsDayToCode[selectedDate.getDay()]||'MON';document.querySelectorAll('#days button').forEach(x=>x.classList.toggle('active',x.dataset.day===selectedDay));render()})}
