@@ -1,126 +1,27 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
-const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
-const MODEL = "google/gemini-2.5-flash";
-const CONTEXT = {
-  academic_program: "III MBBS Part-II",
-  academic_term: "VII Term",
-  batch: "J3 Batch",
-  period_start: "2026-09-07",
-  period_end: "2027-01-24",
-};
-
-const CORS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-};
-
-const schema = {
-  type: "object",
-  properties: {
-    classes: {
-      type: "array",
-      items: {
-        type: "object",
-        properties: {
-          class_date: { type: ["string", "null"] },
-          day: { type: ["string", "null"] },
-          start_time: { type: ["string", "null"] },
-          end_time: { type: ["string", "null"] },
-          session_type: { type: ["string", "null"] },
-          subject: { type: ["string", "null"] },
-          topic: { type: ["string", "null"] },
-          faculty: { type: ["string", "null"] },
-          venue: { type: ["string", "null"] },
-          batch: { type: ["string", "null"] },
-          raw_text: { type: ["string", "null"] },
-          confidence: { type: ["number", "null"] },
-        },
-        required: [
-          "class_date", "day", "start_time", "end_time", "session_type",
-          "subject", "topic", "faculty", "venue", "batch", "raw_text", "confidence",
-        ],
-        additionalProperties: false,
-      },
-    },
-  },
-  required: ["classes"],
-  additionalProperties: false,
-};
-
-function response(data: unknown, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: { ...CORS, "Content-Type": "application/json" },
-  });
-}
-
-function dataUrl(mime: string, base64: string) {
-  return `data:${mime};base64,${base64}`;
-}
-
-Deno.serve(async (req: Request) => {
-  if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
-  if (req.method !== "POST") return response({ error: "POST required" }, 405);
-
-  const apiKey = Deno.env.get("OPENROUTER_API_KEY");
-  if (!apiKey) return response({ error: "OPENROUTER_API_KEY is not configured" }, 500);
-
-  try {
-    const body = await req.json();
-    if (!Array.isArray(body?.files) || body.files.length === 0) {
-      return response({ error: "files array is required" }, 400);
-    }
-    if (body.files.length > 10) return response({ error: "Maximum 10 files per request" }, 413);
-
-    const content: any[] = [{
-      type: "text",
-      text: `You are the CollegeSchedule V2.3 extraction agent. Target context: ${JSON.stringify(CONTEXT)}. Extract ONLY factual timetable classes relevant to this context and date range. Ignore unrelated programmes, terms, batches and dates. Do not reconcile, modify or replace the authoritative V1 timetable. Extract topic and teacher/faculty when explicitly present. Extract venue when explicitly present; otherwise null. Never infer missing values. Preserve useful source wording in raw_text. Use YYYY-MM-DD dates and HH:MM times when explicit. Return only the required structured schema.`,
-    }];
-
-    for (const file of body.files) {
-      if (typeof file?.name !== "string" || typeof file?.mime_type !== "string" || typeof file?.data_base64 !== "string") {
-        return response({ error: "Each file requires name, mime_type and data_base64" }, 400);
-      }
-      if (file.mime_type === "application/pdf") {
-        content.push({ type: "file", file: { filename: file.name, file_data: dataUrl(file.mime_type, file.data_base64) } });
-      } else if (/^image\/(png|jpeg|webp|gif)$/.test(file.mime_type)) {
-        content.push({ type: "image_url", image_url: { url: dataUrl(file.mime_type, file.data_base64) } });
-      } else if (["text/plain", "text/csv", "application/json"].includes(file.mime_type)) {
-        content.push({ type: "text", text: `\nSOURCE FILE: ${file.name}\n${atob(file.data_base64)}` });
-      } else {
-        return response({ error: `Unsupported MIME type: ${file.mime_type}` }, 415);
-      }
-    }
-
-    const upstream = await fetch(OPENROUTER_URL, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-        "HTTP-Referer": "https://quare-albus.github.io/CollegeSchedule/",
-        "X-Title": "CollegeSchedule Schedule Agent",
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        temperature: 0,
-        messages: [{ role: "user", content }],
-        response_format: {
-          type: "json_schema",
-          json_schema: { name: "schedule_extraction", strict: true, schema },
-        },
-        plugins: [{ id: "file-parser", pdf: { engine: "mistral-ocr" } }],
-      }),
-    });
-
-    const payload = await upstream.json();
-    if (!upstream.ok) return response({ error: "OpenRouter request failed", status: upstream.status, details: payload }, 502);
-
-    const raw = payload?.choices?.[0]?.message?.content;
-    const parsed = typeof raw === "string" ? JSON.parse(raw) : raw;
-    return response({ ok: true, model: MODEL, context: CONTEXT, files: body.files.map((f: { name: string }) => f.name), ...parsed });
-  } catch (error) {
-    return response({ error: error instanceof Error ? error.message : String(error) }, 500);
-  }
-});
+const OPENROUTER_URL="https://openrouter.ai/api/v1/chat/completions";
+const MODEL="google/gemini-2.5-flash";
+const SUPABASE_URL=Deno.env.get("SUPABASE_URL")!;
+const PUBLISHABLE_KEYS=JSON.parse(Deno.env.get("SUPABASE_PUBLISHABLE_KEYS")||"{}");
+const BROWSER_KEY=PUBLISHABLE_KEYS.default;
+const CONTEXT={academic_program:"III MBBS Part-II",academic_term:"VII Term",batch:"J3 Batch",period_start:"2026-09-07",period_end:"2027-01-24"};
+const CORS={"Access-Control-Allow-Origin":"*","Access-Control-Allow-Headers":"authorization, x-client-info, apikey, content-type","Access-Control-Allow-Methods":"POST, OPTIONS"};
+const schema={type:"object",properties:{department:{type:["string","null"]},department_code:{type:["string","null"]},classes:{type:"array",items:{type:"object",properties:{class_date:{type:["string","null"]},day:{type:["string","null"]},start_time:{type:["string","null"]},end_time:{type:["string","null"]},session_type:{type:["string","null"]},subject:{type:["string","null"]},topic:{type:["string","null"]},faculty:{type:["string","null"]},venue:{type:["string","null"]},batch:{type:["string","null"]},raw_text:{type:["string","null"]},confidence:{type:["number","null"]}},required:["class_date","day","start_time","end_time","session_type","subject","topic","faculty","venue","batch","raw_text","confidence"],additionalProperties:false}}},required:["department","department_code","classes"],additionalProperties:false};
+function response(data:unknown,status=200){return new Response(JSON.stringify(data),{status,headers:{...CORS,"Content-Type":"application/json"}})}
+function dataUrl(mime:string,base64:string){return`data:${mime};base64,${base64}`}
+async function rpc(name:string,payload:unknown){const r=await fetch(`${SUPABASE_URL}/rest/v1/rpc/${name}`,{method:"POST",headers:{apikey:BROWSER_KEY,"Content-Type":"application/json"},body:JSON.stringify(payload)});const t=await r.text();if(!r.ok)throw new Error(`Supabase ${name} failed (${r.status}): ${t}`);return JSON.parse(t)}
+Deno.serve(async(req:Request)=>{
+ if(req.method==="OPTIONS")return new Response("ok",{headers:CORS});
+ if(req.method!=="POST")return response({error:"POST required"},405);
+ if(!BROWSER_KEY||req.headers.get("apikey")!==BROWSER_KEY)return response({error:"Unauthorized"},401);
+ const apiKey=Deno.env.get("OPENROUTER_API_KEY");if(!apiKey)return response({error:"OPENROUTER_API_KEY is not configured"},500);
+ try{
+  const form=await req.formData();const files=form.getAll("files").filter((x):x is File=>x instanceof File);if(!files.length)return response({error:"No document files supplied"},400);if(files.length>5)return response({error:"Maximum 5 files per request"},413);
+  const content:any[]=[{type:"text",text:`You are the CollegeSchedule V2.3 document-native extraction agent. Target context: ${JSON.stringify(CONTEXT)}. Read ORIGINAL PDF/image documents including visual tables and scanned pages. Identify the issuing department first. Extract ONLY factual timetable classes relevant to this target context and date range. Ignore unrelated programmes, terms, batches and dates. Do not reconcile, modify or replace V1. Never fabricate date, time, batch, subject, session type, topic, faculty or venue; use null when not explicit. Expand date ranges only when clearly established. Return one object per actual class/session. Preserve the smallest useful supporting wording in raw_text. Use YYYY-MM-DD dates and HH:MM times. confidence is extraction certainty from 0 to 1. Return exactly the required JSON schema.`}];
+  for(const file of files){if(!file.type.startsWith("image/")&&file.type!=="application/pdf")return response({error:`Unsupported document type: ${file.type||file.name}. Use PDF or image.`},415);const bytes=new Uint8Array(await file.arrayBuffer());let b="";for(let i=0;i<bytes.length;i+=0x8000)b+=String.fromCharCode(...bytes.subarray(i,Math.min(i+0x8000,bytes.length)));content.push({type:"text",text:`SOURCE FILE: ${file.name}`});content.push(file.type==="application/pdf"?{type:"file",file:{filename:file.name,file_data:`data:${file.type};base64,${btoa(b)}`}}:{type:"image_url",image_url:{url:`data:${file.type};base64,${btoa(b)}`}})}
+  const upstream=await fetch(OPENROUTER_URL,{method:"POST",headers:{Authorization:`Bearer ${apiKey}`,"Content-Type":"application/json","HTTP-Referer":"https://quare-albus.github.io/CollegeSchedule/","X-Title":"CollegeSchedule Schedule Agent"},body:JSON.stringify({model:MODEL,temperature:0,messages:[{role:"user",content}],response_format:{type:"json_schema",json_schema:{name:"schedule_extraction",strict:true,schema}}})});
+  const text=await upstream.text();if(!upstream.ok)return response({error:"OpenRouter request failed",status:upstream.status,details:text},502);const payload=JSON.parse(text);const raw=payload?.choices?.[0]?.message?.content;const parsed=typeof raw==="string"?JSON.parse(raw):raw;if(!parsed||!Array.isArray(parsed.classes)||!parsed.department)return response({error:"Extraction did not identify a department or class array"},422);
+  const ingest=await rpc("ingest_department_schedule",{payload:{target:CONTEXT,department:parsed.department,department_code:parsed.department_code,source_file:files.map(f=>f.name).join(", "),files_count:files.length,classes:parsed.classes}});const results=await rpc("get_schedule_results",{p_schedule_id:ingest.schedule_id});
+  return response({ok:true,model:MODEL,context:CONTEXT,files:files.map(f=>f.name),department:parsed.department,classes:parsed.classes,persistence:ingest,results});
+ }catch(error){return response({error:error instanceof Error?error.message:String(error)},500)}});
