@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UG College Timetable</title>
+<style>
+:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#17202a;background:#f6f7f9}*{box-sizing:border-box}body{margin:0}.wrap{max-width:1200px;margin:auto;padding:24px 16px}.head{display:flex;justify-content:space-between;gap:16px;align-items:end;flex-wrap:wrap;margin-bottom:18px}.title{margin:0;font-size:clamp(24px,5vw,38px)}.sub{color:#667085;margin:5px 0 0}.controls{display:flex;gap:8px;flex-wrap:wrap}.controls button{border:1px solid #d0d5dd;background:white;border-radius:10px;padding:10px 14px;font-weight:600;cursor:pointer}.controls button.active{background:#17202a;color:white}.table-wrap{overflow:auto;background:white;border:1px solid #e4e7ec;border-radius:14px}.grid{min-width:820px;display:grid;grid-template-columns:110px repeat(6,minmax(145px,1fr))}.cell{padding:12px;border-right:1px solid #eaecf0;border-bottom:1px solid #eaecf0;min-height:82px}.headcell{font-weight:700;background:#f9fafb;min-height:auto;position:sticky;top:0}.time{font-weight:700;white-space:nowrap}.entry{border-left:4px solid #667085;background:#f9fafb;border-radius:8px;padding:8px;margin-bottom:6px}.entry strong{display:block;font-size:14px}.entry small{display:block;color:#667085;margin-top:3px}.note{margin:12px 0;color:#667085;font-size:13px}.status{padding:12px;background:white;border:1px solid #e4e7ec;border-radius:10px;margin-bottom:14px}.error{color:#b42318}.muted{color:#98a2b3}
+</style>
+</head>
+<body>
+<main class="wrap">
+<div class="head"><div><h1 class="title">UG College Timetable</h1><p class="sub">VII Term · UG Batch · decoded from the official timetable</p></div><div class="controls" id="days"></div></div>
+<div id="status" class="status">Loading timetable…</div>
+<div class="table-wrap"><div id="grid" class="grid"></div></div>
+<p class="note">Source data: <code>data/ug_timetable.csv</code>. Entries marked as overlapping/parallel should be verified against the original timetable.</p>
+</main>
+<script>
+const DAYS=['MON','TUE','WED','THU','FRI','SAT'];
+const dayNames={MON:'Monday',TUE:'Tuesday',WED:'Wednesday',THU:'Thursday',FRI:'Friday',SAT:'Saturday'};
+const csvUrl='data/ug_timetable.csv';
+let rows=[];
+function parseCSV(text){const out=[];let row=[],field='',quoted=false;for(let i=0;i<text.length;i++){const c=text[i],n=text[i+1];if(c==='"'){if(quoted&&n==='"'){field+='"';i++}else quoted=!quoted}else if(c===','&&!quoted){row.push(field);field=''}else if((c==='\n'||c==='\r')&&!quoted){if(c==='\r'&&n==='\n')i++;row.push(field);field='';if(row.some(x=>x.trim()!==''))out.push(row);row=[]}else field+=c}if(field!==''||row.length){row.push(field);out.push(row)}return out}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function render(){const grid=document.getElementById('grid');grid.innerHTML='';grid.append(Object.assign(document.createElement('div'),{className:'cell headcell',textContent:'Time'}));DAYS.forEach(d=>grid.append(Object.assign(document.createElement('div'),{className:'cell headcell',textContent:dayNames[d]})));
+const times=[...new Set(rows.map(r=>r.start_time+'|'+r.end_time))].sort();times.forEach(t=>{const [st,en]=t.split('|');grid.append(Object.assign(document.createElement('div'),{className:'cell time',textContent:st+'–'+en}));DAYS.forEach(d=>{const cell=document.createElement('div');cell.className='cell';rows.filter(r=>r.day===d&&r.start_time===st&&r.end_time===en).forEach(r=>{const e=document.createElement('div');e.className='entry';e.innerHTML='<strong>'+esc(r.session_type)+(r.department_subject?' · '+esc(r.department_subject):'')+'</strong>'+(r.details?'<small>'+esc(r.details)+'</small>':'');cell.append(e)});if(!cell.children.length)cell.innerHTML='<span class="muted">—</span>';grid.append(cell)})})}
+function setupDays(){const c=document.getElementById('days');DAYS.forEach(d=>{const b=document.createElement('button');b.type='button';b.textContent=dayNames[d];b.addEventListener('click',()=>{document.querySelectorAll('#days button').forEach(x=>x.classList.remove('active'));b.classList.add('active');const i=DAYS.indexOf(d)+1;document.querySelectorAll('#grid .cell').forEach((x,k)=>{x.style.display=(k===0||k%7===i)?'block':'none'})});c.append(b)});c.firstChild?.classList.add('active')}
+fetch(csvUrl).then(r=>{if(!r.ok)throw Error('Could not load CSV');return r.text()}).then(text=>{const a=parseCSV(text);const h=a.shift().map(x=>x.trim());rows=a.map(r=>Object.fromEntries(h.map((k,i)=>[k,(r[i]||'').trim()])));document.getElementById('status').textContent=rows.length+' timetable entries loaded';setupDays();render()}).catch(e=>{document.getElementById('status').innerHTML='<span class="error">'+esc(e.message)+'</span>';});
+</script>
+</body>
+</html>
