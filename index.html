@@ -23,7 +23,7 @@
 <script>
 const DAYS=['MON','TUE','WED','THU','FRI','SAT'];
 const dayNames={MON:'Monday',TUE:'Tuesday',WED:'Wednesday',THU:'Thursday',FRI:'Friday',SAT:'Saturday'};
-const csvUrl='data/ug_timetable.csv?v=6';
+const csvUrl='data/ug_timetable.csv?v=7';
 const clinicCsvUrl='data/clinics_timetable.csv?v=1';
 const batchFields={A:'batch_a_subject',B:'batch_b_subject',C:'batch_c_subject'};
 const jsDayToCode={1:'MON',2:'TUE',3:'WED',4:'THU',5:'FRI',6:'SAT'};
@@ -43,9 +43,36 @@ function clinicForDate(date){const target=isoDate(date);return clinicRows.find(r
 function mondayOfWeek(date){const d=new Date(date);const day=d.getDay();const diff=day===0?-6:1-day;d.setDate(d.getDate()+diff);return d}
 function dateForColumn(anchor,code){const monday=mondayOfWeek(anchor),idx=DAYS.indexOf(code);const d=new Date(monday);d.setDate(monday.getDate()+idx);return d}
 function appendClinic(cell,date){const c=clinicForDate(date);if(!c){const n=document.createElement('span');n.className='noduty';n.textContent='—';cell.append(n);return}const e=document.createElement('div');e.className='entry clinicentry';const tag=document.createElement('span');tag.className='batchtag';tag.textContent='Batch '+selectedClinicBatch;e.append(tag);const strong=document.createElement('strong');strong.textContent='CLINICS · '+c.subject;e.append(strong);cell.append(e)}
-function render(){const grid=document.getElementById('grid');grid.innerHTML='';grid.className='grid '+(viewMode==='daily'?'daily':'weekly');const visibleDays=viewMode==='daily'?[selectedDay]:DAYS;let h=document.createElement('div');h.className='cell headcell';h.textContent='Time';grid.append(h);visibleDays.forEach(d=>{const x=document.createElement('div');x.className='cell headcell';x.textContent=dayNames[d];grid.append(x)});const times=[...new Set(rows.map(r=>r.start_time+'|'+r.end_time))].sort();times.forEach(t=>{const [st,en]=t.split('|'),tc=document.createElement('div');tc.className='cell time';tc.textContent=st+'–'+en;grid.append(tc);visibleDays.forEach(d=>{const cell=document.createElement('div');cell.className='cell';const matching=rows.filter(r=>r.day===d&&r.start_time===st&&r.end_time===en);const dayDate=viewMode==='daily'?selectedDate:dateForColumn(selectedDate,d);matching.forEach(r=>appendEntry(cell,r,dayDate));if(!cell.children.length){const dateSpecific=matching.some(r=>String(r.day_of_month||'').trim()!=='');const n=document.createElement('span');n.className='noduty';n.textContent=dateSpecific&&viewMode==='daily'?'No session scheduled for this weekday occurrence':'—';cell.append(n)}grid.append(cell)})});
- // Dedicated 10:15–13:15 clinic block, independent of the teaching CSV.
- const clinicTime=document.createElement('div');clinicTime.className='cell time';clinicTime.textContent='10:15–13:15';grid.append(clinicTime);visibleDays.forEach(d=>{const cell=document.createElement('div');cell.className='cell';appendClinic(cell,viewMode==='daily'?selectedDate:dateForColumn(selectedDate,d));grid.append(cell)});
+function timeToMinutes(value){const m=String(value).match(/^(\d{1,2}):(\d{2})$/);return m?Number(m[1])*60+Number(m[2]):Number.MAX_SAFE_INTEGER}
+function timeKeyStart(key){return key.split('|')[0]}
+function render(){
+ const grid=document.getElementById('grid');grid.innerHTML='';grid.className='grid '+(viewMode==='daily'?'daily':'weekly');
+ const visibleDays=viewMode==='daily'?[selectedDay]:DAYS;
+ const h=document.createElement('div');h.className='cell headcell';h.textContent='Time';grid.append(h);
+ visibleDays.forEach(d=>{const x=document.createElement('div');x.className='cell headcell';x.textContent=dayNames[d];grid.append(x)});
+ // Merge all teaching slots with the clinic block, then sort numerically by start time.
+ const timeSet=new Set(rows.map(r=>r.start_time+'|'+r.end_time));
+ timeSet.add('10:15|13:15');
+ const times=[...timeSet].sort((a,b)=>timeToMinutes(timeKeyStart(a))-timeToMinutes(timeKeyStart(b)) || timeToMinutes(a.split('|')[1])-timeToMinutes(b.split('|')[1]));
+ times.forEach(t=>{
+   const [st,en]=t.split('|');
+   const tc=document.createElement('div');tc.className='cell time';tc.textContent=st+'–'+en;grid.append(tc);
+   visibleDays.forEach(d=>{
+     const cell=document.createElement('div');cell.className='cell';
+     const dayDate=viewMode==='daily'?selectedDate:dateForColumn(selectedDate,d);
+     if(st==='10:15'&&en==='13:15'){
+       appendClinic(cell,dayDate);
+     }else{
+       const matching=rows.filter(r=>r.day===d&&r.start_time===st&&r.end_time===en);
+       matching.forEach(r=>appendEntry(cell,r,dayDate));
+       if(!cell.children.length){
+         const dateSpecific=matching.some(r=>String(r.day_of_month||'').trim()!=='');
+         const n=document.createElement('span');n.className='noduty';n.textContent=dateSpecific&&viewMode==='daily'?'No session scheduled for this weekday occurrence':'—';cell.append(n)
+       }
+     }
+     grid.append(cell)
+   })
+ });
 }
 function setupViews(){const c=document.getElementById('views');[['daily','Daily'],['weekly','Weekly']].forEach(([mode,label])=>{const b=document.createElement('button');b.type='button';b.textContent=label;b.addEventListener('click',()=>{viewMode=mode;document.querySelectorAll('#views button').forEach(x=>x.classList.remove('active'));b.classList.add('active');render()});c.append(b);if(mode===viewMode)b.classList.add('active')})}
 function setupDate(){const input=document.getElementById('date');input.value=isoDate(selectedDate);input.addEventListener('change',()=>{if(!input.value)return;selectedDate=parseDate(input.value);selectedDay=jsDayToCode[selectedDate.getDay()]||'MON';document.querySelectorAll('#days button').forEach(x=>x.classList.toggle('active',x.dataset.day===selectedDay));render()})}
