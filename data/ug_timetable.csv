@@ -1,36 +1,36 @@
-day,start_time,end_time,block,session_type,department_subject,details
-MON,08:00,08:45,Theory/SDL,THEORY,Gen Surgery,
-MON,08:45,09:30,Theory/SDL,THEORY,Gen Medicine,
-MON,09:30,10:15,Theory/SDL,SDL,Medicine,
-MON,14:00,15:00,Practical/Tutorial/Small Group Teaching/Mentorship,TUTORIAL,Obst & Gynae; Gen Surgery; Gen Med,A batch / B batch / C batch
-MON,15:00,16:00,Practical/Tutorial/Small Group Teaching/Mentorship,TUTORIAL,Obst & Gynae; Gen Surgery; Gen Med,B batch / C batch / A batch
-MON,16:00,17:00,Practical/Tutorial/Small Group Teaching/Mentorship,TUTORIAL/SDL,Dermatology; Radio,Dermatology 1st 2nd & 3rd day of month; Radio 4th & 5th day of month
-TUE,08:00,08:45,Theory/SDL,THEORY,Obst & Gynae,
-TUE,08:45,09:30,Theory/SDL,THEORY,Surgery,
-TUE,09:30,10:15,Theory/SDL,SDL,Surgery,
-TUE,14:00,15:00,Practical/Tutorial/Small Group Teaching/Mentorship,TUTORIAL,Obst & Gynae; Gen Surgery; Gen Med,C batch / A batch / B batch
-TUE,15:00,16:00,Practical/Tutorial/Small Group Teaching/Mentorship,TUTORIAL,Dermatology; Psychiatry; Anaesthesia,Dermatology 1st day; Psychiatry 2nd day; Anaesthesia 3rd 4th & 5th day of month
-TUE,16:00,17:00,Practical/Tutorial/Small Group Teaching/Mentorship,SDL,Dermatology; Psychiatry; Radio,Dermatology 1st & 2nd day; Psychiatry 3rd day; Radio 4th & 5th day of month
-WED,08:00,08:45,Theory/SDL,THEORY,ENT,
-WED,08:45,09:30,Theory/SDL,THEORY,Paediatrics,
-WED,09:30,10:15,Theory/SDL,SDL,Paediatrics,
-WED,14:00,15:00,Practical/Tutorial/Small Group Teaching/Mentorship,TUTORIAL,Obst & Gynae; Gen Surgery; Gen Med,B batch / C batch / A batch
-WED,15:00,16:00,Practical/Tutorial/Small Group Teaching/Mentorship,TUTORIAL,Obst & Gynae; Gen Surgery; Gen Med,A batch / B batch / C batch
-WED,16:00,17:00,Practical/Tutorial/Small Group Teaching/Mentorship,MENTORSHIP,,
-THU,08:00,08:45,Theory/SDL,THEORY,Gen Medicine,
-THU,08:45,09:30,Theory/SDL,THEORY,Obst & Gynae,
-THU,09:30,10:15,Theory/SDL,SDL,Obst & Gynae,
-THU,14:00,15:00,Practical/Tutorial/Small Group Teaching/Mentorship,TUTORIAL,Paediatrics,
-THU,15:00,16:00,Practical/Tutorial/Small Group Teaching/Mentorship,THEORY/TUTORIAL,Orthopaedics,Theory 1st 2nd & 4th day of month; Tutorial 3rd & 5th day of month
-THU,16:00,17:00,Practical/Tutorial/Small Group Teaching/Mentorship,TUTORIAL,Ophthal,1st to 4th day of month
-FRI,08:00,08:45,Theory/SDL,THEORY,Gen Surgery,
-FRI,08:45,09:30,Theory/SDL,THEORY,Medicine,
-FRI,09:30,10:15,Theory/SDL,SDL,Medicine; Ophthal,Appears as overlapping/parallel allocation in the image
-FRI,14:00,15:00,Practical/Tutorial/Small Group Teaching/Mentorship,TUTORIAL,Obst & Gynae; Gen Surgery; Gen Med,C batch / A batch / B batch
-FRI,15:00,16:00,Practical/Tutorial/Small Group Teaching/Mentorship,TUTORIAL,Obst & Gynae; Gen Surgery; Gen Med,A batch / B batch / C batch
-SAT,08:00,08:45,Theory/SDL,THEORY,Dermatology; Psychiatry; Radio,Dermatology 1st & 2nd day; Psychiatry 3rd & 4th day; Radio 5th day of month
-SAT,08:45,09:30,Theory/SDL,THEORY,Ophthal,
-SAT,09:30,10:15,Theory/SDL,SDL,Ophthal,
-SAT,14:00,15:00,Practical/Tutorial/Small Group Teaching/Mentorship,TUTORIAL,Obst & Gynae; Gen Surgery; Gen Med,B batch / C batch / A batch
-SAT,15:00,16:00,Practical/Tutorial/Small Group Teaching/Mentorship,TUTORIAL,Obst & Gynae; Gen Surgery; Gen Med,C batch / A batch / B batch
-SAT,16:00,17:00,Practical/Tutorial/Small Group Teaching/Mentorship,MENTORSHIP,,
+day,start_time,end_time,block,session_type,department_subject,batch_a_subject,batch_b_subject,batch_c_subject,details
+MON,08:00,08:45,Theory/SDL,THEORY,Gen Surgery,,,,
+MON,08:45,09:30,Theory/SDL,THEORY,Gen Medicine,,,,
+MON,09:30,10:15,Theory/SDL,SDL,Medicine,,,,
+MON,14:00,15:00,Practical/Tutorial/Small Group Teaching/Mentorship,TUTORIAL,,Obst & Gynae,Gen Surgery,Gen Med,
+MON,15:00,16:00,Practical/Tutorial/Small Group Teaching/Mentorship,TUTORIAL,,Gen Med,Obst & Gynae,Gen Surgery,
+MON,16:00,17:00,Practical/Tutorial/Small Group Teaching/Mentorship,TUTORIAL/SDL,Dermatology; Radio,,,,Dermatology 1st 2nd & 3rd day of month; Radio 4th & 5th day of month
+TUE,08:00,08:45,Theory/SDL,THEORY,Obst & Gynae,,,,
+TUE,08:45,09:30,Theory/SDL,THEORY,Surgery,,,,
+TUE,09:30,10:15,Theory/SDL,SDL,Surgery,,,,
+TUE,14:00,15:00,Practical/Tutorial/Small Group Teaching/Mentorship,TUTORIAL,,Gen Surgery,Gen Med,Obst & Gynae,
+TUE,15:00,16:00,Practical/Tutorial/Small Group Teaching/Mentorship,TUTORIAL,Dermatology; Psychiatry; Anaesthesia,,,,Dermatology 1st day; Psychiatry 2nd day; Anaesthesia 3rd 4th & 5th day of month
+TUE,16:00,17:00,Practical/Tutorial/Small Group Teaching/Mentorship,SDL,Dermatology; Psychiatry; Radio,,,,Dermatology 1st & 2nd day; Psychiatry 3rd day; Radio 4th & 5th day of month
+WED,08:00,08:45,Theory/SDL,THEORY,ENT,,,,
+WED,08:45,09:30,Theory/SDL,THEORY,Paediatrics,,,,
+WED,09:30,10:15,Theory/SDL,SDL,Paediatrics,,,,
+WED,14:00,15:00,Practical/Tutorial/Small Group Teaching/Mentorship,TUTORIAL,,Gen Med,Obst & Gynae,Gen Surgery,
+WED,15:00,16:00,Practical/Tutorial/Small Group Teaching/Mentorship,TUTORIAL,,Obst & Gynae,Gen Surgery,Gen Med,
+WED,16:00,17:00,Practical/Tutorial/Small Group Teaching/Mentorship,MENTORSHIP,,,,
+THU,08:00,08:45,Theory/SDL,THEORY,Gen Medicine,,,,
+THU,08:45,09:30,Theory/SDL,THEORY,Obst & Gynae,,,,
+THU,09:30,10:15,Theory/SDL,SDL,Obst & Gynae,,,,
+THU,14:00,15:00,Practical/Tutorial/Small Group Teaching/Mentorship,TUTORIAL,Paediatrics,,,,
+THU,15:00,16:00,Practical/Tutorial/Small Group Teaching/Mentorship,THEORY/TUTORIAL,Orthopaedics,,,,Theory 1st 2nd & 4th day of month; Tutorial 3rd & 5th day of month
+THU,16:00,17:00,Practical/Tutorial/Small Group Teaching/Mentorship,TUTORIAL,Ophthal,,,,1st to 4th day of month
+FRI,08:00,08:45,Theory/SDL,THEORY,Gen Surgery,,,,
+FRI,08:45,09:30,Theory/SDL,THEORY,Medicine,,,,
+FRI,09:30,10:15,Theory/SDL,SDL,Medicine; Ophthal,,,,Appears as overlapping/parallel allocation in the image
+FRI,14:00,15:00,Practical/Tutorial/Small Group Teaching/Mentorship,TUTORIAL,,Gen Surgery,Gen Med,Obst & Gynae,
+FRI,15:00,16:00,Practical/Tutorial/Small Group Teaching/Mentorship,TUTORIAL,,Obst & Gynae,Gen Surgery,Gen Med,
+SAT,08:00,08:45,Theory/SDL,THEORY,Dermatology; Psychiatry; Radio,,,,Dermatology 1st & 2nd day; Psychiatry 3rd & 4th day; Radio 5th day of month
+SAT,08:45,09:30,Theory/SDL,THEORY,Ophthal,,,,
+SAT,09:30,10:15,Theory/SDL,SDL,Ophthal,,,,
+SAT,14:00,15:00,Practical/Tutorial/Small Group Teaching/Mentorship,TUTORIAL,,Gen Med,Obst & Gynae,Gen Surgery,
+SAT,15:00,16:00,Practical/Tutorial/Small Group Teaching/Mentorship,TUTORIAL,,Gen Surgery,Gen Med,Obst & Gynae,
+SAT,16:00,17:00,Practical/Tutorial/Small Group Teaching/Mentorship,MENTORSHIP,,,,
