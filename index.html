@@ -46,29 +46,7 @@ function dateForColumn(anchor,code){const monday=mondayOfWeek(anchor),idx=DAYS.i
 function appendClinic(cell,date){const c=clinicForDate(date);if(!c){const n=document.createElement('span');n.className='noduty';n.textContent='—';cell.append(n);return}const e=document.createElement('div');e.className='entry clinicentry';const tag=document.createElement('span');tag.className='batchtag';tag.textContent='Batch '+selectedClinicBatch;e.append(tag);const strong=document.createElement('strong');strong.textContent='CLINICS · '+c.subject;e.append(strong);cell.append(e)}
 function timeToMinutes(value){const m=String(value).match(/^(\d{1,2}):(\d{2})$/);return m?Number(m[1])*60+Number(m[2]):Number.MAX_SAFE_INTEGER}
 function timeKeyStart(key){return key.split('|')[0]}
-function render(){
- const grid=document.getElementById('grid');grid.innerHTML='';grid.className='grid '+(viewMode==='daily'?'daily':'weekly');
- const visibleDays=viewMode==='daily'?[selectedDay]:DAYS;
- const h=document.createElement('div');h.className='cell headcell';h.textContent='Time';grid.append(h);
- visibleDays.forEach(d=>{const x=document.createElement('div');x.className='cell headcell';x.textContent=dayNames[d];grid.append(x)});
- const timeSet=new Set(rows.map(r=>r.start_time+'|'+r.end_time));timeSet.add('10:15|13:15');
- const times=[...timeSet].sort((a,b)=>timeToMinutes(timeKeyStart(a))-timeToMinutes(timeKeyStart(b)) || timeToMinutes(a.split('|')[1])-timeToMinutes(b.split('|')[1]));
- times.forEach(t=>{
-   const [st,en]=t.split('|');
-   const tc=document.createElement('div');tc.className='cell time';tc.textContent=st+'–'+en;grid.append(tc);
-   visibleDays.forEach(d=>{
-     const cell=document.createElement('div');cell.className='cell';
-     const dayDate=viewMode==='daily'?selectedDate:dateForColumn(selectedDate,d);
-     if(st==='10:15'&&en==='13:15') appendClinic(cell,dayDate);
-     else{
-       const matching=rows.filter(r=>r.day===d&&r.start_time===st&&r.end_time===en);
-       matching.forEach(r=>appendEntry(cell,r,dayDate));
-       if(!cell.children.length){const dateSpecific=matching.some(r=>String(r.day_of_month||'').trim()!=='');const n=document.createElement('span');n.className='noduty';n.textContent=dateSpecific&&viewMode==='daily'?'No session scheduled for this weekday occurrence':'—';cell.append(n)}
-     }
-     grid.append(cell)
-   })
- });
-}
+function render(){const grid=document.getElementById('grid');grid.innerHTML='';grid.className='grid '+(viewMode==='daily'?'daily':'weekly');const visibleDays=viewMode==='daily'?[selectedDay]:DAYS;const h=document.createElement('div');h.className='cell headcell';h.textContent='Time';grid.append(h);visibleDays.forEach(d=>{const x=document.createElement('div');x.className='cell headcell';x.textContent=dayNames[d];grid.append(x)});const timeSet=new Set(rows.map(r=>r.start_time+'|'+r.end_time));timeSet.add('10:15|13:15');const times=[...timeSet].sort((a,b)=>timeToMinutes(timeKeyStart(a))-timeToMinutes(timeKeyStart(b))||timeToMinutes(a.split('|')[1])-timeToMinutes(b.split('|')[1]));times.forEach(t=>{const [st,en]=t.split('|');const tc=document.createElement('div');tc.className='cell time';tc.textContent=st+'–'+en;grid.append(tc);visibleDays.forEach(d=>{const cell=document.createElement('div');cell.className='cell';const dayDate=viewMode==='daily'?selectedDate:dateForColumn(selectedDate,d);if(st==='10:15'&&en==='13:15')appendClinic(cell,dayDate);else{const matching=rows.filter(r=>r.day===d&&r.start_time===st&&r.end_time===en);matching.forEach(r=>appendEntry(cell,r,dayDate));if(!cell.children.length){const dateSpecific=matching.some(r=>String(r.day_of_month||'').trim()!=='');const n=document.createElement('span');n.className='noduty';n.textContent=dateSpecific&&viewMode==='daily'?'No session scheduled for this weekday occurrence':'—';cell.append(n)}}grid.append(cell)})})}
 function setupViews(){const c=document.getElementById('views');[['daily','Daily'],['weekly','Weekly']].forEach(([mode,label])=>{const b=document.createElement('button');b.type='button';b.textContent=label;b.addEventListener('click',()=>{viewMode=mode;document.querySelectorAll('#views button').forEach(x=>x.classList.remove('active'));b.classList.add('active');render()});c.append(b);if(mode===viewMode)b.classList.add('active')})}
 function setupDate(){const input=document.getElementById('date');input.value=isoDate(selectedDate);input.addEventListener('change',()=>{if(!input.value)return;selectedDate=parseDate(input.value);selectedDay=jsDayToCode[selectedDate.getDay()]||'MON';document.querySelectorAll('#days button').forEach(x=>x.classList.toggle('active',x.dataset.day===selectedDay));render()});const nav=document.getElementById('dateNav');[['‹','Previous day'],['›','Next day']].forEach(([symbol,label],i)=>{const b=document.createElement('button');b.type='button';b.textContent=symbol;b.setAttribute('aria-label',label);b.title=label;b.addEventListener('click',()=>shiftDate(i===0?-1:1));nav.append(b)})}
 function setupDays(){const c=document.getElementById('days');DAYS.forEach(d=>{const b=document.createElement('button');b.type='button';b.textContent=dayNames[d];b.dataset.day=d;b.addEventListener('click',()=>{selectedDate=nextDateForDay(d);selectedDay=d;document.getElementById('date').value=isoDate(selectedDate);document.querySelectorAll('#days button').forEach(x=>x.classList.remove('active'));b.classList.add('active');viewMode='daily';document.querySelectorAll('#views button').forEach(x=>x.classList.toggle('active',x.textContent==='Daily'));render()});c.append(b);if(d===selectedDay)b.classList.add('active')})}
