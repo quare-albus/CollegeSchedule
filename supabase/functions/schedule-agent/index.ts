@@ -4,12 +4,13 @@ const OPENROUTER_URL="https://openrouter.ai/api/v1/chat/completions";
 const MODEL="google/gemini-2.5-flash";
 const SUPABASE_URL=Deno.env.get("SUPABASE_URL")!;
 const PUBLISHABLE_KEYS=JSON.parse(Deno.env.get("SUPABASE_PUBLISHABLE_KEYS")||"{}");
-const BROWSER_KEY=PUBLISHABLE_KEYS.default||Deno.env.get("SUPABASE_ANON_KEY")||"";
+const ACCEPTED_KEYS=[PUBLISHABLE_KEYS.default,Deno.env.get("SUPABASE_ANON_KEY")].filter((x):x is string=>Boolean(x));
+const BROWSER_KEY=ACCEPTED_KEYS[0]||"";
 const CONTEXT={academic_program:"III MBBS Part-II",academic_term:"VII Term",batch:"J3 Batch",period_start:"2026-09-07",period_end:"2027-01-24"};
 const CORS={"Access-Control-Allow-Origin":"*","Access-Control-Allow-Headers":"authorization, x-client-info, apikey, content-type","Access-Control-Allow-Methods":"POST, OPTIONS","Access-Control-Max-Age":"86400","Vary":"Origin"};
 const schema={type:"object",properties:{department:{type:["string","null"]},department_code:{type:["string","null"]},classes:{type:"array",items:{type:"object",properties:{class_date:{type:["string","null"]},day:{type:["string","null"]},start_time:{type:["string","null"]},end_time:{type:["string","null"]},session_type:{type:["string","null"]},subject:{type:["string","null"]},topic:{type:["string","null"]},faculty:{type:["string","null"]},venue:{type:["string","null"]},batch:{type:["string","null"]},raw_text:{type:["string","null"]},confidence:{type:["number","null"]}},required:["class_date","day","start_time","end_time","session_type","subject","topic","faculty","venue","batch","raw_text","confidence"],additionalProperties:false}}},required:["department","department_code","classes"],additionalProperties:false};
 function response(data:unknown,status=200){return new Response(JSON.stringify(data),{status,headers:{...CORS,"Content-Type":"application/json; charset=utf-8"}})}
-function dataUrl(mime:string,bytes:Uint8Array){let b="";for(let i=0;i<bytes.length;i+=0x8000)b+=String.fromCharCode(...bytes.subarray(i,Math.min(i+0x8000,bytes.length)));return`data:${mime};base64,${btoa(b)}`}
+function dataUrl(mime:string,bytes:Uint8Array){let b="";for(let i=0;i<bytes.length;i+=0x8000)b+=String.fromCharCode(...bytes.subarray(i,Math.min(i+0x8000,bytes.length)));return`data:${mime};base64,${b}`}
 async function rpc(name:string,payload:unknown){const r=await fetch(`${SUPABASE_URL}/rest/v1/rpc/${name}`,{method:"POST",headers:{apikey:BROWSER_KEY,Authorization:`Bearer ${BROWSER_KEY}`,"Content-Type":"application/json"},body:JSON.stringify(payload)});const t=await r.text();if(!r.ok)throw new Error(`Supabase ${name} failed (${r.status}): ${t}`);return t?JSON.parse(t):null}
 async function log(requestId:string,level:string,stage:string,message:string,metadata:Record<string,unknown>={}){try{await rpc("append_schedule_agent_log",{p_request_id:requestId,p_level:level,p_stage:stage,p_message:message,p_metadata:metadata})}catch(_){} }
 Deno.serve(async(req:Request)=>{
@@ -18,7 +19,7 @@ Deno.serve(async(req:Request)=>{
  if(req.method==="OPTIONS"){await log(requestId,"info","CORS_PREFLIGHT","CORS preflight received");return response({ok:true,request_id:requestId})}
  if(req.method!=="POST"){await log(requestId,"warn","METHOD_REJECTED","Request method rejected",{method:req.method});return response({error:"POST required",request_id:requestId},405)}
  const suppliedKey=req.headers.get("apikey")||"";const bearer=(req.headers.get("authorization")||"").replace(/^Bearer\s+/i,"");
- if(!BROWSER_KEY||(suppliedKey!==BROWSER_KEY&&bearer!==BROWSER_KEY)){await log(requestId,"warn","AUTH_REJECTED","Request reached backend but API key was rejected",{has_apikey:Boolean(suppliedKey),has_authorization:Boolean(bearer),key_prefix:suppliedKey.slice(0,12)});return response({error:"Unauthorized",request_id:requestId},401)}
+ if(!ACCEPTED_KEYS.length||(!ACCEPTED_KEYS.includes(suppliedKey)&&!ACCEPTED_KEYS.includes(bearer))){await log(requestId,"warn","AUTH_REJECTED","Request reached backend but API key was rejected",{has_apikey:Boolean(suppliedKey),has_authorization:Boolean(bearer),key_prefix:suppliedKey.slice(0,12)});return response({error:"Unauthorized",request_id:requestId},401)}
  await log(requestId,"info","AUTH_ACCEPTED","UI request authenticated");
  const apiKey=Deno.env.get("OPENROUTER_API_KEY");if(!apiKey){await log(requestId,"error","CONFIG","OPENROUTER_API_KEY is not configured");return response({error:"OPENROUTER_API_KEY is not configured",request_id:requestId},500)}
  try{
