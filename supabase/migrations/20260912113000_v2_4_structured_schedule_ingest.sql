@@ -21,7 +21,7 @@ begin
  for item in select value from jsonb_array_elements(classes) loop
   begin
    cls_date:=nullif(item->>'class_date','')::date;
-   cls_day:=upper(nullif(trim(item->>'day'),'',''));
+   cls_day:=upper(nullif(trim(item->>'day'),''));
    st:=nullif(item->>'start_time','')::time;
    et:=nullif(item->>'end_time','')::time;
    conf:=nullif(item->>'confidence','')::numeric;
