@@ -15,37 +15,69 @@
 <p class="muted" style="font-size:12px">OCR backend: Supabase Edge Function <code>ocrspace-proxy</code> → OCR.space. The OCR.space API key remains server-side.</p>
 </main>
 <script src="supabase/config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs" type="module"></script>
 <script>
 const cfg=window.COLLEGE_SCHEDULE_SUPABASE||{};
 const ENDPOINT=(cfg.url||'')+'/functions/v1/ocrspace-proxy';
 const input=document.getElementById('file'),selection=document.getElementById('selection'),run=document.getElementById('run'),clear=document.getElementById('clear'),out=document.getElementById('out'),status=document.getElementById('status'),results=document.getElementById('results');
-let selected=null;
+let selected=null,pdfjsReady=null;
+
 function esc(s){return String(s??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));}
+
+/* Load PDF.js as an ES module. We render each source page to JPEG instead of
+   trying to recompress the original PDF. This avoids the OCR.space 1 MB PDF
+   limit while preserving readable timetable text. */
+pdfjsReady=import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs').then(mod=>{
+  mod.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs';
+  return mod;
+}).catch(e=>{console.error(e);return null;});
+
 input.onchange=()=>{selected=input.files?.[0]||null;if(selected&&selected.type!=='application/pdf'&&!selected.name.toLowerCase().endsWith('.pdf')){selected=null;input.value='';selection.textContent='Please select a PDF file.';return}selection.textContent=selected?selected.name+' · '+(selected.size/1048576).toFixed(2)+' MB':'No PDF selected.';run.disabled=!selected;clear.disabled=!selected};
 clear.onclick=()=>{selected=null;input.value='';selection.textContent='No PDF selected.';run.disabled=true;clear.disabled=true;out.classList.add('hidden');results.innerHTML=''};
-async function makeChunks(file){
- const bytes=new Uint8Array(await file.arrayBuffer());
- const src=await PDFLib.PDFDocument.load(bytes,{ignoreEncryption:true});
- const count=src.getPageCount();
- const chunks=[]; let current=[];
- for(let i=0;i<count;i++){
-   const test=[...current,i];
-   const doc=await PDFLib.PDFDocument.create();
-   const pages=await doc.copyPages(src,test);pages.forEach(p=>doc.addPage(p));
-   const outBytes=await doc.save({useObjectStreams:true,addDefaultPage:false});
-   if(outBytes.byteLength<=1048576 || current.length===0){current=test}else{
-     chunks.push({start:current[0]+1,end:current[current.length-1]+1,bytes:await buildChunk(src,current)});current=[i];
-   }
- }
- if(current.length)chunks.push({start:current[0]+1,end:current[current.length-1]+1,bytes:await buildChunk(src,current)});
- for(const c of chunks)if(c.bytes.byteLength>1048576)throw new Error('A single PDF page exceeds OCR.space\'s 1 MB free-limit target; this file cannot be processed safely in v2.5.0.');
- return {count,chunks};
+
+async function renderPageToImage(pdf,pageNumber){
+  const page=await pdf.getPage(pageNumber);
+  const baseViewport=page.getViewport({scale:1});
+  const maxWidth=1800;
+  const scale=Math.min(2.0,maxWidth/baseViewport.width);
+  const viewport=page.getViewport({scale});
+  const canvas=document.createElement('canvas');
+  canvas.width=Math.ceil(viewport.width);canvas.height=Math.ceil(viewport.height);
+  const ctx=canvas.getContext('2d',{alpha:false});
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);
+  await page.render({canvasContext:ctx,viewport}).promise;
+
+  // OCR.space free API has a 1 MB upload limit. Find the highest JPEG quality
+  // that stays safely below it, then fall back to lower resolution if needed.
+  let quality=.82;
+  let blob=null;
+  for(let i=0;i<8;i++){
+    blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',quality));
+    if(blob&&blob.size<=900000)break;
+    quality-=.08;
+  }
+  if(!blob||blob.size>1048576){
+    const smaller=document.createElement('canvas');
+    const factor=.75;
+    smaller.width=Math.max(1,Math.floor(canvas.width*factor));smaller.height=Math.max(1,Math.floor(canvas.height*factor));
+    const sctx=smaller.getContext('2d',{alpha:false});sctx.drawImage(canvas,0,0,smaller.width,smaller.height);
+    blob=await new Promise(resolve=>smaller.toBlob(resolve,'image/jpeg',.65));
+  }
+  if(!blob||blob.size>1048576)throw new Error('Could not compress page '+pageNumber+' below OCR.space\'s 1 MB upload limit.');
+  return {blob,width:canvas.width,height:canvas.height};
 }
-async function buildChunk(src,indices){const doc=await PDFLib.PDFDocument.create();const pages=await doc.copyPages(src,indices);pages.forEach(p=>doc.addPage(p));return await doc.save({useObjectStreams:true,addDefaultPage:false});}
+
+async function preparePages(file){
+  const pdfjs=await pdfjsReady;if(!pdfjs)throw new Error('PDF rendering library could not be loaded. Check your network connection and retry.');
+  const bytes=new Uint8Array(await file.arrayBuffer());
+  const pdf=await pdfjs.getDocument({data:bytes}).promise;
+  return {pdf,count:pdf.numPages};
+}
+
 function extractText(data){if(!data)return '';if(Array.isArray(data.ParsedResults))return data.ParsedResults.map(x=>x.ParsedText||'').join('\n');return data.raw||''}
-async function ocrChunk(bytes,name){const fd=new FormData();fd.append('file',new Blob([bytes],{type:'application/pdf'}),name);const r=await fetch(ENDPOINT,{method:'POST',body:fd});const text=await r.text();let data;try{data=JSON.parse(text)}catch{throw new Error('OCR backend returned non-JSON HTTP '+r.status)}if(!r.ok)throw new Error(data.error||data.ErrorMessage||('OCR backend HTTP '+r.status));if(data.IsErroredOnProcessing)throw new Error(Array.isArray(data.ErrorMessage)?data.ErrorMessage.join('; '):String(data.ErrorMessage||'OCR.space processing error'));return data}
-run.onclick=async()=>{if(!selected)return;out.classList.remove('hidden');run.disabled=true;clear.disabled=true;results.innerHTML='';status.className='status';try{if(!cfg.url)throw new Error('Supabase configuration is missing');status.textContent='Reading PDF and creating OCR.space-compatible chunks…';const prepared=await makeChunks(selected);status.textContent='PDF has '+prepared.count+' page(s); processing '+prepared.chunks.length+' OCR chunk(s)…';for(let i=0;i<prepared.chunks.length;i++){const c=prepared.chunks[i];const box=document.createElement('section');box.className='chunk';box.innerHTML='<h3>Pages '+c.start+'–'+c.end+' · OCR chunk '+(i+1)+'/'+prepared.chunks.length+'</h3><pre>Processing…</pre><div class="meta">Chunk size: '+(c.bytes.byteLength/1048576).toFixed(2)+' MB</div>';results.appendChild(box);const data=await ocrChunk(c.bytes,selected.name+' · pages '+c.start+'-'+c.end+'.pdf');box.querySelector('pre').textContent=extractText(data)||'[No text returned]';}status.textContent='OCR complete · '+prepared.count+' page(s) · '+prepared.chunks.length+' chunk(s). Results are displayed only; nothing was stored in Supabase.';}catch(e){status.className='status error';status.textContent='OCR failed: '+(e?.message||String(e));}finally{run.disabled=!selected;clear.disabled=!selected}};
+async function ocrImage(blob,name){const fd=new FormData();fd.append('file',blob,name);const r=await fetch(ENDPOINT,{method:'POST',body:fd});const text=await r.text();let data;try{data=JSON.parse(text)}catch{throw new Error('OCR backend returned non-JSON HTTP '+r.status)}if(!r.ok)throw new Error(data.error||data.ErrorMessage||('OCR backend HTTP '+r.status));if(data.IsErroredOnProcessing)throw new Error(Array.isArray(data.ErrorMessage)?data.ErrorMessage.join('; '):String(data.ErrorMessage||'OCR.space processing error'));return data}
+
+run.onclick=async()=>{if(!selected)return;out.classList.remove('hidden');run.disabled=true;clear.disabled=true;results.innerHTML='';status.className='status';try{if(!cfg.url)throw new Error('Supabase configuration is missing');status.textContent='Reading PDF and preparing page images for OCR.space…';const prepared=await preparePages(selected);status.textContent='PDF has '+prepared.count+' page(s); rendering and OCR processing one page at a time…';for(let i=1;i<=prepared.count;i++){const box=document.createElement('section');box.className='chunk';box.innerHTML='<h3>Page '+i+' of '+prepared.count+'</h3><pre>Rendering page…</pre><div class="meta">Preparing an OCR.space-compatible JPEG</div>';results.appendChild(box);const page=await renderPageToImage(prepared.pdf,i);box.querySelector('.meta').textContent='Image: '+(page.width)+'×'+(page.height)+' · '+(page.blob.size/1048576).toFixed(2)+' MB';box.querySelector('pre').textContent='Sending to OCR.space…';const data=await ocrImage(page.blob,selected.name+' · page '+i+'.jpg');box.querySelector('pre').textContent=extractText(data)||'[No text returned]';}status.textContent='OCR complete · '+prepared.count+' page(s). Pages were rendered locally and sent individually as compressed images. Nothing was stored in Supabase.';}catch(e){status.className='status error';status.textContent='OCR failed: '+(e?.message||String(e));}finally{run.disabled=!selected;clear.disabled=!selected}};
 </script>
 </body>
 </html>
