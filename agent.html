@@ -3,29 +3,29 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>Schedule Agent · CollegeSchedule</title>
 <style>
-:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#17202a;background:#f6f7f9}*{box-sizing:border-box}body{margin:0}.wrap{max-width:1100px;margin:auto;padding:24px 16px}.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:16px}.top a{color:#17202a;font-weight:700}.muted{color:#667085}.panel{background:#fff;border:1px solid #e4e7ec;border-radius:16px;padding:20px;margin-bottom:14px}h1{margin:4px 0;font-size:clamp(28px,6vw,40px)}h2{margin-top:0}.context{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.field{border:1px solid #e4e7ec;border-radius:10px;padding:11px;background:#f9fafb}.field small{display:block;color:#667085;text-transform:uppercase;font-size:10px;font-weight:800;margin-bottom:3px}.uploadbox{border:2px dashed #cbd5e1;border-radius:14px;padding:20px}.file-input{display:block;width:100%;padding:14px;border:1px solid #d0d5dd;border-radius:10px;background:#fff;font:inherit}.hint{margin:10px 0 0;font-size:13px}.files{display:grid;gap:10px;margin-top:14px}.file{display:flex;align-items:center;gap:12px;border:1px solid #e4e7ec;border-radius:10px;padding:10px}.thumb{width:80px;height:60px;object-fit:cover;border-radius:7px;border:1px solid #e4e7ec;background:#f2f4f7;flex:none}.fileinfo{min-width:0;flex:1}.fileinfo b{display:block;word-break:break-word}.actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}.btn{border:1px solid #d0d5dd;background:#fff;border-radius:10px;padding:11px 15px;font-weight:750;cursor:pointer}.btn.primary{background:#17202a;color:#fff}.btn:disabled{opacity:.45;cursor:not-allowed}.status{padding:11px 13px;border-radius:10px;background:#f9fafb;border:1px solid #e4e7ec}.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:12px}.stat{border:1px solid #e4e7ec;border-radius:10px;padding:12px}.num{font-size:22px;font-weight:800}.results{overflow:auto;margin-top:12px}.results table{width:100%;border-collapse:collapse;min-width:1000px}.results th,.results td{text-align:left;padding:9px;border-bottom:1px solid #eaecf0;font-size:13px;vertical-align:top}.results th{font-size:10px;color:#667085;text-transform:uppercase}.badge{display:inline-block;padding:4px 7px;border-radius:999px;font-size:11px;font-weight:800}.matched{background:#dcfce7}.mismatch{background:#fee2e2}.ambiguous{background:#fef3c7}.nomatch{background:#e5e7eb}.error{color:#9b1c1c;background:#fff6f6;border-color:#f2c4c4}.hidden{display:none}@media(max-width:800px){.context{grid-template-columns:1fr 1fr}.stats{grid-template-columns:repeat(3,1fr)}}@media(max-width:520px){.wrap{padding:16px 12px}.top{flex-direction:column}.context{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.actions{justify-content:stretch}.actions .btn{flex:1}.thumb{width:68px;height:52px}}
+:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#17202a;background:#f6f7f9}*{box-sizing:border-box}body{margin:0}.wrap{max-width:1100px;margin:auto;padding:24px 16px}.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:16px}.top a{color:#17202a;font-weight:700}.muted{color:#667085}.panel{background:#fff;border:1px solid #e4e7ec;border-radius:16px;padding:20px;margin-bottom:14px}h1{margin:4px 0;font-size:clamp(28px,6vw,40px)}h2{margin-top:0}.context{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.field{border:1px solid #e4e7ec;border-radius:10px;padding:11px;background:#f9fafb}.field small{display:block;color:#667085;text-transform:uppercase;font-size:10px;font-weight:800;margin-bottom:3px}.uploadbox{border:2px dashed #cbd5e1;border-radius:14px;padding:20px}.file-input{display:block;width:100%;padding:14px;border:1px solid #d0d5dd;border-radius:10px;background:#fff;font:inherit}.hint{margin:10px 0 0;font-size:13px}.files{display:grid;gap:10px;margin-top:14px}.file{display:flex;align-items:center;gap:12px;border:1px solid #e4e7ec;border-radius:10px;padding:10px}.thumb{width:80px;height:60px;object-fit:cover;border-radius:7px;border:1px solid #e4e7ec;background:#f2f4f7;flex:none}.fileinfo{min-width:0;flex:1}.fileinfo b{display:block;word-break:break-word}.remove{flex:none}.actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}.btn{border:1px solid #d0d5dd;background:#fff;border-radius:10px;padding:11px 15px;font-weight:750;cursor:pointer}.btn.primary{background:#17202a;color:#fff}.btn:disabled{opacity:.45;cursor:not-allowed}.status{padding:11px 13px;border-radius:10px;background:#f9fafb;border:1px solid #e4e7ec}.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:12px}.stat{border:1px solid #e4e7ec;border-radius:10px;padding:12px}.num{font-size:22px;font-weight:800}.results{overflow:auto;margin-top:12px}.results table{width:100%;border-collapse:collapse;min-width:1000px}.results th,.results td{text-align:left;padding:9px;border-bottom:1px solid #eaecf0;font-size:13px;vertical-align:top}.results th{font-size:10px;color:#667085;text-transform:uppercase}.badge{display:inline-block;padding:4px 7px;border-radius:999px;font-size:11px;font-weight:800}.matched{background:#dcfce7}.mismatch{background:#fee2e2}.ambiguous{background:#fef3c7}.nomatch{background:#e5e7eb}.error{color:#9b1c1c;background:#fff6f6;border-color:#f2c4c4}.hidden{display:none}@media(max-width:800px){.context{grid-template-columns:1fr 1fr}.stats{grid-template-columns:repeat(3,1fr)}}@media(max-width:520px){.wrap{padding:16px 12px}.top{flex-direction:column}.context{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.actions{justify-content:stretch}.actions .btn{flex:1}.thumb{width:68px;height:52px}}
 </style>
 </head>
 <body>
 <main class="wrap">
-<header class="top"><div><div class="muted">CollegeSchedule · Phase 2</div><h1>Schedule Agent</h1><p class="muted">Upload an original department timetable and reconcile its relevant classes against the authoritative V1 timetable.</p></div><a href="index.html">← Timetable</a></header>
+<header class="top"><div><div class="muted">CollegeSchedule · Phase 2</div><h1>Schedule Agent</h1><p class="muted">Upload original department timetables and reconcile their relevant classes against the authoritative V1 timetable.</p></div><a href="index.html">← Timetable</a></header>
 <section class="panel">
 <h2>Target context</h2>
 <div class="context"><div class="field"><small>Programme</small><b>III MBBS Part-II</b></div><div class="field"><small>Term</small><b>VII Term</b></div><div class="field"><small>Batch</small><b>J3 Batch</b></div><div class="field"><small>Period</small><b>07 Sep 2026 → 24 Jan 2027</b></div></div>
 <p class="muted">V1 remains authoritative. The agent extracts only relevant timetable classes. Original documents are sent to the server-side agent and are not stored by this page.</p>
 </section>
 <section class="panel">
-<h2>Department schedule</h2>
+<h2>Department schedules</h2>
 <div class="uploadbox">
-<p><b>Select the original schedule file(s)</b></p>
+<p><b>Add original schedule file(s)</b></p>
 <input id="files" class="file-input" type="file" multiple accept=".pdf,.png,.jpg,.jpeg,.webp,application/pdf,image/png,image/jpeg,image/webp">
-<p class="hint muted">PDF, PNG, JPG, JPEG or WEBP. The native file control is intentionally visible so mobile browsers handle selection normally.</p>
+<p class="hint muted"><b>Mobile:</b> you can select multiple files if your file picker supports it. If it only allows one at a time, simply tap the control again to add another file — previous selections are kept.</p>
+<div id="selectionStatus" class="status" style="margin-top:12px">0 files selected</div>
 <div id="fileList" class="files"><div class="muted">No files selected.</div></div>
 </div>
-<div class="actions"><button id="clear" class="btn" type="button" disabled>Clear</button><button id="analyse" class="btn primary" type="button" disabled>Analyse &amp; reconcile</button></div>
+<div class="actions"><button id="clear" class="btn" type="button" disabled>Clear all</button><button id="analyse" class="btn primary" type="button" disabled>Analyse &amp; reconcile</button></div>
 </section>
 <section id="out" class="panel hidden">
 <h2>Agent result</h2>
@@ -41,22 +41,40 @@ const cfg=window.COLLEGE_SCHEDULE_SUPABASE||{};
 const ENDPOINT=(cfg.url||'')+'/functions/v1/schedule-agent';
 const input=document.getElementById('files');
 const list=document.getElementById('fileList');
+const selectionStatus=document.getElementById('selectionStatus');
 const analyse=document.getElementById('analyse');
 const clear=document.getElementById('clear');
 const out=document.getElementById('out');
 const status=document.getElementById('status');
 let selected=[];
-const esc=s=>String(s??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));
+const esc=s=>String(s??'').replace(/[&<>\\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\\"':'&quot;',"'":'&#39;'}[c]));
 function readPreview(file){return new Promise(resolve=>{if(!file.type.startsWith('image/'))return resolve(null);const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=()=>resolve(null);r.readAsDataURL(file)})}
+function key(f){return `${f.name}::${f.size}::${f.lastModified}::${f.type}`}
 async function renderFiles(){
- if(!selected.length){list.innerHTML='<div class="muted">No files selected.</div>';analyse.disabled=true;clear.disabled=true;return}
+ const count=selected.length;
+ selectionStatus.textContent=count===0?'0 files selected':count===1?'1 file selected — ready to analyse':`${count} files selected — ready to analyse`;
+ analyse.disabled=count===0;clear.disabled=count===0;
+ if(!count){list.innerHTML='<div class="muted">No files selected.</div>';return}
  const cards=[];
- for(const f of selected){const preview=await readPreview(f);cards.push(`<div class="file">${preview?`<img class="thumb" src="${preview}" alt="Selected image preview">`:'<div class="thumb" style="display:grid;place-items:center;font-weight:800">PDF</div>'}<div class="fileinfo"><b>${esc(f.name)}</b><span class="muted">${(f.size/1048576).toFixed(2)} MB · ${esc(f.type||'unknown')}</span></div></div>`)}
+ for(let i=0;i<selected.length;i++){
+  const f=selected[i];
+  const preview=await readPreview(f);
+  cards.push(`<div class="file">${preview?`<img class="thumb" src="${preview}" alt="Selected image preview">`:'<div class="thumb" style="display:grid;place-items:center;font-weight:800">PDF</div>'}<div class="fileinfo"><b>${esc(f.name)}</b><span class="muted">${(f.size/1048576).toFixed(2)} MB · ${esc(f.type||'unknown')}</span></div><button class="btn remove" type="button" data-remove="${i}" aria-label="Remove ${esc(f.name)}">×</button></div>`)
+ }
  list.innerHTML=cards.join('');
- analyse.disabled=false;clear.disabled=false;
 }
-input.addEventListener('change',()=>{selected=Array.from(input.files||[]);renderFiles()});
-input.addEventListener('input',()=>{selected=Array.from(input.files||[]);renderFiles()});
+function addFiles(fileList){
+ const incoming=Array.from(fileList||[]);
+ for(const f of incoming){
+  if(!['application/pdf','image/png','image/jpeg','image/webp'].includes(f.type))continue;
+  if(!selected.some(x=>key(x)===key(f)))selected.push(f);
+ }
+ input.value='';
+ renderFiles();
+}
+input.addEventListener('change',()=>addFiles(input.files));
+input.addEventListener('input',()=>addFiles(input.files));
+list.addEventListener('click',e=>{const btn=e.target.closest('[data-remove]');if(!btn)return;selected.splice(Number(btn.dataset.remove),1);renderFiles()});
 clear.addEventListener('click',()=>{selected=[];input.value='';renderFiles();out.classList.add('hidden')});
 function badge(s){const c=String(s||'').toUpperCase();const cls=c==='MATCHED'?'matched':c==='MISMATCH'?'mismatch':c==='AMBIGUOUS'?'ambiguous':'nomatch';return `<span class="badge ${cls}">${esc(c||'UNKNOWN')}</span>`}
 function renderRows(rows){if(!rows.length){document.getElementById('results').innerHTML='<p class="muted">No relevant classes extracted.</p>';return}document.getElementById('results').innerHTML='<table><thead><tr><th>Date</th><th>Time</th><th>Batch</th><th>Department extraction</th><th>V1 subject</th><th>V1 type</th><th>Result</th><th>Score</th><th>Evidence</th></tr></thead><tbody>'+rows.map(r=>`<tr><td>${esc(r.class_date)}</td><td>${esc((r.start_time||'')+'–'+(r.end_time||''))}</td><td>${esc(r.batch)}</td><td><b>${esc(r.subject)}</b><br><span class="muted">${esc(r.session_type)}${r.topic?' · '+esc(r.topic):''}</span></td><td>${esc(r.v1_subject)}</td><td>${esc(r.v1_session_type)}</td><td>${badge(r.match_status)}</td><td>${r.match_score==null?'':Math.round(Number(r.match_score)*100)+'%'}</td><td>${esc(r.evidence_summary||'')}</td></tr>`).join('')}</tbody></table>'}
@@ -76,6 +94,7 @@ async function run(){
  analyse.disabled=false;
 }
 analyse.addEventListener('click',run);
+renderFiles();
 </script>
 </body>
 </html>
