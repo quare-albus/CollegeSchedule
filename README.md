@@ -4,14 +4,14 @@ For management of schedules and automating with department training schedules.
 
 ## Current release
 
-**v2.4.3** — page-chunked structured schedule ingestion with parser fallback.
+**v2.5.0 — OCR migration (PDF recognition only).**
 
-- V1 remains authoritative.
-- Structured ingestion is separate from V1 reconciliation.
-- PDFs are processed page-by-page to reduce parser-size failures.
-- Image files use structured image extraction.
-- CSV files are parsed locally without an LLM.
-- Ambiguous reconciliation remains downstream of structured extraction.
+- PDF input is automatically split into OCR.space-compatible chunks.
+- OCR.space is called through the `ocrspace-proxy` Supabase Edge Function so the API key stays server-side.
+- OCR results are recombined and displayed on GitHub Pages.
+- v2.5.0 does **not** persist OCR results to Supabase.
+- Matching, AI review, reconciliation, and V1 modification are intentionally out of scope.
+- The previous v2.4.3 implementation remains in Git history as the fallback.
 
 ## Versioning rule
 
