@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CollegeSchedule · Sign in</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#17202a;background:#f6f7f9}*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px}.card{width:min(430px,100%);background:#fff;border:1px solid #e4e7ec;border-radius:18px;padding:28px;box-shadow:0 8px 30px rgba(16,24,40,.06)}h1{margin:0 0 6px}.muted{color:#667085}.google,.save,.logout{width:100%;border:1px solid #d0d5dd;background:#fff;border-radius:10px;padding:12px 14px;font:inherit;font-weight:700;cursor:pointer}.save{background:#17202a;color:#fff;margin-top:10px}.logout{margin-top:10px}.hidden{display:none}.status{margin:14px 0;padding:10px 12px;border-radius:10px;background:#f9fafb;border:1px solid #e4e7ec}.error{background:#fff6f6;border-color:#f2c4c4;color:#9b1c1c}input{width:100%;padding:12px;border:1px solid #d0d5dd;border-radius:10px;font:inherit;margin-top:8px}.profile{margin-top:20px}.small{font-size:13px}.top{display:flex;justify-content:space-between;gap:10px;align-items:center}.link{color:#17202a;font-weight:700;text-decoration:none}
+</style>
+</head>
+<body>
+<main class="card">
+<div class="top"><div><h1>CollegeSchedule</h1><div class="muted">Student attendance</div></div><a class="link" href="index.html">Timetable</a></div>
+<div id="signedOut">
+<p class="muted">Sign in with your college Google account to continue.</p>
+<button id="google" class="google">Continue with Google</button>
+</div>
+<div id="signedIn" class="hidden">
+<div id="identity" class="muted"></div>
+<section id="profile" class="profile">
+<h2>Set your roll number</h2>
+<p class="muted small">This is the only CollegeSchedule-specific information linked to your account.</p>
+<label for="roll">Roll number</label>
+<input id="roll" autocomplete="off" inputmode="numeric" maxlength="30" placeholder="Enter roll number">
+<button id="save" class="save">Save & continue</button>
+</section>
+<button id="logout" class="logout">Sign out</button>
+</div>
+<div id="status" class="status">Checking sign-in status…</div>
+</main>
+<script src="supabase/config.js"></script>
+<script>
+const cfg=window.COLLEGE_SCHEDULE_SUPABASE||{};
+const sb=supabase.createClient(cfg.url,cfg.publishableKey);
+const signedOut=document.getElementById('signedOut'),signedIn=document.getElementById('signedIn'),profile=document.getElementById('profile'),identity=document.getElementById('identity'),status=document.getElementById('status'),roll=document.getElementById('roll');
+const setStatus=(text,error=false)=>{status.textContent=text;status.className='status'+(error?' error':'')};
+async function loadUser(){
+ const {data:{user},error}=await sb.auth.getUser();
+ if(error||!user){signedOut.classList.remove('hidden');signedIn.classList.add('hidden');setStatus('Not signed in.');return}
+ signedOut.classList.add('hidden');signedIn.classList.remove('hidden');
+ identity.textContent=user.email||'Signed in with Google';
+ const {data,rowError}=await sb.from('users').select('roll_no').eq('id',user.id).maybeSingle();
+ if(rowError){setStatus('Could not load your profile: '+rowError.message,true);return}
+ roll.value=row?.roll_no||'';
+ if(row?.roll_no){profile.querySelector('h2').textContent='Your roll number';setStatus('Signed in.');}
+ else setStatus('Enter your roll number to continue.');
+}
+document.getElementById('google').addEventListener('click',async()=>{
+ setStatus('Opening Google…');
+ const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.href}});
+ if(error)setStatus(error.message,true);
+});
+document.getElementById('save').addEventListener('click',async()=>{
+ const value=roll.value.trim();
+ if(!value){setStatus('Please enter your roll number.',true);return}
+ const {data:{user}}=await sb.auth.getUser();
+ if(!user){setStatus('Your session expired. Please sign in again.',true);return}
+ const {error}=await sb.from('users').update({roll_no:value}).eq('id',user.id);
+ if(error){setStatus('Could not save roll number: '+error.message,true);return}
+ setStatus('Saved. Opening timetable…');
+ window.location.href='index.html';
+});
+document.getElementById('logout').addEventListener('click',async()=>{await sb.auth.signOut();window.location.reload()});
+sb.auth.onAuthStateChange(()=>loadUser());
+loadUser();
+</script>
+</body>
+</html>
