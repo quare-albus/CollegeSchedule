@@ -2,6 +2,14 @@
 
 For management of schedules and automating with department training schedules.
 
+## Student authentication
+
+- `auth.html` is the student sign-in and onboarding page.
+- Students sign in with Google through Supabase Auth.
+- A matching `public.users` row is created automatically by the Supabase Auth trigger.
+- The student then saves exactly one CollegeSchedule-specific field: `roll_no`.
+- The browser uses the Supabase publishable key only. No service-role or secret key is exposed.
+
 ## Current release
 
 **v2.9.2 — OCR table-header reconstruction fix.**
