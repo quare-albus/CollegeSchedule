@@ -12,21 +12,8 @@
 <body>
 <main class="card">
 <div class="top"><div><h1>CollegeSchedule</h1><div class="muted">Student attendance</div></div><a class="link" href="index.html">Timetable</a></div>
-<div id="signedOut">
-<p class="muted">Sign in with your college Google account to continue.</p>
-<button id="google" class="google">Continue with Google</button>
-</div>
-<div id="signedIn" class="hidden">
-<div id="identity" class="muted"></div>
-<section id="profile" class="profile">
-<h2>Set your roll number</h2>
-<p class="muted small">This is the only CollegeSchedule-specific information linked to your account.</p>
-<label for="roll">Roll number</label>
-<input id="roll" autocomplete="off" inputmode="numeric" maxlength="30" placeholder="Enter roll number">
-<button id="save" class="save">Save & continue</button>
-</section>
-<button id="logout" class="logout">Sign out</button>
-</div>
+<div id="signedOut"><p class="muted">Sign in with your college Google account to continue.</p><button id="google" class="google">Continue with Google</button></div>
+<div id="signedIn" class="hidden"><div id="identity" class="muted"></div><section id="profile" class="profile"><h2>Set your roll number</h2><p class="muted small">This is the only CollegeSchedule-specific information linked to your account.</p><label for="roll">Roll number</label><input id="roll" autocomplete="off" inputmode="numeric" maxlength="30" placeholder="Enter roll number"><button id="save" class="save">Save & continue</button></section><button id="logout" class="logout">Sign out</button></div>
 <div id="status" class="status">Checking sign-in status…</div>
 </main>
 <script src="supabase/config.js"></script>
@@ -34,34 +21,32 @@
 const cfg=window.COLLEGE_SCHEDULE_SUPABASE||{};
 const sb=supabase.createClient(cfg.url,cfg.publishableKey);
 const signedOut=document.getElementById('signedOut'),signedIn=document.getElementById('signedIn'),profile=document.getElementById('profile'),identity=document.getElementById('identity'),status=document.getElementById('status'),roll=document.getElementById('roll');
-const setStatus=(text,error=false)=>{status.textContent=text;status.className='status'+(error?' error':'')};
+const setStatus=(text,error=false)=>{status.textContent=text;status.className='status'+(error?' error':'');};
 async function loadUser(){
  const {data:{user},error}=await sb.auth.getUser();
- if(error||!user){signedOut.classList.remove('hidden');signedIn.classList.add('hidden');setStatus('Not signed in.');return}
- signedOut.classList.add('hidden');signedIn.classList.remove('hidden');
- identity.textContent=user.email||'Signed in with Google';
- const {data,rowError}=await sb.from('users').select('roll_no').eq('id',user.id).maybeSingle();
- if(rowError){setStatus('Could not load your profile: '+rowError.message,true);return}
+ if(error||!user){signedOut.classList.remove('hidden');signedIn.classList.add('hidden');setStatus('Not signed in.');return;}
+ signedOut.classList.add('hidden');signedIn.classList.remove('hidden');identity.textContent=user.email||'Signed in with Google';
+ const {data:row,error:rowError}=await sb.from('users').select('roll_no').eq('id',user.id).maybeSingle();
+ if(rowError){setStatus('Could not load your profile: '+rowError.message,true);return;}
  roll.value=row?.roll_no||'';
  if(row?.roll_no){profile.querySelector('h2').textContent='Your roll number';setStatus('Signed in.');}
- else setStatus('Enter your roll number to continue.');
+ else {profile.querySelector('h2').textContent='Set your roll number';setStatus('Enter your roll number to continue.');}
 }
-document.getElementById('google').addEventListener('click',async()=>{
- setStatus('Opening Google…');
- const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.href}});
- if(error)setStatus(error.message,true);
-});
+document.getElementById('google').addEventListener('click',async()=>{setStatus('Opening Google…');const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.href}});if(error)setStatus(error.message,true);});
 document.getElementById('save').addEventListener('click',async()=>{
  const value=roll.value.trim();
- if(!value){setStatus('Please enter your roll number.',true);return}
- const {data:{user}}=await sb.auth.getUser();
- if(!user){setStatus('Your session expired. Please sign in again.',true);return}
- const {error}=await sb.from('users').update({roll_no:value}).eq('id',user.id);
- if(error){setStatus('Could not save roll number: '+error.message,true);return}
- setStatus('Saved. Opening timetable…');
- window.location.href='index.html';
+ if(!value){setStatus('Please enter your roll number.',true);return;}
+ const {data:{user},error:userError}=await sb.auth.getUser();
+ if(userError||!user){setStatus('Your session expired. Please sign in again.',true);return;}
+ const {data:existing,error:readError}=await sb.from('users').select('id').eq('id',user.id).maybeSingle();
+ if(readError){setStatus('Could not verify your profile: '+readError.message,true);return;}
+ const result=existing
+   ? await sb.from('users').update({roll_no:value}).eq('id',user.id)
+   : await sb.from('users').insert({id:user.id,roll_no:value});
+ if(result.error){setStatus('Could not save roll number: '+result.error.message,true);return;}
+ setStatus('Saved. Opening timetable…');window.location.href='index.html';
 });
-document.getElementById('logout').addEventListener('click',async()=>{await sb.auth.signOut();window.location.reload()});
+document.getElementById('logout').addEventListener('click',async()=>{await sb.auth.signOut();window.location.reload();});
 sb.auth.onAuthStateChange(()=>loadUser());
 loadUser();
 </script>
