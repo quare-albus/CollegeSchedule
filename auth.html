@@ -47,8 +47,18 @@ document.getElementById('save').addEventListener('click',async()=>{
  setStatus('Saved. Opening timetable…');window.location.href='index.html';
 });
 document.getElementById('logout').addEventListener('click',async()=>{await sb.auth.signOut();window.location.reload();});
-sb.auth.onAuthStateChange(()=>loadUser());
-loadUser();
+sb.auth.onAuthStateChange((event)=>{
+  if(event==='SIGNED_OUT'){
+    signedOut.classList.remove('hidden');
+    signedIn.classList.add('hidden');
+    setStatus('Not signed in.');
+    return;
+  }
+  if(event==='SIGNED_IN'||event==='INITIAL_SESSION'){
+    setTimeout(()=>loadUser(),0);
+  }
+});
+setTimeout(()=>loadUser(),0);
 </script>
 </body>
 </html>
