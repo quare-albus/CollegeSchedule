@@ -1,64 +1,16 @@
 <!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CollegeSchedule · Sign in</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#17202a;background:#f6f7f9}*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px}.card{width:min(430px,100%);background:#fff;border:1px solid #e4e7ec;border-radius:18px;padding:28px;box-shadow:0 8px 30px rgba(16,24,40,.06)}h1{margin:0 0 6px}.muted{color:#667085}.google,.save,.logout{width:100%;border:1px solid #d0d5dd;background:#fff;border-radius:10px;padding:12px 14px;font:inherit;font-weight:700;cursor:pointer}.save{background:#17202a;color:#fff;margin-top:10px}.logout{margin-top:10px}.hidden{display:none}.status{margin:14px 0;padding:10px 12px;border-radius:10px;background:#f9fafb;border:1px solid #e4e7ec}.error{background:#fff6f6;border-color:#f2c4c4;color:#9b1c1c}input{width:100%;padding:12px;border:1px solid #d0d5dd;border-radius:10px;font:inherit;margin-top:8px}.profile{margin-top:20px}.small{font-size:13px}.top{display:flex;justify-content:space-between;gap:10px;align-items:center}.link{color:#17202a;font-weight:700;text-decoration:none}
-</style>
-</head>
-<body>
-<main class="card">
-<div class="top"><div><h1>CollegeSchedule</h1><div class="muted">Student attendance</div></div><a class="link" href="index.html">Timetable</a></div>
-<div id="signedOut"><p class="muted">Sign in with your college Google account to continue.</p><button id="google" class="google">Continue with Google</button></div>
-<div id="signedIn" class="hidden"><div id="identity" class="muted"></div><section id="profile" class="profile"><h2>Set your roll number</h2><p class="muted small">This is the only CollegeSchedule-specific information linked to your account.</p><label for="roll">Roll number</label><input id="roll" autocomplete="off" inputmode="numeric" maxlength="30" placeholder="Enter roll number"><button id="save" class="save">Save & continue</button></section><button id="logout" class="logout">Sign out</button></div>
-<div id="status" class="status">Checking sign-in status…</div>
-</main>
-<script src="supabase/config.js"></script>
-<script>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CollegeSchedule · Sign in</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>:root{font-family:system-ui,sans-serif;color:#17202a;background:#f6f7f9}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px}.card{width:min(430px,100%);background:#fff;border:1px solid #e4e7ec;border-radius:18px;padding:28px;box-shadow:0 8px 30px #0001}.muted{color:#667085}.btn{width:100%;padding:12px;border:1px solid #d0d5dd;border-radius:10px;background:#fff;font:inherit;font-weight:700;cursor:pointer}.primary{background:#17202a;color:#fff;margin-top:10px}.hidden{display:none}.status{margin:14px 0;padding:10px;border:1px solid #e4e7ec;border-radius:10px;background:#f9fafb}.error{background:#fff6f6;border-color:#f2c4c4;color:#9b1c1c}input{width:100%;box-sizing:border-box;padding:12px;margin-top:8px;border:1px solid #d0d5dd;border-radius:10px;font:inherit}</style></head><body><main class="card"><h1>CollegeSchedule</h1><p class="muted">Student attendance</p><section id="out"><p class="muted">Sign in with your college Google account.</p><button id="google" class="btn">Continue with Google</button></section><section id="in" class="hidden"><p id="identity" class="muted"></p><label for="roll">Roll number</label><input id="roll" inputmode="numeric" maxlength="30" placeholder="Enter roll number"><button id="save" class="btn primary">Save & continue</button><button id="logout" class="btn" style="margin-top:10px">Sign out</button></section><div id="status" class="status">Starting sign-in check…</div></main><script src="supabase/config.js"></script><script>
 const cfg=window.COLLEGE_SCHEDULE_SUPABASE||{};
-const sb=supabase.createClient(cfg.url,cfg.publishableKey);
-const signedOut=document.getElementById('signedOut'),signedIn=document.getElementById('signedIn'),profile=document.getElementById('profile'),identity=document.getElementById('identity'),status=document.getElementById('status'),roll=document.getElementById('roll');
-let loading=false;
-const setStatus=(text,error=false)=>{status.textContent=text;status.className='status'+(error?' error':'');};
-function showSignedOut(message='Not signed in.'){signedOut.classList.remove('hidden');signedIn.classList.add('hidden');setStatus(message);}
-async function loadUser(){
- if(loading)return;
- loading=true;
- try{
-  const {data:{session},error}=await sb.auth.getSession();
-  if(error){showSignedOut('Unable to check sign-in status: '+error.message);return;}
-  const user=session?.user;
-  if(!user){showSignedOut();return;}
-  signedOut.classList.add('hidden');signedIn.classList.remove('hidden');identity.textContent=user.email||'Signed in with Google';
-  const {data:row,error:rowError}=await sb.from('users').select('roll_no').eq('id',user.id).maybeSingle();
-  if(rowError){setStatus('Could not load your profile: '+rowError.message,true);return;}
-  roll.value=row?.roll_no||'';
-  if(row?.roll_no){profile.querySelector('h2').textContent='Your roll number';setStatus('Signed in.');}
-  else{profile.querySelector('h2').textContent='Set your roll number';setStatus('Enter your roll number to continue.');}
- }catch(error){setStatus('Unexpected sign-in error: '+(error?.message||error),true);}
- finally{loading=false;}
-}
-document.getElementById('google').addEventListener('click',async()=>{setStatus('Opening Google…');const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:'https://quare-albus.github.io/CollegeSchedule/auth.html'}});if(error)setStatus(error.message,true);});
-document.getElementById('save').addEventListener('click',async()=>{
- const value=roll.value.trim();
- if(!value){setStatus('Please enter your roll number.',true);return;}
- const {data:{user},error:userError}=await sb.auth.getUser();
- if(userError||!user){setStatus('Your session expired. Please sign in again.',true);return;}
- const {data:existing,error:readError}=await sb.from('users').select('id').eq('id',user.id).maybeSingle();
- if(readError){setStatus('Could not verify your profile: '+readError.message,true);return;}
- const result=existing?await sb.from('users').update({roll_no:value}).eq('id',user.id):await sb.from('users').insert({id:user.id,roll_no:value});
- if(result.error){setStatus('Could not save roll number: '+result.error.message,true);return;}
- setStatus('Saved. Opening timetable…');window.location.href='index.html';
-});
-document.getElementById('logout').addEventListener('click',async()=>{await sb.auth.signOut();showSignedOut();});
-sb.auth.onAuthStateChange((event)=>{
- if(event==='SIGNED_OUT'){showSignedOut();return;}
- if(event==='SIGNED_IN'||event==='TOKEN_REFRESHED'||event==='INITIAL_SESSION')setTimeout(loadUser,0);
-});
-setTimeout(loadUser,0);
-</script>
-</body>
-</html>
+const sb=supabase.createClient(cfg.url,cfg.publishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,lock:async(_name,_timeout,fn)=>fn()}});
+const out=document.getElementById('out'),inside=document.getElementById('in'),status=document.getElementById('status'),identity=document.getElementById('identity'),roll=document.getElementById('roll');
+let busy=false;
+function message(text,error=false){status.textContent=text;status.className='status'+(error?' error':'');}
+function signedOut(text='Not signed in.'){out.classList.remove('hidden');inside.classList.add('hidden');message(text);}
+function withTimeout(promise,ms,label){return Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error(label+' timed out after '+ms/1000+' seconds')),ms))]);}
+async function load(){if(busy)return;busy=true;message('Checking sign-in status…');try{const result=await withTimeout(sb.auth.getSession(),8000,'Session check');if(result.error)throw result.error;const session=result.data?.session;if(!session){signedOut();return}out.classList.add('hidden');inside.classList.remove('hidden');identity.textContent=session.user.email||'Signed in with Google';const profile=await withTimeout(sb.from('users').select('roll_no').eq('id',session.user.id).maybeSingle(),8000,'Profile lookup');if(profile.error)throw profile.error;roll.value=profile.data?.roll_no||'';message(profile.data?.roll_no?'Signed in.':'Enter your roll number.');}catch(e){message('Sign-in check failed: '+(e.message||e),true);}finally{busy=false;}}
+document.getElementById('google').onclick=async()=>{message('Opening Google…');const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:'https://quare-albus.github.io/CollegeSchedule/auth.html'}});if(error)message(error.message,true);};
+document.getElementById('save').onclick=async()=>{const value=roll.value.trim();if(!value){message('Please enter your roll number.',true);return;}try{const session=await withTimeout(sb.auth.getSession(),8000,'Session check');const user=session.data?.session?.user;if(!user)throw new Error('Session expired');const result=await withTimeout(sb.from('users').upsert({id:user.id,roll_no:value},{onConflict:'id'}),8000,'Profile save');if(result.error)throw result.error;message('Saved. Opening timetable…');location.href='index.html';}catch(e){message('Could not save: '+(e.message||e),true);}};
+document.getElementById('logout').onclick=async()=>{await sb.auth.signOut();signedOut();};
+sb.auth.onAuthStateChange(event=>{if(event==='SIGNED_OUT')signedOut();else if(['SIGNED_IN','INITIAL_SESSION','TOKEN_REFRESHED'].includes(event))setTimeout(load,0);});
+setTimeout(load,0);
+</script></body></html>
