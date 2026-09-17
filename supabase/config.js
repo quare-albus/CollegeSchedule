@@ -13,8 +13,21 @@ window.COLLEGE_SCHEDULE_SUPABASE = Object.freeze({
   const originalCreateClient = supabaseGlobal.createClient;
   supabaseGlobal.createClient = (url, key, options) => {
     const client = originalCreateClient(url, key, options);
-    const originalSignInWithOAuth = client.auth.signInWithOAuth.bind(client.auth);
-    client.auth.signInWithOAuth = (oauthOptions = {}) => {
+    const auth = client.auth;
+    const originalGetSession = auth.getSession.bind(auth);
+    const originalGetUser = auth.getUser.bind(auth);
+    const withTimeout = (promise, label) => Promise.race([
+      promise,
+      new Promise(resolve => setTimeout(() => resolve({
+        data: label === 'session' ? { session: null } : { user: null },
+        error: new Error('Authentication request timed out. Please refresh and try again.')
+      }), 10000))
+    ]);
+    auth.getSession = (...args) => withTimeout(originalGetSession(...args), 'session');
+    auth.getUser = (...args) => withTimeout(originalGetUser(...args), 'user');
+
+    const originalSignInWithOAuth = auth.signInWithOAuth.bind(auth);
+    auth.signInWithOAuth = (oauthOptions = {}) => {
       const authOptions = oauthOptions.options || {};
       return originalSignInWithOAuth({
         ...oauthOptions,
