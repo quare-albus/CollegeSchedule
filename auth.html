@@ -32,7 +32,7 @@ async function loadUser(){
  if(row?.roll_no){profile.querySelector('h2').textContent='Your roll number';setStatus('Signed in.');}
  else {profile.querySelector('h2').textContent='Set your roll number';setStatus('Enter your roll number to continue.');}
 }
-document.getElementById('google').addEventListener('click',async()=>{setStatus('Opening Google…');const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.href}});if(error)setStatus(error.message,true);});
+document.getElementById('google').addEventListener('click',async()=>{setStatus('Opening Google…');const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:'https://quare-albus.github.io/CollegeSchedule/auth.html'}});if(error)setStatus(error.message,true);});
 document.getElementById('save').addEventListener('click',async()=>{
  const value=roll.value.trim();
  if(!value){setStatus('Please enter your roll number.',true);return;}
