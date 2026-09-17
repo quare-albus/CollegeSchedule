@@ -21,16 +21,25 @@
 const cfg=window.COLLEGE_SCHEDULE_SUPABASE||{};
 const sb=supabase.createClient(cfg.url,cfg.publishableKey);
 const signedOut=document.getElementById('signedOut'),signedIn=document.getElementById('signedIn'),profile=document.getElementById('profile'),identity=document.getElementById('identity'),status=document.getElementById('status'),roll=document.getElementById('roll');
+let loading=false;
 const setStatus=(text,error=false)=>{status.textContent=text;status.className='status'+(error?' error':'');};
+function showSignedOut(message='Not signed in.'){signedOut.classList.remove('hidden');signedIn.classList.add('hidden');setStatus(message);}
 async function loadUser(){
- const {data:{user},error}=await sb.auth.getUser();
- if(error||!user){signedOut.classList.remove('hidden');signedIn.classList.add('hidden');setStatus('Not signed in.');return;}
- signedOut.classList.add('hidden');signedIn.classList.remove('hidden');identity.textContent=user.email||'Signed in with Google';
- const {data:row,error:rowError}=await sb.from('users').select('roll_no').eq('id',user.id).maybeSingle();
- if(rowError){setStatus('Could not load your profile: '+rowError.message,true);return;}
- roll.value=row?.roll_no||'';
- if(row?.roll_no){profile.querySelector('h2').textContent='Your roll number';setStatus('Signed in.');}
- else {profile.querySelector('h2').textContent='Set your roll number';setStatus('Enter your roll number to continue.');}
+ if(loading)return;
+ loading=true;
+ try{
+  const {data:{session},error}=await sb.auth.getSession();
+  if(error){showSignedOut('Unable to check sign-in status: '+error.message);return;}
+  const user=session?.user;
+  if(!user){showSignedOut();return;}
+  signedOut.classList.add('hidden');signedIn.classList.remove('hidden');identity.textContent=user.email||'Signed in with Google';
+  const {data:row,error:rowError}=await sb.from('users').select('roll_no').eq('id',user.id).maybeSingle();
+  if(rowError){setStatus('Could not load your profile: '+rowError.message,true);return;}
+  roll.value=row?.roll_no||'';
+  if(row?.roll_no){profile.querySelector('h2').textContent='Your roll number';setStatus('Signed in.');}
+  else{profile.querySelector('h2').textContent='Set your roll number';setStatus('Enter your roll number to continue.');}
+ }catch(error){setStatus('Unexpected sign-in error: '+(error?.message||error),true);}
+ finally{loading=false;}
 }
 document.getElementById('google').addEventListener('click',async()=>{setStatus('Opening Google…');const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:'https://quare-albus.github.io/CollegeSchedule/auth.html'}});if(error)setStatus(error.message,true);});
 document.getElementById('save').addEventListener('click',async()=>{
@@ -40,25 +49,16 @@ document.getElementById('save').addEventListener('click',async()=>{
  if(userError||!user){setStatus('Your session expired. Please sign in again.',true);return;}
  const {data:existing,error:readError}=await sb.from('users').select('id').eq('id',user.id).maybeSingle();
  if(readError){setStatus('Could not verify your profile: '+readError.message,true);return;}
- const result=existing
-   ? await sb.from('users').update({roll_no:value}).eq('id',user.id)
-   : await sb.from('users').insert({id:user.id,roll_no:value});
+ const result=existing?await sb.from('users').update({roll_no:value}).eq('id',user.id):await sb.from('users').insert({id:user.id,roll_no:value});
  if(result.error){setStatus('Could not save roll number: '+result.error.message,true);return;}
  setStatus('Saved. Opening timetable…');window.location.href='index.html';
 });
-document.getElementById('logout').addEventListener('click',async()=>{await sb.auth.signOut();window.location.reload();});
+document.getElementById('logout').addEventListener('click',async()=>{await sb.auth.signOut();showSignedOut();});
 sb.auth.onAuthStateChange((event)=>{
-  if(event==='SIGNED_OUT'){
-    signedOut.classList.remove('hidden');
-    signedIn.classList.add('hidden');
-    setStatus('Not signed in.');
-    return;
-  }
-  if(event==='SIGNED_IN'||event==='INITIAL_SESSION'){
-    setTimeout(()=>loadUser(),0);
-  }
+ if(event==='SIGNED_OUT'){showSignedOut();return;}
+ if(event==='SIGNED_IN'||event==='TOKEN_REFRESHED'||event==='INITIAL_SESSION')setTimeout(loadUser,0);
 });
-setTimeout(()=>loadUser(),0);
+setTimeout(loadUser,0);
 </script>
 </body>
 </html>
