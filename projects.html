@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Project Progress</title>
+<style>
+:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#17202a;background:#f6f7f9}*{box-sizing:border-box}body{margin:0}.wrap{max-width:1100px;margin:auto;padding:28px 18px 44px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:30px}.title{margin:0;font-size:clamp(28px,5vw,42px);letter-spacing:-1px}.sub{margin:6px 0 0;color:#667085}.actions{display:flex;gap:8px}.btn{display:inline-block;border:1px solid #d0d5dd;background:#fff;color:#17202a;border-radius:10px;padding:10px 14px;font:inherit;font-weight:700;text-decoration:none;cursor:pointer}.btn.dark{background:#17202a;color:#fff;border-color:#17202a}.projects{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.card{background:#fff;border:1px solid #e4e7ec;border-radius:20px;padding:24px 18px;display:flex;flex-direction:column;align-items:center;text-align:center;box-shadow:0 8px 24px #00000008}.ring{width:174px;height:174px;position:relative;margin:8px 0 22px}.ring svg{width:100%;height:100%;transform:rotate(-90deg)}.track,.progress{fill:none;stroke-width:12}.track{stroke:#eaecf0}.progress{stroke:var(--accent,#2563eb);stroke-linecap:round;stroke-dasharray:502.655;stroke-dashoffset:var(--offset);transition:stroke-dashoffset .8s ease}.center{position:absolute;inset:0;display:grid;place-content:center;gap:2px}.percent{font-size:29px;font-weight:800;letter-spacing:-1px}.small{font-size:12px;color:#667085}.name{font-size:21px;font-weight:800;margin:0 0 7px}.numbers{color:#667085;font-size:14px;margin:0}.bar{height:7px;width:100%;background:#f2f4f7;border-radius:999px;overflow:hidden;margin-top:20px}.bar span{display:block;height:100%;width:var(--width);background:var(--accent,#2563eb);border-radius:999px}.note{margin-top:26px;color:#667085;font-size:13px;text-align:center}@media(max-width:800px){.projects{grid-template-columns:1fr 1fr}}@media(max-width:520px){.projects{grid-template-columns:1fr}.card{padding:26px 20px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<header class="top"><div><h1 class="title">Project Progress</h1><p class="sub">Track research and survey milestones</p></div><div class="actions"><a class="btn" href="index.html">Schedule</a><button class="btn dark" id="logout" type="button">Sign out</button></div></header>
+<section class="projects" aria-label="Project progress cards">
+<article class="card" style="--accent:#2563eb;--offset:497.63;--width:1%"><div class="ring"><svg viewBox="0 0 180 180" aria-hidden="true"><circle class="track" cx="90" cy="90" r="80"/><circle class="progress" cx="90" cy="90" r="80"/></svg><div class="center"><div class="percent">1%</div><div class="small">complete</div></div></div><h2 class="name">KAP</h2><p class="numbers">4 achieved out of 400</p><div class="bar"><span></span></div></article>
+<article class="card" style="--accent:#7c3aed;--offset:501.40;--width:.25%"><div class="ring"><svg viewBox="0 0 180 180" aria-hidden="true"><circle class="track" cx="90" cy="90" r="80"/><circle class="progress" cx="90" cy="90" r="80"/></svg><div class="center"><div class="percent">0.25%</div><div class="small">complete</div></div></div><h2 class="name">KAP</h2><p class="numbers">1 achieved out of 400</p><div class="bar"><span></span></div></article>
+<article class="card" style="--accent:#059669;--offset:464.09;--width:7.69%"><div class="ring"><svg viewBox="0 0 180 180" aria-hidden="true"><circle class="track" cx="90" cy="90" r="80"/><circle class="progress" cx="90" cy="90" r="80"/></svg><div class="center"><div class="percent">7.69%</div><div class="small">complete</div></div></div><h2 class="name">Retro Mortality Study</h2><p class="numbers">2 achieved out of 26</p><div class="bar"><span></span></div></article>
+</section>
+<p class="note">Progress is calculated from achieved ÷ target.</p>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase/config.js"></script>
+<script>
+const {createClient}=supabase;const sb=createClient(window.COLLEGE_SCHEDULE_SUPABASE.url,window.COLLEGE_SCHEDULE_SUPABASE.publishableKey);
+(async()=>{const {data:{session}}=await sb.auth.getSession();if(!session){window.location.replace('auth.html');return}const {data:user}=await sb.from('users').select('roll_no').eq('id',session.user.id).maybeSingle();if(!user||!user.roll_no){window.location.replace('auth.html')}})();
+document.getElementById('logout').addEventListener('click',async()=>{await sb.auth.signOut();window.location.replace('auth.html')});
+</script>
+</body>
+</html>
