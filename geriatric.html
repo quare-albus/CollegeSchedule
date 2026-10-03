@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Geriatric Data Entry</title>
+<style>
+:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#17202a;background:#f5f7fa}
+*{box-sizing:border-box}body{margin:0}.wrap{max-width:980px;margin:auto;padding:20px 14px 42px}
+header{margin-bottom:18px}.title{margin:0;font-size:clamp(26px,6vw,38px)}.sub{margin:5px 0;color:#667085}
+.panel{background:#fff;border:1px solid #e4e7ec;border-radius:16px;padding:18px;box-shadow:0 6px 20px #00000008;margin-bottom:16px}
+h2{font-size:18px;margin:0 0 14px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}
+label{font-size:13px;font-weight:650;color:#344054}input,select,textarea{font:inherit;width:100%;border:1px solid #d0d5dd;border-radius:9px;padding:10px 11px;background:#fff;outline:none}
+input:focus,select:focus,textarea:focus{border-color:#667085;box-shadow:0 0 0 3px #66708518}
+textarea{min-height:76px;resize:vertical}.cause-group{border:1px solid #eaecf0;border-radius:12px;padding:13px;margin-top:12px;background:#fafbfc}
+.cause-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.cause-head strong{font-size:14px}
+.causes{display:grid;gap:9px;margin-top:10px}.cause-row{display:flex;gap:8px}.cause-row input{flex:1}
+button{font:inherit;border:0;border-radius:9px;padding:10px 14px;cursor:pointer;font-weight:700}
+.primary{background:#17202a;color:#fff}.secondary{background:#eef2f6;color:#17202a}.danger{background:#fee4e2;color:#b42318}.small-btn{padding:7px 10px;font-size:12px}
+.actions{display:flex;flex-wrap:wrap;gap:9px}.status{font-size:13px;color:#667085;margin:10px 0 0}
+.records{overflow:auto}.records table{border-collapse:collapse;width:100%;font-size:12px}.records th,.records td{border:1px solid #eaecf0;padding:7px;white-space:nowrap;text-align:left}.records th{background:#f8fafc}
+.empty{text-align:center;color:#667085;padding:20px}.badge{display:inline-block;background:#eef2ff;color:#3730a3;padding:4px 8px;border-radius:999px;font-size:12px;font-weight:700}
+@media(max-width:650px){.grid{grid-template-columns:1fr}.field.full{grid-column:auto}.panel{padding:15px}.actions button{flex:1}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<header><h1 class="title">Geriatric Data Entry</h1><p class="sub">Fast browser-only entry • no Google Forms • data remains on this device during the session</p></header>
+
+<form id="entryForm">
+<section class="panel">
+<h2>Patient details</h2>
+<div class="grid">
+<div class="field"><label for="age">AGE</label><input id="age" name="age" type="number" min="0" max="150" required></div>
+<div class="field"><label for="sex">SEX</label><select id="sex" name="sex" required><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option></select></div>
+<div class="field"><label for="admissionDate">Date of admission</label><input id="admissionDate" name="admissionDate" type="date" required></div>
+<div class="field"><label for="admissionTime">Time of admission</label><input id="admissionTime" name="admissionTime" type="time" required></div>
+<div class="field"><label for="deathDate">Date of death</label><input id="deathDate" name="deathDate" type="date"></div>
+<div class="field"><label for="deathTime">Time of death</label><input id="deathTime" name="deathTime" type="time"></div>
+<div class="field"><label for="department">Admitting department</label><input id="department" name="department" type="text"></div>
+<div class="field"><label for="referral">Direct referred or transferred</label><select id="referral" name="referral"><option value="">Select</option><option>Direct referred</option><option>Transferred</option></select></div>
+<div class="field"><label for="area">Urban or rural</label><select id="area" name="area"><option value="">Select</option><option>Urban</option><option>Rural</option></select></div>
+<div class="field full"><label for="complaints">Presenting complaints</label><textarea id="complaints" name="complaints"></textarea></div>
+<div class="field full"><label for="comorbidities">Existing comorbidities</label><textarea id="comorbidities" name="comorbidities"></textarea></div>
+</div>
+</section>
+
+<section class="panel">
+<h2>Cause of death</h2>
+<div class="cause-group">
+<div class="cause-head"><strong>Part I — Chain of events</strong><button type="button" class="secondary small-btn" id="addPartI">+ Add cause</button></div>
+<div id="partI" class="causes">
+<div class="cause-row"><input name="cause1a" placeholder="1a"></div>
+<div class="cause-row"><input name="cause1b" placeholder="1b"></div>
+<div class="cause-row"><input name="cause1c" placeholder="1c"></div>
+</div>
+</div>
+<div class="cause-group">
+<div class="cause-head"><strong>Part II — Other significant conditions</strong><button type="button" class="secondary small-btn" id="addPartII">+ Add condition</button></div>
+<div id="partII" class="causes">
+<div class="cause-row"><input name="cause2_1" placeholder="2"></div>
+</div>
+</div>
+</section>
+
+<section class="panel">
+<h2>Record status</h2>
+<div class="grid">
+<div class="field"><label for="complete">Complete or not</label><select id="complete" name="complete"><option selected>Complete</option><option>Incomplete</option></select></div>
+<div class="field"><label for="pm">PM done or not</label><select id="pm" name="pm"><option selected>No</option><option>Yes</option></select></div>
+<div class="field"><label for="summary">Death summary present or not</label><select id="summary" name="summary"><option selected>Present</option><option>Not present</option></select></div>
+</div>
+</section>
+
+<section class="panel">
+<div class="actions">
+<button class="primary" type="submit">Add patient to session</button>
+<button class="secondary" type="button" id="clearForm">Clear form</button>
+<button class="secondary" type="button" id="download">Download Excel</button>
+<button class="danger" type="button" id="clearSession">Clear session</button>
+</div>
+<p class="status"><span class="badge" id="count">0 records</span> <span id="statusText">Nothing added yet.</span></p>
+</section>
+</form>
+
+<section class="panel">
+<h2>Current session</h2>
+<div class="records" id="records"><div class="empty">No records in this session.</div></div>
+</section>
+</main>
+
+<script>
+const STORAGE_KEY='geriatricDataEntrySessionV1';
+let records=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
+
+function val(id){return document.getElementById(id).value.trim()}
+function causeValues(prefix){
+  return [...document.querySelectorAll('#'+prefix+' input')].map(x=>x.value.trim()).filter(Boolean)
+}
+function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(records));render()}
+function render(){
+  document.getElementById('count').textContent=records.length+' record'+(records.length===1?'':'s');
+  document.getElementById('statusText').textContent=records.length?'Saved locally in this browser.':'Nothing added yet.';
+  const box=document.getElementById('records');
+  if(!records.length){box.innerHTML='<div class="empty">No records in this session.</div>';return}
+  box.innerHTML='<table><thead><tr><th>#</th><th>Age</th><th>Sex</th><th>Admission</th><th>Death</th><th>Department</th><th>1</th><th>2</th><th>Status</th></tr></thead><tbody>'+
+    records.map((r,i)=>'<tr><td>'+ (i+1) +'</td><td>'+esc(r.age)+'</td><td>'+esc(r.sex)+'</td><td>'+esc(r.admissionDate+' '+r.admissionTime)+'</td><td>'+esc((r.deathDate||'')+' '+(r.deathTime||''))+'</td><td>'+esc(r.department)+'</td><td>'+esc(r.partI.join(' | '))+'</td><td>'+esc(r.partII.join(' | '))+'</td><td>'+esc(r.complete)+'</td></tr>').join('')+
+    '</tbody></table>';
+}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+
+document.getElementById('entryForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  if(!e.target.checkValidity()){e.target.reportValidity();return}
+  records.push({
+    age:val('age'),sex:val('sex'),admissionDate:val('admissionDate'),admissionTime:val('admissionTime'),
+    deathDate:val('deathDate'),deathTime:val('deathTime'),department:val('department'),
+    referral:val('referral'),area:val('area'),complaints:val('complaints'),comorbidities:val('comorbidities'),
+    partI:causeValues('partI'),partII:causeValues('partII'),complete:val('complete'),pm:val('pm'),summary:val('summary')
+  });
+  save(); e.target.reset();
+  document.getElementById('complete').value='Complete';document.getElementById('pm').value='No';document.getElementById('summary').value='Present';
+  document.getElementById('statusText').textContent='Patient added. Ready for the next record.';
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+function addCause(container,placeholder){
+  const row=document.createElement('div');row.className='cause-row';
+  row.innerHTML='<input placeholder="'+placeholder+'"><button type="button" class="danger small-btn" aria-label="Remove">×</button>';
+  row.querySelector('button').onclick=()=>row.remove();container.appendChild(row);
+}
+document.getElementById('addPartI').onclick=()=>addCause(document.getElementById('partI'),'Additional cause');
+document.getElementById('addPartII').onclick=()=>addCause(document.getElementById('partII'),'Additional condition');
+document.getElementById('clearForm').onclick=()=>{document.getElementById('entryForm').reset();document.getElementById('complete').value='Complete';document.getElementById('pm').value='No';document.getElementById('summary').value='Present'};
+document.getElementById('clearSession').onclick=()=>{if(confirm('Delete all records from this browser session?')){records=[];save()}};
+
+document.getElementById('download').onclick=()=>{
+  if(!records.length){alert('Add at least one patient first.');return}
+  const headers=['AGE','SEX','DATE OF ADMISSION','TIME OF ADMISSION','DATE OF DEATH','TIME OF DEATH','ADMITTING DEPARTMENT','DIRECT REFERRED OR TRANSFERRED','URBAN OR RURAL','PRESENTING COMPLAINTS','EXISTING COMORBIDITIES','CAUSE OF DEATH 1A','CAUSE OF DEATH 1B','CAUSE OF DEATH 1C','ADDITIONAL 1 CAUSES','CAUSE OF DEATH 2','ADDITIONAL 2 CONDITIONS','COMPLETE OR NOT','PM DONE OR NOT','DEATH SUMMARY PRESENT OR NOT'];
+  const rows=records.map(r=>[r.age,r.sex,r.admissionDate,r.admissionTime,r.deathDate,r.deathTime,r.department,r.referral,r.area,r.complaints,r.comorbidities,r.partI[0]||'',r.partI[1]||'',r.partI[2]||'',r.partI.slice(3).join(' | '),r.partII[0]||'',r.partII.slice(1).join(' | '),r.complete,r.pm,r.summary]);
+  const escXml=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;');
+  const xml='<?xml version="1.0"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"><Worksheet ss:Name="Geriatric Data"><Table><Row>'+headers.map(h=>'<Cell><Data ss:Type="String">'+escXml(h)+'</Data></Cell>').join('')+'</Row>'+rows.map(row=>'<Row>'+row.map(v=>'<Cell><Data ss:Type="String">'+escXml(v)+'</Data></Cell>').join('')+'</Row>').join('')+'</Table></Worksheet></Workbook>';
+  const blob=new Blob([xml],{type:'application/vnd.ms-excel'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='geriatric_session_'+new Date().toISOString().slice(0,10)+'.xls';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+};
+render();
+</script>
+</body>
+</html>
