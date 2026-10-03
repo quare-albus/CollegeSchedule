@@ -168,7 +168,7 @@ document.getElementById('download').onclick=()=>{
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='geriatric_session_'+new Date().toISOString().slice(0,10)+'.xls';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 };
 
-<script id="rapidEntryScript">
+
 const rapidSteps=[
  {key:'age',label:'AGE',type:'number',required:true},
  {key:'sex',label:'SEX',type:'options',options:['Male','Female','Other'],required:true},
@@ -256,7 +256,7 @@ rapidNext.onclick=()=>rapidGo(1);
 rapidBack.onclick=()=>rapidGo(-1);
 rapidOverlay.addEventListener('click',e=>{if(e.target===rapidOverlay)closeRapid()});
 document.addEventListener('keydown',e=>{if(!rapidOverlay.classList.contains('open'))return;if(e.key==='Escape')closeRapid()});
-</script>render();
+render();
 </script>
 </body>
 </html>
