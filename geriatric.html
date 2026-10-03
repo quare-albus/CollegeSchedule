@@ -23,12 +23,36 @@ button{font:inherit;border:0;border-radius:9px;padding:10px 14px;cursor:pointer;
 .empty{text-align:center;color:#667085;padding:20px}.badge{display:inline-block;background:#eef2ff;color:#3730a3;padding:4px 8px;border-radius:999px;font-size:12px;font-weight:700}
 @media(max-width:650px){.grid{grid-template-columns:1fr}.field.full{grid-column:auto}.panel{padding:15px}.actions button{flex:1}}
 </style>
+<style id="rapidEntryStyles">
+.rapid-launch{width:100%;padding:16px 18px;margin:0 0 16px;border-radius:14px;background:#2563eb;color:#fff;font-size:17px;box-shadow:0 8px 20px #2563eb25}
+.rapid-launch span{display:block;font-size:12px;font-weight:500;opacity:.85;margin-top:3px}
+.rapid-overlay{position:fixed;inset:0;background:#0b1220aa;display:none;align-items:center;justify-content:center;padding:14px;z-index:9999}
+.rapid-overlay.open{display:flex}.rapid-modal{width:min(560px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:20px;box-shadow:0 24px 80px #0006;padding:22px}
+.rapid-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:22px}.rapid-top h2{margin:0;font-size:20px}.rapid-close{background:#eef2f6;color:#344054;padding:8px 11px}
+.rapid-progress{height:6px;background:#eaecf0;border-radius:99px;overflow:hidden;margin-bottom:24px}.rapid-progress span{display:block;height:100%;background:#2563eb;width:0;transition:width .2s}
+.rapid-step-label{font-size:12px;color:#667085;margin-bottom:7px}.rapid-question{font-size:27px;font-weight:800;letter-spacing:-.5px;margin:0 0 18px}.rapid-input{font:inherit;width:100%;border:1px solid #d0d5dd;border-radius:12px;padding:14px;font-size:18px;outline:none}.rapid-input:focus{border-color:#2563eb;box-shadow:0 0 0 4px #2563eb18}
+.rapid-options{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.rapid-option{padding:16px;border:1px solid #d0d5dd;background:#fff;border-radius:12px;font-size:16px}.rapid-option.selected{border-color:#2563eb;background:#eff6ff;color:#1d4ed8}
+.rapid-actions{display:flex;gap:9px;margin-top:20px}.rapid-actions button{flex:1}.rapid-next{background:#17202a;color:#fff}.rapid-back{background:#eef2f6;color:#17202a}.rapid-hint{font-size:12px;color:#667085;margin-top:9px}
+@media(max-width:520px){.rapid-modal{padding:18px}.rapid-question{font-size:24px}.rapid-options{grid-template-columns:1fr 1fr}}
+</style>
 </head>
 <body>
 <main class="wrap">
 <header><h1 class="title">Geriatric Data Entry</h1><p class="sub">Fast browser-only entry • no Google Forms • data remains on this device during the session</p></header>
 
-<form id="entryForm">
+
+<button type="button" class="rapid-launch" id="openRapidEntry">⚡ Rapid Entry<span>Enter one patient field-by-field without scrolling</span></button>
+<div class="rapid-overlay" id="rapidOverlay">
+  <div class="rapid-modal" role="dialog" aria-modal="true" aria-labelledby="rapidQuestion">
+    <div class="rapid-top"><h2 id="rapidTitle">New patient</h2><button type="button" class="rapid-close" id="closeRapid">✕</button></div>
+    <div class="rapid-progress"><span id="rapidProgress"></span></div>
+    <div class="rapid-step-label" id="rapidStep"></div>
+    <h3 class="rapid-question" id="rapidQuestion"></h3>
+    <div id="rapidBody"></div>
+    <div class="rapid-actions"><button type="button" class="rapid-back" id="rapidBack">Back</button><button type="button" class="rapid-next" id="rapidNext">Next</button></div>
+    <div class="rapid-hint" id="rapidHint">Enter = Next</div>
+  </div>
+</div><form id="entryForm">
 <section class="panel">
 <h2>Patient details</h2>
 <div class="grid">
@@ -143,7 +167,96 @@ document.getElementById('download').onclick=()=>{
   const blob=new Blob([xml],{type:'application/vnd.ms-excel'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='geriatric_session_'+new Date().toISOString().slice(0,10)+'.xls';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 };
-render();
+
+<script id="rapidEntryScript">
+const rapidSteps=[
+ {key:'age',label:'AGE',type:'number',required:true},
+ {key:'sex',label:'SEX',type:'options',options:['Male','Female','Other'],required:true},
+ {key:'admissionDate',label:'Date of admission',type:'date',required:true},
+ {key:'admissionTime',label:'Time of admission',type:'time',required:true},
+ {key:'deathDate',label:'Date of death',type:'date'},
+ {key:'deathTime',label:'Time of death',type:'time'},
+ {key:'department',label:'Admitting department',type:'text'},
+ {key:'referral',label:'Direct referred or transferred',type:'options',options:['Direct referred','Transferred']},
+ {key:'area',label:'Urban or rural',type:'options',options:['Urban','Rural']},
+ {key:'complaints',label:'Presenting complaints',type:'textarea'},
+ {key:'comorbidities',label:'Existing comorbidities',type:'textarea'},
+ {key:'cause1a',label:'Cause of death — 1a',type:'text'},
+ {key:'cause1b',label:'Cause of death — 1b',type:'text'},
+ {key:'cause1c',label:'Cause of death — 1c',type:'text'},
+ {key:'cause1extra',label:'Additional cause after 1c (optional)',type:'text',optional:true},
+ {key:'cause2',label:'Cause of death — 2',type:'text'},
+ {key:'cause2extra',label:'Additional condition after 2 (optional)',type:'text',optional:true},
+ {key:'complete',label:'Complete or not',type:'options',options:['Complete','Incomplete'],default:'Complete'},
+ {key:'pm',label:'PM done or not',type:'options',options:['No','Yes'],default:'No'},
+ {key:'summary',label:'Death summary present or not',type:'options',options:['Present','Not present'],default:'Present'}
+];
+let rapidIndex=0,rapidData={};
+
+const rapidOverlay=document.getElementById('rapidOverlay');
+const rapidBody=document.getElementById('rapidBody');
+const rapidQuestion=document.getElementById('rapidQuestion');
+const rapidStep=document.getElementById('rapidStep');
+const rapidProgress=document.getElementById('rapidProgress');
+const rapidNext=document.getElementById('rapidNext');
+const rapidBack=document.getElementById('rapidBack');
+const rapidHint=document.getElementById('rapidHint');
+
+function openRapid(){rapidIndex=0;rapidData={};rapidOverlay.classList.add('open');renderRapid();setTimeout(()=>{const x=rapidBody.querySelector('input,textarea');if(x)x.focus()},50)}
+function closeRapid(){rapidOverlay.classList.remove('open')}
+function currentStep(){return rapidSteps[rapidIndex]}
+function renderRapid(){
+ const s=currentStep(), value=rapidData[s.key]??s.default??'';
+ rapidQuestion.textContent=s.label;
+ rapidStep.textContent='Patient '+(records.length+1)+' • Step '+(rapidIndex+1)+' of '+rapidSteps.length;
+ rapidProgress.style.width=((rapidIndex+1)/rapidSteps.length*100)+'%';
+ rapidBody.innerHTML='';
+ rapidHint.textContent=s.type==='options'?'Tap an option to continue • Enter = Next':(s.optional?'Optional — leave blank and press Next':'Enter = Next');
+ if(s.type==='options'){
+   const box=document.createElement('div');box.className='rapid-options';
+   s.options.forEach(o=>{const b=document.createElement('button');b.type='button';b.className='rapid-option'+(value===o?' selected':'');b.textContent=o;b.onclick=()=>{rapidData[s.key]=o;renderRapid();if(rapidIndex<rapidSteps.length-1)setTimeout(()=>rapidGo(1),100);else finishRapid()};box.appendChild(b)});
+   rapidBody.appendChild(box);
+ }else{
+   const el=document.createElement(s.type==='textarea'?'textarea':'input');el.className='rapid-input';
+   if(s.type!=='textarea')el.type=s.type;el.value=value;el.placeholder=s.optional?'Optional':'';
+   if(s.type==='number'){el.min=0;el.max=150;el.inputMode='numeric'}
+   rapidBody.appendChild(el);
+   el.addEventListener('input',()=>rapidData[s.key]=el.value);
+   el.addEventListener('keydown',e=>{if(e.key==='Enter'&&s.type!=='textarea'){e.preventDefault();rapidGo(1)}else if(e.key==='Enter'&&e.ctrlKey&&s.type==='textarea'){e.preventDefault();rapidGo(1)}});
+ }
+ rapidBack.disabled=rapidIndex===0;
+ rapidBack.style.opacity=rapidIndex===0?.45:1;
+ rapidNext.textContent=rapidIndex===rapidSteps.length-1?'Save patient':'Next';
+}
+function rapidGo(dir){
+ const s=currentStep(), el=rapidBody.querySelector('input,textarea');
+ if(el)rapidData[s.key]=el.value.trim();
+ if(dir>0&&s.required&&!rapidData[s.key]){if(el){el.focus();el.reportValidity?.()}return}
+ if(dir>0&&rapidIndex<rapidSteps.length-1){rapidIndex++;renderRapid();setTimeout(()=>{const x=rapidBody.querySelector('input,textarea');if(x)x.focus()},30)}
+ else if(dir<0&&rapidIndex>0){rapidIndex--;renderRapid();setTimeout(()=>{const x=rapidBody.querySelector('input,textarea');if(x){x.focus();x.value=rapidData[currentStep().key]||'';x.setSelectionRange?.(x.value.length,x.value.length)}},30)}
+ else if(dir>0)finishRapid();
+}
+function finishRapid(){
+ const s=currentStep(),el=rapidBody.querySelector('input,textarea');if(el)rapidData[s.key]=el.value.trim();
+ if(!rapidData.complete)rapidData.complete='Complete';if(!rapidData.pm)rapidData.pm='No';if(!rapidData.summary)rapidData.summary='Present';
+ const extra1=rapidData.cause1extra?[rapidData.cause1extra]:[];
+ const extra2=rapidData.cause2extra?[rapidData.cause2extra]:[];
+ records.push({
+  age:rapidData.age||'',sex:rapidData.sex||'',admissionDate:rapidData.admissionDate||'',admissionTime:rapidData.admissionTime||'',
+  deathDate:rapidData.deathDate||'',deathTime:rapidData.deathTime||'',department:rapidData.department||'',
+  referral:rapidData.referral||'',area:rapidData.area||'',complaints:rapidData.complaints||'',comorbidities:rapidData.comorbidities||'',
+  partI:[rapidData.cause1a,rapidData.cause1b,rapidData.cause1c,...extra1].filter(Boolean),
+  partII:[rapidData.cause2,...extra2].filter(Boolean),complete:rapidData.complete,pm:rapidData.pm,summary:rapidData.summary
+ });
+ save();closeRapid();
+}
+document.getElementById('openRapidEntry').onclick=openRapid;
+document.getElementById('closeRapid').onclick=closeRapid;
+rapidNext.onclick=()=>rapidGo(1);
+rapidBack.onclick=()=>rapidGo(-1);
+rapidOverlay.addEventListener('click',e=>{if(e.target===rapidOverlay)closeRapid()});
+document.addEventListener('keydown',e=>{if(!rapidOverlay.classList.contains('open'))return;if(e.key==='Escape')closeRapid()});
+</script>render();
 </script>
 </body>
 </html>
