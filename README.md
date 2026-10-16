@@ -4,20 +4,26 @@ A public, single-page browser for the complete CCM weekly mess menu.
 
 ## Current release
 
-**v3.1.4 — Five-choice serving selector**
+**v3.1.6 — Shared unique-dish serving defaults**
 
-- The homepage loads all 371 current records from the HealthOS `public."CCM_MENU"` table.
-- Browse Monday through Sunday, with breakfast, lunch, and dinner grouped into the source's VEG and NON-VEG categories.
-- Search by dish, day, meal, category, or menu note.
-- Filter by day, meal, and category; reset filters or print the page.
-- No Google authentication is required to open the homepage.
-- The homepage loads the current 371 menu records from Supabase and displays a serving selector beside every dish.
-- Every tracked dish has the same five-choice selector: Cup, Small bowl, Large bowl, 1 standard rice scoop (kharandi), or Number. Selecting Number reveals a numeric quantity field (for example, 2 bread or 2 eggs); numeric choices are preserved on reload for any dish. The selected vessel or numeric quantity saves immediately to the `serving` column in `public."CCM_MENU"`.
-- Butter and Jam are excluded from serving tracking (shown without a serving control).
-- Initial serving values are heuristic guesses and should be corrected from the page where needed. Numeric defaults include 2 for bread/eggs, 3 for chapati, 2 for other countable pieces, and 1 for fruit.
+- The homepage loads all 371 schedule entries from `public."CCM_MENU"`.
+- Each schedule entry links to one reusable row in `public."CCM_DISHES"` through `dish_id`.
+- The dish library currently contains 99 unique dishes linked to the 371 menu entries.
+- Serving choices are Cup, Small bowl, Large bowl, 1 standard rice scoop (kharandi), or Number. Number supports quantities such as 2 bread or 2 eggs.
+- Serving defaults are stored once per dish in `CCM_DISHES.default_serving` and `CCM_DISHES.default_quantity`. Editing any occurrence updates the shared dish default and therefore every occurrence on the menu.
+- Butter and Jam are excluded from serving tracking.
+- The existing `CCM_MENU.serving` column is retained as legacy data for now; the homepage no longer reads or writes it.
+- The unique-dish table has nutrition fields ready for future use: `calories`, `protein`, `carbs`, `fat`, `fiber`, and `nutrition_basis`. Values remain blank until entered or verified.
 - The embedded 371-entry snapshot is a read-only fallback if Supabase is unavailable; serving controls are disabled in fallback mode.
-- Row-level security allows public menu reads and updates to the `serving` column only; other menu columns are not granted to public update access.
-- `data/ccm_menu.json` and the embedded JSON are read-only fallback snapshots from 2026-10-16; the live page uses Supabase whenever the backend is reachable.
+- Public access can read both tables. Public updates are limited to serving defaults and nutrition fields on `CCM_DISHES`; public menu schedule fields are not writable.
+- No Google authentication is required to open the homepage.
+- The embedded JSON and `data/ccm_menu.json` are fallback snapshots dated 2026-10-16; the live page uses Supabase whenever the backend is reachable.
+
+## Data model
+
+`CCM_MENU` stores schedule-specific information: weekday, meal, diet category, menu notes, ordering, and `dish_id`.
+
+`CCM_DISHES` stores one row per unique dish, with shared serving defaults and nutrition data. The migration is documented in `supabase/migrations/20261016_normalize_ccm_dishes.sql`.
 
 ## Legacy files
 
@@ -25,4 +31,4 @@ The previous timetable, authentication, OCR, and scheduler files are retained in
 
 ## Versioning rule
 
-Increment the visible version tag with every user-facing release. Keep the homepage version and this release note aligned. Current homepage version: **v3.1.4**.
+Increment the visible version tag with every user-facing release. Keep the homepage version and this release note aligned. Current homepage version: **v3.1.6**.
