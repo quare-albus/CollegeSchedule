@@ -3,40 +3,144 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f5f5f0">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<title>UG College Timetable</title>
+<meta name="description" content="Browse the complete CCM weekly mess menu by day, meal, and food category.">
+<title>CCM Menu · CollegeSchedule</title>
 <style>
-:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#17202a;background:#f6f7f9}*{box-sizing:border-box}body{margin:0}.auth-gate{position:fixed;inset:0;background:#f6f7f9;display:grid;place-items:center;padding:24px;z-index:100}.auth-card{width:min(420px,100%);background:white;border:1px solid #e4e7ec;border-radius:16px;padding:28px;box-shadow:0 8px 30px #00000012;text-align:center}.auth-card h1{margin:0 0 8px}.auth-card p{color:#667085}.auth-card button{border:0;background:#17202a;color:white;border-radius:10px;padding:12px 18px;font:inherit;font-weight:700;cursor:pointer}.auth-error{color:#b42318;font-size:13px;margin-top:12px}.wrap{max-width:1200px;margin:auto;padding:24px 16px}.head{margin-bottom:14px}.headrow{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.title{margin:0;font-size:clamp(24px,5vw,38px)}.sub{color:#667085;margin:5px 0 0}.scheduler-link{display:inline-flex;align-items:center;text-decoration:none;border:1px solid #d0d5dd;background:white;color:#17202a;border-radius:10px;padding:10px 14px;font-weight:700;white-space:nowrap}.logout{border:1px solid #d0d5dd;background:white;color:#17202a;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer}.controls{display:flex;gap:8px;flex-wrap:wrap}.controls button{border:1px solid #d0d5dd;background:white;border-radius:10px;padding:10px 14px;font-weight:600;cursor:pointer}.controls button.active{background:#17202a;color:white}.viewbar,.datebar,.batchbar,.clinicbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 12px}.batchbar,.clinicbar{margin-bottom:14px}.viewlabel,.batchlabel,.cliniclabel{font-weight:700;margin-right:4px}.datebar input{border:1px solid #d0d5dd;background:white;border-radius:10px;padding:10px 12px;font:inherit}.date-nav{display:flex;gap:6px}.date-nav button{width:42px;height:42px;border:1px solid #d0d5dd;background:white;border-radius:10px;font-size:26px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}.date-nav button:hover{background:#f2f4f7}.table-wrap{overflow:auto;background:white;border:1px solid #e4e7ec;border-radius:14px}.grid{display:grid}.grid.weekly{min-width:820px;grid-template-columns:110px repeat(6,minmax(145px,1fr))}.grid.daily{grid-template-columns:110px minmax(240px,1fr);min-width:350px}.cell{padding:12px;border-right:1px solid #eaecf0;border-bottom:1px solid #eaecf0;min-height:82px}.headcell{font-weight:700;background:#f9fafb;min-height:auto;position:sticky;top:0}.time{font-weight:700;white-space:nowrap}.entry{border-left:4px solid #667085;background:#f9fafb;border-radius:8px;padding:8px;margin-bottom:6px}.entry strong{display:block;font-size:14px}.batchtag{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#667085}.noduty{color:#98a2b3;font-size:13px}.clinicentry{border-left-width:4px}.warning{display:none;margin:0 0 14px;padding:10px 12px;border:1px solid #f2c4c4;border-radius:10px;background:#fff6f6;color:#9b1c1c;font-size:13px}.warning.show{display:block}.note{margin:12px 0;color:#667085;font-size:13px}
+:root{color-scheme:light;--ink:#20251f;--muted:#6d746a;--paper:#f5f5f0;--card:#fff;--line:#e5e7df;--green:#23543c;--green-soft:#e8f0e9;--orange:#9a4f24;--orange-soft:#f8eee5;--shadow:0 8px 28px #2431240b;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink)}button,input,select{font:inherit}button,select{cursor:pointer}
+.wrap{width:min(1180px,100%);margin:0 auto;padding:28px 20px 48px}
+.topline{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:32px}.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.03em}.brandmark{width:38px;height:38px;border-radius:12px;background:var(--green);color:#fff;display:grid;place-items:center;font-size:19px}.version{font-size:12px;font-weight:800;letter-spacing:.03em;color:var(--green);background:var(--green-soft);border:1px solid #d1e1d3;padding:7px 10px;border-radius:999px}
+.hero{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:20px;margin-bottom:26px}.eyebrow{margin:0 0 10px;text-transform:uppercase;letter-spacing:.15em;font-size:11px;font-weight:800;color:var(--green)}h1{font-size:clamp(36px,6vw,64px);line-height:.98;letter-spacing:-.065em;margin:0;max-width:700px}.intro{font-size:15px;line-height:1.65;color:var(--muted);max-width:590px;margin:16px 0 0}.stats{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}.stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 17px;min-width:100px}.stat strong{display:block;font-size:25px;letter-spacing:-.05em}.stat span{display:block;font-size:11px;color:var(--muted);margin-top:3px}
+.filters{display:grid;grid-template-columns:minmax(200px,1fr) repeat(3,minmax(135px,180px));gap:10px;background:#ebece5;padding:12px;border-radius:18px;margin-bottom:22px}.field{display:flex;flex-direction:column;gap:6px;min-width:0}.field label{font-size:11px;text-transform:uppercase;letter-spacing:.09em;font-weight:800;color:#596157}.field input,.field select{width:100%;height:44px;border:1px solid #d8dbd1;border-radius:11px;background:white;color:var(--ink);padding:0 12px;outline:none}.field input:focus,.field select:focus{border-color:var(--green);box-shadow:0 0 0 3px #23543c19}
+.resultsbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 2px 14px}.resultsbar p{font-size:13px;color:var(--muted);margin:0}.clear{border:1px solid var(--line);border-radius:999px;background:white;padding:8px 12px;font-size:12px;font-weight:700;color:var(--ink)}.clear:hover{background:var(--green-soft)}
+.day-section{margin:24px 0 30px}.day-heading{display:flex;align-items:center;gap:12px;margin:0 0 12px}.day-heading h2{font-size:22px;letter-spacing:-.04em;margin:0}.day-heading:after{content:"";height:1px;background:var(--line);flex:1}.day-count{font-size:11px;color:var(--muted);font-weight:700}
+.meals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.meal-card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:17px;min-width:0;box-shadow:var(--shadow)}.meal-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:15px}.meal-head h3{font-size:15px;margin:0;letter-spacing:-.02em}.meal-count{font-size:11px;color:var(--muted);background:#f2f3ed;padding:5px 8px;border-radius:999px}
+.category{margin-top:14px}.category:first-of-type{margin-top:0}.category-head{display:flex;align-items:center;gap:7px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}.dot{width:8px;height:8px;border-radius:50%;background:var(--green)}.category.nonveg .dot{background:var(--orange)}.category ul{list-style:none;margin:0;padding:0}.category li{font-size:13px;line-height:1.45;padding:7px 0;border-bottom:1px solid #f0f1eb;overflow-wrap:anywhere}.category li:last-child{border-bottom:0}.note{font-size:11px;line-height:1.5;color:var(--muted);background:#f7f7f2;border-radius:9px;padding:8px;margin:8px 0 0}.empty{background:white;border:1px dashed #cfd4c9;border-radius:16px;padding:38px 20px;text-align:center;color:var(--muted)}.empty strong{display:block;color:var(--ink);font-size:18px;margin-bottom:6px}.error{padding:18px;border-radius:12px;background:#fff0ed;color:#8d3021;border:1px solid #f1c7bf}
+footer{display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding-top:18px;margin-top:42px;color:var(--muted);font-size:11px}footer strong{color:var(--ink)}
+@media(max-width:850px){.hero{grid-template-columns:1fr}.stats{justify-content:flex-start}.filters{grid-template-columns:repeat(2,minmax(0,1fr))}.field.search{grid-column:1/-1}.meals{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.wrap{padding:18px 13px 32px}.topline{margin-bottom:25px}.hero{margin-bottom:20px}h1{font-size:43px}.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.stat{min-width:0;padding:11px}.stat strong{font-size:21px}.stat span{font-size:10px}.filters{grid-template-columns:1fr 1fr;padding:10px;gap:9px}.field.search{grid-column:1/-1}.field label{font-size:10px}.meals{grid-template-columns:1fr}.meal-card{padding:15px}.day-heading h2{font-size:20px}.resultsbar{align-items:flex-start}footer{align-items:flex-start;flex-direction:column}}
+@media print{body{background:white}.wrap{width:100%;padding:0}.topline,.filters,.resultsbar button{display:none!important}.hero{margin:0 0 18px}.meal-card{box-shadow:none;break-inside:avoid}.day-section{break-inside:avoid}.meals{grid-template-columns:repeat(3,minmax(0,1fr))}.day-section[hidden],.meal-card[hidden]{display:none!important}footer{margin-top:15px}}
 </style>
 </head>
 <body>
-<div id="authGate" class="auth-gate" hidden><div class="auth-card"><h1>CollegeSchedule</h1><p id="authMessage">Checking your sign-in…</p><button id="loginButton" hidden>Continue with Google</button><div id="authError" class="auth-error"></div></div></div>
-<main id="app" class="wrap" hidden>
-<div class="head"><div class="headrow"><div><h1 class="title">UG College Timetable</h1><p class="sub">VII Term · UG Batch · decoded from the official timetable</p></div><div><a class="scheduler-link" href="agent.html">Open Scheduler</a> <button id="logoutButton" class="logout" type="button">Sign out</button></div></div></div>
-<div class="viewbar"><span class="viewlabel">View:</span><div class="controls" id="views"></div></div>
-<div class="datebar"><span class="viewlabel">Date:</span><div class="date-nav" id="dateNav"></div><input id="date" type="date" aria-label="Schedule date"></div>
-<div class="viewbar"><span class="viewlabel">Day:</span><div class="controls" id="days"></div></div>
-<div class="batchbar"><span class="batchlabel">Tutorial batch:</span><div id="batches" class="controls"></div></div>
-<div class="clinicbar"><span class="cliniclabel">Clinics batch:</span><div id="clinicBatches" class="controls"></div></div>
-<div id="warning" class="warning" role="alert"></div><div class="table-wrap"><div id="grid" class="grid"></div></div>
-<p class="note">Tutorial batch selection changes only batch-specific tutorial cells. Clinic batch selection changes only the 10:15–13:15 CLINICS block. Clinic dates are inclusive ranges from the official clinic timetable.</p>
+<main class="wrap">
+  <div class="topline">
+    <div class="brand"><span class="brandmark" aria-hidden="true">C</span><span>CCM <span style="font-weight:500">/ Menu</span></span></div>
+    <span class="version" aria-label="Website version 3.0.0">VERSION v3.0.0</span>
+  </div>
+  <header class="hero">
+    <div>
+      <p class="eyebrow">College mess · Weekly menu</p>
+      <h1>What's on<br>the menu?</h1>
+      <p class="intro">The complete CCM menu, organised by day and meal. Search for a dish or narrow the list by day, meal, and food category.</p>
+    </div>
+    <div class="stats" aria-label="Menu summary">
+      <div class="stat"><strong id="totalItems">—</strong><span>menu entries</span></div>
+      <div class="stat"><strong>7</strong><span>days</span></div>
+      <div class="stat"><strong>3</strong><span>meals daily</span></div>
+    </div>
+  </header>
+  <section class="filters" aria-label="Menu filters">
+    <div class="field search"><label for="search">Find a dish</label><input id="search" type="search" placeholder="Try paneer, rice, eggs…" autocomplete="off"></div>
+    <div class="field"><label for="dayFilter">Day</label><select id="dayFilter"><option value="">All days</option></select></div>
+    <div class="field"><label for="mealFilter">Meal</label><select id="mealFilter"><option value="">All meals</option><option>Breakfast</option><option>Lunch</option><option>Dinner</option></select></div>
+    <div class="field"><label for="categoryFilter">Category</label><select id="categoryFilter"><option value="">All categories</option><option value="VEG">Vegetarian</option><option value="NON-VEG">Non-vegetarian</option></select></div>
+  </section>
+  <div class="resultsbar"><p id="resultSummary" aria-live="polite">Loading menu…</p><button class="clear" id="clearFilters" type="button">Reset filters ↺</button></div>
+  <div id="menu" aria-live="polite"><div class="empty">Loading the CCM menu…</div></div>
+  <footer><span>Menu data snapshot: <strong>HealthOS · CCM_MENU</strong></span><span>CollegeSchedule <strong>v3.0.0</strong></span></footer>
 </main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase/config.js"></script>
 <script>
-const {createClient}=supabase;const sb=createClient(window.COLLEGE_SCHEDULE_SUPABASE.url,window.COLLEGE_SCHEDULE_SUPABASE.publishableKey);
-const gate=document.getElementById('authGate'),app=document.getElementById('app'),msg=document.getElementById('authMessage'),login=document.getElementById('loginButton'),err=document.getElementById('authError');
-async function requireAuth(){gate.hidden=false;app.hidden=true;const {data:{session},error}=await sb.auth.getSession();if(error){msg.textContent='Unable to check sign-in status.';err.textContent=error.message;return}if(!session){msg.textContent='Sign in with your college Google account to continue.';login.hidden=false;return}const {data:user,error:userError}=await sb.from('users').select('roll_no').eq('id',session.user.id).maybeSingle();if(userError){msg.textContent='Unable to load your account.';err.textContent=userError.message;return}if(!user||!user.roll_no){window.location.replace('auth.html');return}gate.hidden=true;app.hidden=false;startApp()}
-login.addEventListener('click',async()=>{err.textContent='';login.disabled=true;const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin+'/index.html'}});if(error){err.textContent=error.message;login.disabled=false}});
-document.getElementById('logoutButton').addEventListener('click',async()=>{await sb.auth.signOut();window.location.replace('auth.html')});
-sb.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT')window.location.replace('auth.html')});
-const DAYS=['MON','TUE','WED','THU','FRI','SAT'],dayNames={MON:'Monday',TUE:'Tuesday',WED:'Wednesday',THU:'Thursday',FRI:'Friday',SAT:'Saturday'},csvUrl='data/ug_timetable.csv?v=8',clinicCsvUrl='data/clinics_timetable.csv?v=1',batchFields={A:'batch_a_subject',B:'batch_b_subject',C:'batch_c_subject'},jsDayToCode={1:'MON',2:'TUE',3:'WED',4:'THU',5:'FRI',6:'SAT'};let rows=[],clinicRows=[],selectedBatch='A',selectedClinicBatch='A',selectedDate=new Date(),selectedDay=jsDayToCode[selectedDate.getDay()]||'MON',viewMode='daily';
-function pad(n){return String(n).padStart(2,'0')}function isoDate(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}function parseDate(v){const [y,m,day]=v.split('-').map(Number);return new Date(y,m-1,day)}function nextDateForDay(code){const target=DAYS.indexOf(code)+1;let d=new Date(selectedDate),cur=d.getDay(),diff=(target-cur+7)%7;if(diff===0&&cur===0)diff=1;d.setDate(d.getDate()+diff);return d}function shiftDate(days){const d=new Date(selectedDate);d.setDate(d.getDate()+days);selectedDate=d;selectedDay=jsDayToCode[d.getDay()]||'MON';document.getElementById('date').value=isoDate(d);document.querySelectorAll('#days button').forEach(x=>x.classList.toggle('active',x.dataset.day===selectedDay));render()}
-function parseCSV(text){const out=[];let row=[],field='',quoted=false;for(let i=0;i<text.length;i++){const c=text[i],n=text[i+1];if(c==='"'){if(quoted&&n==='"'){field+='"';i++}else quoted=!quoted}else if(c===','&&!quoted){row.push(field);field=''}else if((c==='\n'||c==='\r')&&!quoted){if(c==='\r'&&n==='\n')i++;row.push(field);field='';if(row.some(x=>x.trim()!==''))out.push(row);row=[]}else field+=c}if(field!==''||row.length){row.push(field);out.push(row)}return out}
-function hasBatchAllocation(r){return ['batch_a_subject','batch_b_subject','batch_c_subject'].some(k=>String(r[k]||'').trim()!=='')}function occurrenceOfWeekday(date){return Math.floor((date.getDate()-1)/7)+1}function ruleTokens(rule){return String(rule||'').split(/[;,]+/).map(x=>x.trim()).filter(Boolean)}function dayMatches(rule,occurrence){return ruleTokens(rule).some(part=>{const m=part.match(/^(\d+)\s*-\s*(\d+)$/);if(m)return occurrence>=Number(m[1])&&occurrence<=Number(m[2]);return /^\d+$/.test(part)&&Number(part)===occurrence})}function subjectFor(r){return hasBatchAllocation(r)?String(r[batchFields[selectedBatch]]||'').trim():String(r.department_subject||'').trim()}function appendEntry(cell,r){const subject=subjectFor(r);if(!subject)return;const e=document.createElement('div');e.className='entry';if(hasBatchAllocation(r)){const tag=document.createElement('span');tag.className='batchtag';tag.textContent='Batch '+selectedBatch;e.append(tag)}const strong=document.createElement('strong');strong.textContent=r.session_type+' · '+subject;e.append(strong);cell.append(e)}function clinicForDate(date){const target=isoDate(date);return clinicRows.find(r=>r.batch===selectedClinicBatch&&target>=r.start_date&&target<=r.end_date)||null}function mondayOfWeek(date){const d=new Date(date),day=d.getDay(),diff=day===0?-6:1-day;d.setDate(d.getDate()+diff);return d}function dateForColumn(anchor,code){const monday=mondayOfWeek(anchor),idx=DAYS.indexOf(code),d=new Date(monday);d.setDate(monday.getDate()+idx);return d}function appendClinic(cell,date){const c=clinicForDate(date);if(!c){const n=document.createElement('span');n.className='noduty';n.textContent='—';cell.append(n);return}const e=document.createElement('div');e.className='entry clinicentry';const tag=document.createElement('span');tag.className='batchtag';tag.textContent='Batch '+selectedClinicBatch;e.append(tag);const strong=document.createElement('strong');strong.textContent='CLINICS · '+c.subject;e.append(strong);cell.append(e)}function timeToMinutes(v){const m=String(v).match(/^(\d{1,2}):(\d{2})$/);return m?Number(m[1])*60+Number(m[2]):Number.MAX_SAFE_INTEGER}
-function render(){const grid=document.getElementById('grid');grid.innerHTML='';grid.className='grid '+(viewMode==='daily'?'daily':'weekly');const visibleDays=viewMode==='daily'?[selectedDay]:DAYS;const h=document.createElement('div');h.className='cell headcell';h.textContent='Time';grid.append(h);visibleDays.forEach(d=>{const x=document.createElement('div');x.className='cell headcell';x.textContent=dayNames[d];grid.append(x)});const timeSet=new Set(rows.map(r=>r.start_time+'|'+r.end_time));timeSet.add('10:15|13:15');const times=[...timeSet].sort((a,b)=>timeToMinutes(a.split('|')[0])-timeToMinutes(b.split('|')[0])||timeToMinutes(a.split('|')[1])-timeToMinutes(b.split('|')[1]));times.forEach(t=>{const [st,en]=t.split('|'),tc=document.createElement('div');tc.className='cell time';tc.textContent=st+'–'+en;grid.append(tc);visibleDays.forEach(d=>{const cell=document.createElement('div');cell.className='cell';const dayDate=viewMode==='daily'?selectedDate:dateForColumn(selectedDate,d);if(st==='10:15'&&en==='13:15')appendClinic(cell,dayDate);else{const matching=rows.filter(r=>r.day===d&&r.start_time===st&&r.end_time===en);const conditional=matching.filter(r=>String(r.day_of_month||'').trim()!=='');const fixed=matching.filter(r=>String(r.day_of_month||'').trim()==='');fixed.forEach(r=>appendEntry(cell,r));conditional.filter(r=>dayMatches(r.day_of_month,occurrenceOfWeekday(dayDate))).forEach(r=>appendEntry(cell,r));if(!cell.children.length){const n=document.createElement('span');n.className='noduty';n.textContent=conditional.length&&viewMode==='daily'?'No session scheduled for this weekday occurrence':'—';cell.append(n)}}grid.append(cell)})})}
-function setupViews(){const c=document.getElementById('views');[['daily','Daily'],['weekly','Weekly']].forEach(([mode,label])=>{const b=document.createElement('button');b.type='button';b.textContent=label;b.addEventListener('click',()=>{viewMode=mode;document.querySelectorAll('#views button').forEach(x=>x.classList.remove('active'));b.classList.add('active');render()});c.append(b);if(mode===viewMode)b.classList.add('active')})}function setupDate(){const input=document.getElementById('date');input.value=isoDate(selectedDate);input.addEventListener('change',()=>{if(!input.value)return;selectedDate=parseDate(input.value);selectedDay=jsDayToCode[selectedDate.getDay()]||'MON';document.querySelectorAll('#days button').forEach(x=>x.classList.toggle('active',x.dataset.day===selectedDay));render()});const nav=document.getElementById('dateNav');[['‹','Previous day'],['›','Next day']].forEach(([s,l],i)=>{const b=document.createElement('button');b.type='button';b.textContent=s;b.setAttribute('aria-label',l);b.addEventListener('click',()=>shiftDate(i===0?-1:1));nav.append(b)})}function setupDays(){const c=document.getElementById('days');DAYS.forEach(d=>{const b=document.createElement('button');b.type='button';b.textContent=dayNames[d];b.dataset.day=d;b.addEventListener('click',()=>{selectedDate=nextDateForDay(d);selectedDay=d;document.getElementById('date').value=isoDate(selectedDate);document.querySelectorAll('#days button').forEach(x=>x.classList.remove('active'));b.classList.add('active');viewMode='daily';document.querySelectorAll('#views button').forEach(x=>x.classList.toggle('active',x.textContent==='Daily'));render()});c.append(b);if(d===selectedDay)b.classList.add('active')})}function setupBatches(){const c=document.getElementById('batches');['A','B','C'].forEach(bn=>{const b=document.createElement('button');b.type='button';b.textContent='Batch '+bn;b.addEventListener('click',()=>{selectedBatch=bn;document.querySelectorAll('#batches button').forEach(x=>x.classList.remove('active'));b.classList.add('active');render()});c.append(b)});c.firstChild.classList.add('active')}function setupClinicBatches(){const c=document.getElementById('clinicBatches');['A','B','C','D'].forEach(bn=>{const b=document.createElement('button');b.type='button';b.textContent='Batch '+bn;b.addEventListener('click',()=>{selectedClinicBatch=bn;document.querySelectorAll('#clinicBatches button').forEach(x=>x.classList.remove('active'));b.classList.add('active');render()});c.append(b)});c.firstChild.classList.add('active')}
-function startApp(){Promise.all([fetch(csvUrl,{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('Could not load UG timetable CSV');return r.text()}),fetch(clinicCsvUrl,{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('Could not load clinics timetable CSV');return r.text()})]).then(([text,clinicText])=>{let a=parseCSV(text),h=a.shift().map(x=>x.trim());rows=a.map(r=>Object.fromEntries(h.map((k,i)=>[k,(r[i]||'').trim()])));let ca=parseCSV(clinicText),ch=ca.shift().map(x=>x.trim());clinicRows=ca.map(r=>Object.fromEntries(ch.map((k,i)=>[k,(r[i]||'').trim()])));setupViews();setupDate();setupDays();setupBatches();setupClinicBatches();render()}).catch(e=>{document.getElementById('grid').innerHTML='<div class="cell" style="grid-column:1/-1">'+String(e.message).replace(/[&<>]/g,'')+'</div>'})}
-requireAuth();
+(() => {
+  const DAY_ORDER = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+  const MEAL_ORDER = ['Breakfast','Lunch','Dinner'];
+  const menuRoot = document.getElementById('menu');
+  const search = document.getElementById('search');
+  const dayFilter = document.getElementById('dayFilter');
+  const mealFilter = document.getElementById('mealFilter');
+  const categoryFilter = document.getElementById('categoryFilter');
+  const summary = document.getElementById('resultSummary');
+  let items = [];
+
+  const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  const key = value => String(value ?? '').trim().toLowerCase();
+  const unique = values => [...new Set(values.filter(Boolean))];
+
+  function fillDays() {
+    unique(items.map(item => item.weekday)).sort((a,b) => DAY_ORDER.indexOf(a)-DAY_ORDER.indexOf(b)).forEach(day => {
+      const option = document.createElement('option');
+      option.value = day; option.textContent = day;
+      dayFilter.append(option);
+    });
+  }
+
+  function filteredItems() {
+    const term = key(search.value);
+    return items.filter(item => {
+      const searchable = [item.food_item,item.weekday,item.meal,item.diet_category,item.menu_notes].map(key).join(' ');
+      return (!term || searchable.includes(term))
+        && (!dayFilter.value || item.weekday === dayFilter.value)
+        && (!mealFilter.value || item.meal === mealFilter.value)
+        && (!categoryFilter.value || item.diet_category === categoryFilter.value);
+    });
+  }
+
+  function render() {
+    const filtered = filteredItems();
+    document.getElementById('totalItems').textContent = items.length.toLocaleString('en-IN');
+    summary.textContent = 'Showing ' + filtered.length.toLocaleString('en-IN') + ' of ' + items.length.toLocaleString('en-IN') + ' menu entries';
+    if (!filtered.length) {
+      menuRoot.innerHTML = '<div class="empty"><strong>No dishes match those filters.</strong>Try a different search or reset the filters.</div>';
+      return;
+    }
+    const sections = [];
+    const days = DAY_ORDER.filter(day => filtered.some(item => item.weekday === day));
+    for (const day of days) {
+      const dayItems = filtered.filter(item => item.weekday === day);
+      let cards = '';
+      for (const meal of MEAL_ORDER) {
+        const mealItems = dayItems.filter(item => item.meal === meal);
+        if (!mealItems.length) continue;
+        let categories = '';
+        for (const category of ['VEG','NON-VEG']) {
+          const categoryItems = mealItems.filter(item => item.diet_category === category)
+            .sort((a,b) => Number(a.item_order || 0)-Number(b.item_order || 0));
+          if (!categoryItems.length) continue;
+          const label = category === 'VEG' ? 'Vegetarian' : 'Non-vegetarian';
+          const list = categoryItems.map(item => '<li>' + escapeHtml(item.food_item) + '</li>').join('');
+          const notes = unique(categoryItems.map(item => String(item.menu_notes || '').trim())).filter(Boolean);
+          const noteMarkup = notes.map(note => '<p class="note">' + escapeHtml(note) + '</p>').join('');
+          categories += '<section class="category ' + (category === 'NON-VEG' ? 'nonveg' : 'veg') + '"><div class="category-head"><span class="dot"></span>' + label + '</div><ul>' + list + '</ul>' + noteMarkup + '</section>';
+        }
+        cards += '<article class="meal-card"><div class="meal-head"><h3>' + meal + '</h3><span class="meal-count">' + mealItems.length + ' entries</span></div>' + categories + '</article>';
+      }
+      sections.push('<section class="day-section"><div class="day-heading"><h2>' + day + '</h2><span class="day-count">' + dayItems.length + ' entries</span></div><div class="meals">' + cards + '</div></section>');
+    }
+    menuRoot.innerHTML = sections.join('');
+  }
+
+  [search,dayFilter,mealFilter,categoryFilter].forEach(control => control.addEventListener(control === search ? 'input' : 'change', render));
+  document.getElementById('clearFilters').addEventListener('click', () => {
+    search.value = ''; dayFilter.value = ''; mealFilter.value = ''; categoryFilter.value = '';
+    render(); search.focus();
+  });
+
+  fetch('data/ccm_menu.json?v=3.0.0', {cache:'no-store'})
+    .then(response => { if (!response.ok) throw new Error('Menu data could not be loaded (' + response.status + ').'); return response.json(); })
+    .then(data => {
+      if (!Array.isArray(data.items) || !data.items.length) throw new Error('The menu data file is empty or invalid.');
+      items = data.items;
+      fillDays();
+      render();
+    })
+    .catch(error => {
+      menuRoot.innerHTML = '<div class="error">' + escapeHtml(error.message) + ' Please refresh the page or check back later.</div>';
+      summary.textContent = 'Menu unavailable';
+      document.getElementById('totalItems').textContent = '—';
+    });
+})();
 </script>
 </body>
 </html>
