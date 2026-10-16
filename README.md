@@ -1,34 +1,23 @@
-# CollegeSchedule
+# CCM Menu
 
-For management of schedules and automating with department training schedules.
-
-## Student authentication
-
-- `auth.html` is the student sign-in and onboarding page.
-- Students sign in with Google through Supabase Auth.
-- A matching `public.users` row is created automatically by the Supabase Auth trigger.
-- The student then saves exactly one CollegeSchedule-specific field: `roll_no`.
-- The browser uses the Supabase publishable key only. No service-role or secret key is exposed.
+A public, single-page browser for the complete CCM weekly mess menu.
 
 ## Current release
 
-**v2.9.2 — OCR table-header reconstruction fix.**
+**v3.0.0 — CCM menu page**
 
-- PDF pages are rendered locally and sent individually to OCR.space as compressed images.
-- Generated page JPEGs are kept below the OCR.space Free Plan 1.5 MB file-size limit.
-- OCR.space is called through the `ocrspace-proxy` Supabase Edge Function so the API key stays server-side.
-- OCR results are displayed as raw recognition output for traceability.
-- OCR.space word-level overlay coordinates are used to reconstruct the source table's visual columns.
-- The source visual `Topic` column is mapped to class type (`Theory`, `SDL`, `Tutorials`, `Clinics`), while `SLO` is mapped to the actual topic.
-- Instructor values are taken only from the source `Instructor` column; wrapped lines inherit their visual column.
-- v2.9.2 fixes a reconstruction failure caused by requiring all seven table headers to occur on one OCR line. Headers are now located independently in the upper page region and their x-coordinates are used to recover column boundaries.
-- Candidate rows are validated for date, time range, ordering, and recognizable timetable content.
-- Rows that cannot be safely normalized are explicitly marked **Needs review** rather than silently inventing values.
-- Normalized output is displayed in a human-readable timetable table with source page/line and OCR confidence.
-- v2.9.2 does **not** persist OCR or normalized results to Supabase.
-- Matching, AI review, reconciliation, and V1 modification remain intentionally out of scope for this migration phase.
-- The previous implementations remain in Git history as fallbacks.
+- The homepage lists all 371 records from the HealthOS `public."CCM_MENU"` table snapshot.
+- Browse Monday through Sunday, with breakfast, lunch, and dinner grouped into the source's VEG and NON-VEG categories.
+- Search by dish, day, meal, category, or menu note.
+- Filter by day, meal, and category; reset filters or print the page.
+- No Google authentication is required to open the homepage.
+- The page is static and read-only. It does not call Supabase at runtime or write to any database.
+- Menu records are stored in `data/ccm_menu.json`. This is a snapshot taken on 2026-10-16; refreshing the Supabase table does not automatically update the website data.
+
+## Legacy files
+
+The previous timetable, authentication, OCR, and scheduler files are retained in the repository for now, but are not linked from the CCM menu homepage. They have not been deleted or modified as part of this repurpose.
 
 ## Versioning rule
 
-The release version should be updated consistently across user-facing pages, developer tooling, ingestion metadata, backend agents, and documentation whenever a release is changed. Do not report a release as fully version-aligned unless every safely editable location has been checked.
+Increment the visible version tag with every user-facing release. Keep the homepage version and this release note aligned. Current homepage version: **v3.0.0**.
