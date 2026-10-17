@@ -6,7 +6,7 @@
 <title>Organiser</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{color-scheme:dark;--ink:#e8eef8;--muted:#9aaac2;--paper:#070d18;--card:#fff;--line:#24364f;--green:#3568b8;--green-soft:#172b49;--orange:#9a4f24;--orange-soft:#f8eee5;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+:root{color-scheme:dark;--ink:#e8eef8;--muted:#9aaac2;--paper:#070d18;--card:#101c2d;--line:#24364f;--green:#3568b8;--green-soft:#172b49;--orange:#9a4f24;--orange-soft:#f8eee5;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink)}button{font:inherit;cursor:pointer}.wrap{width:min(1050px,100%);margin:auto;padding:22px 16px 44px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:30px}.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.03em}.mark{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:var(--green);color:#fff}.version{font-size:12px;font-weight:800;color:var(--green);background:var(--green-soft);padding:7px 10px;border-radius:999px}.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:11px;font-weight:800;color:var(--green)}h1{font-size:clamp(34px,6vw,54px);letter-spacing:-.06em;line-height:1;margin:10px 0}.sub{color:var(--muted);line-height:1.6;max-width:650px}.hero{display:flex;justify-content:space-between;gap:18px;align-items:flex-end;margin-bottom:24px}.btn{border:1px solid var(--line);border-radius:11px;background:var(--card);padding:11px 14px;font-weight:750;color:var(--ink)}.primary{background:var(--green);color:white;border-color:var(--green)}.status{margin:18px 0;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--muted);font-size:13px;line-height:1.5}.status.error{color:#8d3021;background:var(--card)0ed;border-color:#f1c7bf}.status.good{color:var(--green);background:var(--green-soft);border-color:#d1e1d3}.hidden{display:none!important}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:18px;min-width:0}.label{font-size:12px;color:var(--muted);font-weight:700}.value{font-size:clamp(24px,4vw,32px);letter-spacing:-.05em;font-weight:850;margin:9px 0 3px}.unit{font-size:12px;color:var(--muted)}.progress-card{margin-top:14px}.progress-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px}.progress{height:12px;background:#eceee7;border-radius:999px;overflow:hidden}.fill{height:100%;width:0;background:var(--green);border-radius:999px;transition:width .25s}.macro-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}.macro .value{font-size:24px}.macro-track{height:7px;background:#eceee7;border-radius:999px;margin-top:12px;overflow:hidden}.macro-track span{display:block;height:100%;width:0;background:var(--green);border-radius:999px}.meal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:28px 0 12px}.meal-head h2{font-size:22px;letter-spacing:-.04em;margin:0}.table-wrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:16px}.table{width:100%;border-collapse:collapse;min-width:560px}.table th,.table td{text-align:left;padding:12px 14px;border-bottom:1px solid #f0f1eb;font-size:13px}.table th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.07em}.table tr:last-child td{border-bottom:0}.empty{text-align:center;color:var(--muted);padding:28px 16px;font-size:13px}.small{font-size:12px;color:var(--muted);line-height:1.6}.guidance-message{white-space:pre-line}.signin{max-width:440px;margin:30px auto}.signin h2{margin-top:0}.foot{border-top:1px solid var(--line);padding-top:16px;margin-top:34px;color:var(--muted);font-size:11px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 @media(max-width:700px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.macro-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{align-items:flex-start;flex-direction:column}.top{margin-bottom:24px}.card{padding:15px}.wrap{padding:16px 12px 32px}}
 
@@ -14,19 +14,19 @@
 .portion-carousel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
 .portion-slide{flex:0 0 min(86%,390px);scroll-snap-align:center;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;min-width:0;transition:border-color .2s,box-shadow .2s}
 .portion-track{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 14px;scrollbar-width:thin}
-.portion-slide.active{border:2px solid var(--green);background:#f3f8f2;box-shadow:0 8px 24px #23543c1a}
-.portion-slide h3{font-size:22px;letter-spacing:-.04em;margin:7px 0}
-.portion-slide .meal-chip{display:inline-block;background:#e8f0e9;color:var(--green);font-size:11px;font-weight:850;border-radius:999px;padding:5px 9px;text-transform:uppercase;letter-spacing:.06em}
+.portion-slide.active{border:2px solid var(--green);background:#142b48;color:var(--ink);box-shadow:0 8px 24px #00000040}
+.portion-slide h3{font-size:22px;letter-spacing:-.04em;margin:7px 0;color:var(--ink)}
+.portion-slide .meal-chip{display:inline-block;background:#203a5d;color:#a9c9f7;font-size:11px;font-weight:850;border-radius:999px;padding:5px 9px;text-transform:uppercase;letter-spacing:.06em}
 .portion-slide.active .meal-chip{background:var(--green);color:white}
 .portion-list{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:0}
-.portion-list li{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:10px 0;border-bottom:1px solid #e8ebe3}
+.portion-list li{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:10px 0;border-bottom:1px solid #2a3c54}
 .portion-list li:last-child{border-bottom:0}
-.dish{font-weight:750;flex:1;font-size:14px}
-.portion{color:var(--green);font-weight:750;text-align:right;max-width:55%;font-size:13px}
+.dish{font-weight:750;flex:1;font-size:14px;color:#e8eef8}
+.portion{color:#8fb5ed;font-weight:800;text-align:right;max-width:55%;font-size:13px}
 .portion-nav{display:flex;gap:8px;align-items:center}
 .portion-nav .btn{padding:8px 11px}
 .portion-help{font-size:12px;color:var(--muted);line-height:1.5;margin:8px 2px 0}
-@media(max-width:520px){.portion-slide{flex-basis:88%;padding:15px}.portion-list li{gap:10px}.portion{max-width:52%;font-size:12px}.dish{font-size:13px}}
+@media(max-width:520px){.portion-slide{flex-basis:calc(100% - 4px);padding:15px}.portion-list li{gap:10px}.portion{max-width:52%;font-size:12px}.dish{font-size:13px}}
 .details-panel{margin-top:16px;border:1px solid var(--line);border-radius:16px;background:var(--card);padding:14px 16px}
 .details-panel summary{cursor:pointer;font-weight:800;color:var(--green)}
 .details-panel .grid{margin-top:14px}
@@ -37,7 +37,7 @@
 </head>
 <body>
 <main class="wrap">
-<header class="top"><a class="brand" href="index.html" style="color:inherit;text-decoration:none"><span class="mark">O</span><span>Organiser</span></a><span class="version">VERSION v3.1.18</span></header>
+<header class="top"><a class="brand" href="index.html" style="color:inherit;text-decoration:none"><span class="mark">O</span><span>Organiser</span></a><span class="version">VERSION v3.1.19</span></header>
 <section class="hero"><div><div class="eyebrow">Organiser · Daily nutrition</div><h1>Your intake,<br>at a glance.</h1><p class="sub">Your daily meal plan, with practical portions and nutrition totals in one place.</p></div></section>
 <div id="status" class="status" role="status">Connecting to public nutrition data…</div>
 <section id="dashboard">
@@ -60,7 +60,7 @@
     
   </div>
   <div class="portion-track" id="portionTrack"><article class="portion-slide"><h3>Loading menu…</h3></article></div>
-  <p class="portion-help">Swipe the cards sideways. The green-highlighted card is the meal for the current time in India: 8 AM–2 PM lunch, 2 PM–8 PM dinner, and 8 PM–8 AM breakfast for the next day.</p>
+  <p class="portion-help">Swipe the cards sideways. The blue-highlighted card is the meal for the current time in India: 8 AM–2 PM lunch, 2 PM–8 PM dinner, and 8 PM–8 AM breakfast for the next day.</p>
 </section>
 
 <section class="details-panel"><h2 style="margin:0 0 8px;color:var(--green)">Today’s totals and food log</h2>
@@ -82,7 +82,7 @@
 </details>
 <p class="small" id="linkNote">PUBLIC DATA: Anyone with this website can view the meal records shown here. Records are grouped by meal date in India Standard Time, regardless of user ID.</p>
 </section>
-<footer class="foot"><span>Organiser · Daily meal portions and nutrition</span><span>Version v3.1.18</span></footer>
+<footer class="foot"><span>Organiser · Daily meal portions and nutrition</span><span>Version v3.1.19</span></footer>
 </main>
 <script>
 (() => {
