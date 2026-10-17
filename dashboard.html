@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#f5f5f0"><meta name="description" content="Personal daily calorie and macro dashboard for CollegeSchedule.">
+<meta name="theme-color" content="#eff6ff"><meta name="description" content="Personal daily calorie and macro dashboard for CollegeSchedule.">
 <title>Nutrition Dashboard · CollegeSchedule</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{color-scheme:light;--ink:#20251f;--muted:#6d746a;--paper:#f5f5f0;--card:#fff;--line:#e5e7df;--green:#23543c;--green-soft:#e8f0e9;--orange:#9a4f24;--orange-soft:#f8eee5;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+:root{color-scheme:light;--ink:#172b4d;--muted:#5d7190;--paper:#eff6ff;--card:#fff;--line:#d7e5f7;--green:#1d4ed8;--green-soft:#dbeafe;--orange:#9a4f24;--orange-soft:#f8eee5;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink)}button{font:inherit;cursor:pointer}.wrap{width:min(1050px,100%);margin:auto;padding:22px 16px 44px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:30px}.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.03em}.mark{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:var(--green);color:#fff}.version{font-size:12px;font-weight:800;color:var(--green);background:var(--green-soft);padding:7px 10px;border-radius:999px}.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:11px;font-weight:800;color:var(--green)}h1{font-size:clamp(34px,6vw,54px);letter-spacing:-.06em;line-height:1;margin:10px 0}.sub{color:var(--muted);line-height:1.6;max-width:650px}.hero{display:flex;justify-content:space-between;gap:18px;align-items:flex-end;margin-bottom:24px}.btn{border:1px solid var(--line);border-radius:11px;background:white;padding:11px 14px;font-weight:750;color:var(--ink)}.primary{background:var(--green);color:white;border-color:var(--green)}.status{margin:18px 0;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:white;color:var(--muted);font-size:13px;line-height:1.5}.status.error{color:#8d3021;background:#fff0ed;border-color:#f1c7bf}.status.good{color:var(--green);background:var(--green-soft);border-color:#d1e1d3}.hidden{display:none!important}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:18px;min-width:0}.label{font-size:12px;color:var(--muted);font-weight:700}.value{font-size:clamp(24px,4vw,32px);letter-spacing:-.05em;font-weight:850;margin:9px 0 3px}.unit{font-size:12px;color:var(--muted)}.progress-card{margin-top:14px}.progress-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px}.progress{height:12px;background:#eceee7;border-radius:999px;overflow:hidden}.fill{height:100%;width:0;background:var(--green);border-radius:999px;transition:width .25s}.macro-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}.macro .value{font-size:24px}.macro-track{height:7px;background:#eceee7;border-radius:999px;margin-top:12px;overflow:hidden}.macro-track span{display:block;height:100%;width:0;background:var(--green);border-radius:999px}.meal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:28px 0 12px}.meal-head h2{font-size:22px;letter-spacing:-.04em;margin:0}.table-wrap{overflow-x:auto;background:white;border:1px solid var(--line);border-radius:16px}.table{width:100%;border-collapse:collapse;min-width:560px}.table th,.table td{text-align:left;padding:12px 14px;border-bottom:1px solid #f0f1eb;font-size:13px}.table th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.07em}.table tr:last-child td{border-bottom:0}.empty{text-align:center;color:var(--muted);padding:28px 16px;font-size:13px}.small{font-size:12px;color:var(--muted);line-height:1.6}.guidance-message{white-space:pre-line}.signin{max-width:440px;margin:30px auto}.signin h2{margin-top:0}.foot{border-top:1px solid var(--line);padding-top:16px;margin-top:34px;color:var(--muted);font-size:11px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 @media(max-width:700px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.macro-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{align-items:flex-start;flex-direction:column}.top{margin-bottom:24px}.card{padding:15px}.wrap{padding:16px 12px 32px}}
 
@@ -30,15 +30,15 @@
 .details-panel{margin-top:16px;border:1px solid var(--line);border-radius:16px;background:#fff;padding:14px 16px}
 .details-panel summary{cursor:pointer;font-weight:800;color:var(--green)}
 .details-panel .grid{margin-top:14px}
-#nextMealCard{display:none!important}
+#nextMealCard{display:none!important}\n.loading-screen{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:#eff6ff;color:#1d4ed8;transition:opacity .25s,visibility .25s}\n.loading-screen.done{opacity:0;visibility:hidden;pointer-events:none}\n.loading-mark{display:grid;place-items:center;width:68px;height:68px;border-radius:22px;background:#1d4ed8;color:white;font-size:30px;font-weight:900;box-shadow:0 10px 35px #1d4ed833;animation:logo-pulse 1.2s ease-in-out infinite}\n.loading-ring{width:92px;height:92px;border:3px solid #bfdbfe;border-top-color:#1d4ed8;border-radius:50%;position:absolute;animation:logo-spin 1s linear infinite}\n.loading-label{font-size:13px;font-weight:750;letter-spacing:.04em;color:#35598f}\n@keyframes logo-spin{to{transform:rotate(360deg)}}@keyframes logo-pulse{50%{transform:scale(.92);box-shadow:0 5px 18px #1d4ed822}}\n@media(prefers-reduced-motion:reduce){.loading-ring,.loading-mark{animation:none}}
 @media(max-width:520px){.portion-card{padding:16px}.portion-list li{gap:10px}.portion{max-width:52%;font-size:13px}.dish{font-size:14px}}
 
 </style>
 </head>
 <body>
 <main class="wrap">
-<header class="top"><a class="brand" href="index.html" style="color:inherit;text-decoration:none"><span class="mark">C</span><span>CollegeSchedule <span style="font-weight:500">/ Nutrition</span></span></a><span class="version">VERSION v3.1.16</span></header>
-<section class="hero"><div><div class="eyebrow">HealthOS · Daily nutrition</div><h1>Your intake,<br>at a glance.</h1><p class="sub">Track today's calories and macros against your weight-gain targets. Nutrition values are taken from your logged meals.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button id="refresh" class="btn">Refresh data ↻</button></div></section>
+<header class="top"><a class="brand" href="index.html" style="color:inherit;text-decoration:none"><span class="mark">C</span><span>CollegeSchedule <span style="font-weight:500">/ Nutrition</span></span></a><span class="version">VERSION v3.1.17</span></header>
+<section class="hero"><div><div class="eyebrow">HealthOS · Daily nutrition</div><h1>Your intake,<br>at a glance.</h1><p class="sub">Track today's calories and macros against your weight-gain targets. Nutrition values are taken from your logged meals.</p></div></section>
 <div id="status" class="status" role="status">Connecting to public nutrition data…</div>
 <section id="dashboard">
 <article class="card progress-card" id="nextMealCard" aria-live="polite">
@@ -56,14 +56,14 @@
 
 <section class="portion-carousel" id="portionCard" aria-live="polite">
   <div class="portion-carousel-head">
-    <div><div class="eyebrow">Your mess menu · recommended portions</div><h2 style="margin:6px 0 3px">What to eat now</h2><p class="small" id="portionDate">Finding your current meal…</p></div>
-    <div class="portion-nav"><button class="btn" id="portionPrev" aria-label="Previous meal card">←</button><button class="btn" id="portionNext" aria-label="Next meal card">→</button></div>
+    <div><div class="eyebrow">Your mess menu · recommended portions</div><h2 style="margin:6px 0 3px">Recommended portions</h2><p class="small" id="portionDate">Finding your current meal…</p></div>
+    
   </div>
   <div class="portion-track" id="portionTrack"><article class="portion-slide"><h3>Loading menu…</h3></article></div>
   <p class="portion-help">Swipe the cards sideways. The green-highlighted card is the meal for the current time in India: 8 AM–2 PM lunch, 2 PM–8 PM dinner, and 8 PM–8 AM breakfast for the next day.</p>
 </section>
 
-<details class="details-panel"><summary>Daily totals and food log (optional)</summary>
+<section class="details-panel"><h2 style="margin:0 0 8px;color:var(--green)">Today’s totals and food log</h2>
 <div class="grid">
 <article class="card"><div class="label">Calories consumed</div><div class="value" id="calories">—</div><div class="unit">kcal today</div></article>
 <article class="card"><div class="label">Calories remaining</div><div class="value" id="remaining">—</div><div class="unit">of 4,440 kcal</div></article>
@@ -82,7 +82,7 @@
 </details>
 <p class="small" id="linkNote">PUBLIC DATA: Anyone with this website can view the meal records shown here. Records are grouped by meal date in India Standard Time, regardless of user ID.</p>
 </section>
-<footer class="foot"><span>CollegeSchedule · HealthOS nutrition dashboard</span><span>Version v3.1.16</span></footer>
+<footer class="foot"><span>CollegeSchedule · HealthOS nutrition dashboard</span><span>Version v3.1.17</span></footer>
 </main>
 <script>
 (() => {
@@ -199,25 +199,14 @@
     activePortionIndex=cards.findIndex(card=>card.active);
     viewedPortionIndex=activePortionIndex;
     portionTrack.innerHTML=cards.map((card,index)=>'<article class="portion-slide'+(card.active?' active':'')+'" data-portion-index="'+index+'">'+
-      (card.active?'<span class="meal-chip">Recommended now</span>':'<span class="meal-chip">'+card.slot+'</span>')+
+      (card.active?'<span class="meal-chip">Highlighted meal</span>':'<span class="meal-chip">'+card.slot+'</span>')+
       '<h3>'+card.slot[0].toUpperCase()+card.slot.slice(1)+' · '+card.day+'</h3>'+
       '<p class="small">'+card.dateLabel+'</p><ul class="portion-list">'+card.items.map(([dish,portion])=>'<li><span class="dish">'+escapeHtml(dish)+'</span><span class="portion">'+escapeHtml(portion)+'</span></li>').join('')+'</ul></article>').join('');
     const active=cards[activePortionIndex];
     document.getElementById('portionDate').textContent='Highlighted: '+active.slot+' · '+active.dateLabel+' (IST)';
     requestAnimationFrame(()=>portionTrack.querySelector('[data-portion-index="'+activePortionIndex+'"]')?.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'}));
   }
-  document.getElementById('portionPrev').addEventListener('click',()=> {
-    const slides=portionTrack.querySelectorAll('.portion-slide');
-    viewedPortionIndex=Math.max(0,viewedPortionIndex-1);
-    slides[viewedPortionIndex]?.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
-  });
-  document.getElementById('portionNext').addEventListener('click',()=> {
-    const slides=portionTrack.querySelectorAll('.portion-slide');
-    viewedPortionIndex=Math.min(slides.length-1,viewedPortionIndex+1);
-    slides[viewedPortionIndex]?.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
-  });
-
-  const setStatus = (message, kind='') => { $('status').textContent=message; $('status').className='status'+(kind?' '+kind:''); };
+  const setStatus = (message, kind='') => { $('status').textContent=message; $('status').className='status'+(kind?' '+kind:''); if(kind==='good'||kind==='error') $('loadingScreen')?.classList.add('done'); };
   const fmt = n => Math.round(Number(n)||0).toLocaleString('en-IN');
   const dec = n => (Number(n)||0).toLocaleString('en-IN',{maximumFractionDigits:1});
   const pct = (n,t) => Math.max(0,Math.min(100,((Number(n)||0)/(t||1))*100));
@@ -282,7 +271,6 @@
     }
   }
   renderPortionGuide();
-  $('refresh').addEventListener('click',()=>{renderPortionGuide();load().catch(e=>setStatus('Could not load meals: '+(e.message||e),'error'));});
   load().catch(e=>setStatus('Could not load dashboard: '+(e.message||e)+'. Check the public read policy in Supabase.','error'));
 })();
 </script>
