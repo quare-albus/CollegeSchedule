@@ -9,6 +9,21 @@
 :root{color-scheme:light;--ink:#20251f;--muted:#6d746a;--paper:#f5f5f0;--card:#fff;--line:#e5e7df;--green:#23543c;--green-soft:#e8f0e9;--orange:#9a4f24;--orange-soft:#f8eee5;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink)}button{font:inherit;cursor:pointer}.wrap{width:min(1050px,100%);margin:auto;padding:22px 16px 44px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:30px}.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.03em}.mark{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:var(--green);color:#fff}.version{font-size:12px;font-weight:800;color:var(--green);background:var(--green-soft);padding:7px 10px;border-radius:999px}.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:11px;font-weight:800;color:var(--green)}h1{font-size:clamp(34px,6vw,54px);letter-spacing:-.06em;line-height:1;margin:10px 0}.sub{color:var(--muted);line-height:1.6;max-width:650px}.hero{display:flex;justify-content:space-between;gap:18px;align-items:flex-end;margin-bottom:24px}.btn{border:1px solid var(--line);border-radius:11px;background:white;padding:11px 14px;font-weight:750;color:var(--ink)}.primary{background:var(--green);color:white;border-color:var(--green)}.status{margin:18px 0;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:white;color:var(--muted);font-size:13px;line-height:1.5}.status.error{color:#8d3021;background:#fff0ed;border-color:#f1c7bf}.status.good{color:var(--green);background:var(--green-soft);border-color:#d1e1d3}.hidden{display:none!important}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:18px;min-width:0}.label{font-size:12px;color:var(--muted);font-weight:700}.value{font-size:clamp(24px,4vw,32px);letter-spacing:-.05em;font-weight:850;margin:9px 0 3px}.unit{font-size:12px;color:var(--muted)}.progress-card{margin-top:14px}.progress-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px}.progress{height:12px;background:#eceee7;border-radius:999px;overflow:hidden}.fill{height:100%;width:0;background:var(--green);border-radius:999px;transition:width .25s}.macro-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}.macro .value{font-size:24px}.macro-track{height:7px;background:#eceee7;border-radius:999px;margin-top:12px;overflow:hidden}.macro-track span{display:block;height:100%;width:0;background:var(--green);border-radius:999px}.meal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:28px 0 12px}.meal-head h2{font-size:22px;letter-spacing:-.04em;margin:0}.table-wrap{overflow-x:auto;background:white;border:1px solid var(--line);border-radius:16px}.table{width:100%;border-collapse:collapse;min-width:560px}.table th,.table td{text-align:left;padding:12px 14px;border-bottom:1px solid #f0f1eb;font-size:13px}.table th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.07em}.table tr:last-child td{border-bottom:0}.empty{text-align:center;color:var(--muted);padding:28px 16px;font-size:13px}.small{font-size:12px;color:var(--muted);line-height:1.6}.guidance-message{white-space:pre-line}.signin{max-width:440px;margin:30px auto}.signin h2{margin-top:0}.foot{border-top:1px solid var(--line);padding-top:16px;margin-top:34px;color:var(--muted);font-size:11px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 @media(max-width:700px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.macro-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{align-items:flex-start;flex-direction:column}.top{margin-bottom:24px}.card{padding:15px}.wrap{padding:16px 12px 32px}}
+
+.portion-card{margin:14px 0;background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px}
+.portion-title-row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.portion-card h2{font-size:clamp(23px,4vw,30px);letter-spacing:-.04em;margin:8px 0 4px}
+.portion-list{list-style:none;margin:16px 0 12px;padding:0;display:grid;gap:0}
+.portion-list li{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;padding:12px 0;border-bottom:1px solid #f0f1eb}
+.portion-list li:last-child{border-bottom:0}
+.dish{font-weight:750;flex:1}
+.portion{color:var(--green);font-weight:750;text-align:right;max-width:55%}
+.details-panel{margin-top:16px;border:1px solid var(--line);border-radius:16px;background:#fff;padding:14px 16px}
+.details-panel summary{cursor:pointer;font-weight:800;color:var(--green)}
+.details-panel .grid{margin-top:14px}
+#nextMealCard{display:none!important}
+@media(max-width:520px){.portion-card{padding:16px}.portion-list li{gap:10px}.portion{max-width:52%;font-size:13px}.dish{font-size:14px}}
+
 </style>
 </head>
 <body>
@@ -29,6 +44,16 @@
     <article class="card macro"><div class="label">Fibre</div><div class="value" id="nextFiber">—</div><div class="unit">grams suggested</div></article>
   </div>
 </article>
+
+<article class="portion-card" id="portionCard" aria-live="polite">
+  <div class="portion-title-row"><div class="eyebrow">Your mess menu · portion guide</div><span class="small" id="portionDate">Today</span></div>
+  <h2 id="portionTitle">What to eat next</h2>
+  <p class="small">Just the dishes and how much to take. No macro calculations needed.</p>
+  <ul class="portion-list" id="portionItems"><li><span class="dish">Loading today's menu…</span></li></ul>
+  <p class="small" id="portionNote"></p>
+</article>
+
+<details class="details-panel"><summary>Daily totals and food log (optional)</summary>
 <div class="grid">
 <article class="card"><div class="label">Calories consumed</div><div class="value" id="calories">—</div><div class="unit">kcal today</div></article>
 <article class="card"><div class="label">Calories remaining</div><div class="value" id="remaining">—</div><div class="unit">of 4,440 kcal</div></article>
@@ -44,9 +69,10 @@
 </div>
 <div class="meal-head"><h2>Today's food log</h2><span class="small" id="dayLabel"></span></div>
 <div class="table-wrap"><table class="table"><thead><tr><th>Time</th><th>Meal / foods</th><th>Calories</th><th>Protein</th></tr></thead><tbody id="mealRows"><tr><td colspan="4" class="empty">Loading meals…</td></tr></tbody></table></div>
+</details>
 <p class="small" id="linkNote">PUBLIC DATA: Anyone with this website can view the meal records shown here. Records are grouped by meal date in India Standard Time, regardless of user ID.</p>
 </section>
-<footer class="foot"><span>CollegeSchedule · HealthOS nutrition dashboard</span><span>Version v3.1.11</span></footer>
+<footer class="foot"><span>CollegeSchedule · HealthOS nutrition dashboard</span><span>Version v3.1.12</span></footer>
 </main>
 <script>
 (() => {
@@ -54,6 +80,112 @@
   const KEY = 'sb_publishable_OlmrgjgznRYLhgFnVm5K-g_3Wrk3nPX';
   const sb = window.supabase.createClient(URL, KEY, {auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
   const $ = id => document.getElementById(id);
+
+  const menus = {
+    Monday: {
+      breakfast: [
+        ['Masala omelette','1 serving (2 eggs)'],['Sweet daliya','1 medium bowl (200–250 ml)'],['Bread','3 slices'],['Butter + jam','1 tsp each'],['Boiled egg','1, if still hungry'],['Milk','250 ml'],['Tea / coffee / drinking chocolate','Choose 1 cup']
+      ],
+      lunch: [
+        ['Fish fry/curry','1 serving (120–150 g fish)'],['Rajma','1 medium bowl'],['Khada rice','1½–2 cups cooked'],['Seasonal vegetables','1 small bowl'],['Green salad','1 bowl'],['Chapati','1–2'],['Sweet lassi','200–250 ml']
+      ],
+      dinner: [
+        ['Chhole','1 medium bowl'],['Bhatura','1 medium'],['Steamed rice','½–1 cup, only if still hungry'],['Plain curd','150 g'],['Seasonal vegetables + kuchumber','1 small bowl each'],['Gulab jamun','1 small'],['Pickle / papad','Small amount']
+      ]
+    },
+    Tuesday: {
+      breakfast: [
+        ['Fried eggs','2 eggs'],['Bread','3 slices'],['Butter + jam','1 tsp each'],['Boiled egg','Skip if already full'],['Milk','250 ml'],['Tea / coffee / drinking chocolate','Choose 1 cup']
+      ],
+      lunch: [
+        ['Dal masoor','1 medium bowl'],['Veg kofta curry','1 medium bowl'],['Steamed rice','1½–2 cups cooked'],['Seasonal/mixed vegetables','1 small bowl each, if both served'],['Raita','150 ml'],['Green salad','1 bowl'],['Chapati','1'],['Fruit','1 piece']
+      ],
+      dinner: [
+        ['Butter chicken','1 serving (150 g chicken with gravy)'],['Dal mung','1 small bowl'],['Seasonal vegetables','1 small bowl'],['Jeera rice','1½–2 cups cooked'],['Chapati','1'],['Green salad','1 bowl'],['Shahi tukda','1 small piece']
+      ]
+    },
+    Wednesday: {
+      breakfast: [
+        ['French toast','2 slices'],['Corn flakes with milk','1 bowl (40 g cereal + 200–250 ml milk)'],['Boiled eggs','1–2'],['Butter / jam','1 tsp each if wanted'],['Tea / coffee / drinking chocolate','Choose 1 cup']
+      ],
+      lunch: [
+        ['Malai kofta curry','1 medium bowl (2 koftas)'],['Dal urad','1 medium bowl'],['Plain rice','1½ cups cooked'],['Seasonal vegetables','1 small bowl'],['Onion raita','150 ml'],['Green salad','1 bowl'],['Chapati','1'],['Fruit','1 piece']
+      ],
+      dinner: [
+        ['Fried rice OR pasta OR noodles','1½ cups cooked — choose one'],['Chilli chicken OR mutton cutlet','1 serving (120–150 g chicken OR 1–2 cutlets)'],['Rajma','½–1 bowl'],['Egg curry','1 egg with gravy'],['Tossed salad','1 bowl'],['Bread with cheese/jam','1 slice, optional'],['Jelly custard','½–1 small bowl']
+      ]
+    },
+    Thursday: {
+      breakfast: [
+        ['Egg bhurji','2 eggs'],['Ham/bacon','2 small slices, optional'],['Salted daliya','1 medium bowl'],['Bread','2 slices'],['Butter + jam','1 tsp each'],['Milk','250 ml'],['Tea / coffee / drinking chocolate','Choose 1 cup']
+      ],
+      lunch: [
+        ['Matar mushroom/soya','1 medium bowl'],['Dal masoor','1 medium bowl'],['Plain rice','1½ cups cooked'],['Seasonal vegetables','1 small bowl'],['Dahi vada','1 piece'],['Beans salad','1 bowl'],['Chapati','1'],['Fruit','1 piece']
+      ],
+      dinner: [
+        ['Chilli chicken OR mutton keema','1 serving (150 g)'],['Dal arhar','1 medium bowl'],['Rice','1½ cups cooked'],['Seasonal vegetables','1 small bowl'],['Green salad','1 bowl'],['Chapati','1'],['Semiya kheer','½–1 small bowl']
+      ]
+    },
+    Friday: {
+      breakfast: [
+        ['Onion omelette','1 serving (2 eggs)'],['Sweet daliya','1 medium bowl'],['Bread','2–3 slices'],['Butter + jam','1 tsp each'],['Boiled egg','1, optional'],['Milk','250 ml'],['Tea / coffee / drinking chocolate','Choose 1 cup']
+      ],
+      lunch: [
+        ['Sambhar','1 medium bowl'],['Fish fry/curry','1 serving (120–150 g fish)'],['Rice','1½–2 cups cooked'],['Seasonal vegetables','1 small bowl'],['Salted lassi','200–250 ml'],['Green salad','1 bowl'],['Chapati','1'],['Suji halwa','½ small bowl'],['Fruit','1 piece']
+      ],
+      dinner: [
+        ['Punjabi egg curry / egg bhurji','2 eggs'],['Dal masoor/lobia','1 medium bowl'],['Seasonal vegetables','1 small bowl'],['Onion pulao','1½ cups cooked'],['Green salad','1 bowl'],['Chapati','1'],['Gulab jamun','1 small'],['Milk','200–250 ml']
+      ]
+    },
+    Saturday: {
+      breakfast: [
+        ['Cheese omelette','1 serving (2 eggs)'],['Bread','3 slices'],['Butter + jam','1 tsp each'],['Boiled egg','1, optional'],['Milk','250 ml'],['Tea / coffee / drinking chocolate','Choose 1 cup']
+      ],
+      lunch: [
+        ['Dal makhani','1 medium bowl'],['Palak paneer/corn','1 medium bowl'],['Seasonal vegetables','1 small bowl'],['Jeera rice','1½–2 cups cooked'],['Boondi raita','150 ml'],['Green salad','1 bowl'],['Chapati','1'],['Fruit','1 piece']
+      ],
+      dinner: [
+        ['Mutton curry','1 serving (150 g cooked meat with gravy)'],['Dal mung','1 small bowl'],['Seasonal vegetables','1 small bowl'],['Peas pulao','1½ cups cooked'],['Green salad','1 bowl'],['Chapati','1'],['Rice kheer','½–1 small bowl']
+      ]
+    },
+    Sunday: {
+      breakfast: [
+        ['French toast','2 slices'],['Salted daliya','1 medium bowl'],['Boiled eggs','1–2'],['Milk','250 ml'],['Tea / coffee / drinking chocolate','Choose 1 cup']
+      ],
+      lunch: [
+        ['Khasta puri','2 medium pieces (or 1 aloo paratha if that is the menu option)'],['Aloo chana masala','1 medium bowl'],['Seasonal vegetables','1 small bowl'],['Jeera rice','1 cup cooked'],['Plain curd','150 g'],['Green salad','1 bowl'],['Rice kheer','½ small bowl'],['Fruit','1 piece']
+      ],
+      dinner: [
+        ['Chicken biryani','1½–2 cups (about 300–350 g)'],['Mirchi salan','2–3 tbsp'],['Mix veg raita','150 ml'],['Green salad','1 bowl'],['Lauki halwa/sago kheer','½ small bowl — choose one'],['Papad','1']
+      ]
+    }
+  };
+  const portionCard = document.getElementById('portionCard');
+  function renderPortionGuide() {
+    const now = new Date();
+    const parts = new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Kolkata',weekday:'long',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(now);
+    const v = Object.fromEntries(parts.map(p=>[p.type,p.value]));
+    let day = v.weekday, hour = Number(v.hour), minute = Number(v.minute);
+    const mins = hour*60+minute;
+    let slot;
+    if (mins < 10*60+30) slot='breakfast';
+    else if (mins < 15*60+30) slot='lunch';
+    else if (mins < 21*60+30) slot='dinner';
+    else {
+      slot='breakfast';
+      const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+      day=days[(days.indexOf(day)+1)%7];
+    }
+    const dateLabel = new Intl.DateTimeFormat('en-IN',{timeZone:'Asia/Kolkata',weekday:'long',day:'numeric',month:'short'}).format(now);
+    const options = menus[day][slot];
+    document.getElementById('portionTitle').textContent = slot[0].toUpperCase()+slot.slice(1)+' · '+day;
+    document.getElementById('portionDate').textContent = dateLabel;
+    document.getElementById('portionItems').innerHTML = options.map(([dish,portion]) =>
+      '<li><span class="dish">'+escapeHtml(dish)+'</span><span class="portion">'+escapeHtml(portion)+'</span></li>'
+    ).join('');
+    document.getElementById('portionNote').textContent = 'Use this as a simple mess-plate guide. The PPT lists dishes, not serving weights, so portions are practical estimates. Choose one option where “OR” appears; you do not need to take every alternative.';
+  }
+
   const setStatus = (message, kind='') => { $('status').textContent=message; $('status').className='status'+(kind?' '+kind:''); };
   const fmt = n => Math.round(Number(n)||0).toLocaleString('en-IN');
   const dec = n => (Number(n)||0).toLocaleString('en-IN',{maximumFractionDigits:1});
@@ -118,7 +250,8 @@
       setStatus('Public dashboard updated · '+rows.length+' meal record(s) loaded, guidance refreshed.','good');
     }
   }
-  $('refresh').addEventListener('click',()=>load().catch(e=>setStatus('Could not load meals: '+(e.message||e),'error')));
+  renderPortionGuide();
+  $('refresh').addEventListener('click',()=>{renderPortionGuide();load().catch(e=>setStatus('Could not load meals: '+(e.message||e),'error'));});
   load().catch(e=>setStatus('Could not load dashboard: '+(e.message||e)+'. Check the public read policy in Supabase.','error'));
 })();
 </script>
