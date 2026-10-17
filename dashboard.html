@@ -14,7 +14,7 @@
 <body>
 <main class="wrap">
 <header class="top"><a class="brand" href="index.html" style="color:inherit;text-decoration:none"><span class="mark">C</span><span>CollegeSchedule <span style="font-weight:500">/ Nutrition</span></span></a><span class="version">VERSION v3.1.7</span></header>
-<section class="hero"><div><div class="eyebrow">HealthOS · Daily nutrition</div><h1>Your intake,<br>at a glance.</h1><p class="sub">Track today's calories and macros against your weight-gain targets. Nutrition values are taken from your logged meals.</p></div><button id="refresh" class="btn hidden">Refresh data ↻</button></section>
+<section class="hero"><div><div class="eyebrow">HealthOS · Daily nutrition</div><h1>Your intake,<br>at a glance.</h1><p class="sub">Track today's calories and macros against your weight-gain targets. Nutrition values are taken from your logged meals.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button id="refresh" class="btn hidden">Refresh data ↻</button><button id="signout" class="btn hidden">Sign out</button></div></section>
 <section id="signin" class="card signin"><h2>Sign in to view your dashboard</h2><p class="sub">Use Google sign-in to access meal records associated with your account. Your food logs remain private.</p><button id="google" class="btn primary" style="width:100%">Continue with Google</button><p class="small">If sign-in is rejected, the Google provider or redirect URL must be enabled in the HealthOS Supabase Auth settings.</p></section>
 <div id="status" class="status" role="status">Checking authentication…</div>
 <section id="dashboard" class="hidden">
@@ -52,8 +52,8 @@
  async function load(){
   const {data:{session},error:sessionError}=await sb.auth.getSession();
   if(sessionError)throw sessionError;
-  if(!session){$('signin').classList.remove('hidden');$('dashboard').classList.add('hidden');$('refresh').classList.add('hidden');setStatus('Sign in to load your private nutrition data.');return;}
-  $('signin').classList.add('hidden');$('dashboard').classList.remove('hidden');$('refresh').classList.remove('hidden');
+  if(!session){$('signin').classList.remove('hidden');$('dashboard').classList.add('hidden');$('refresh').classList.add('hidden');$('signout').classList.add('hidden');setStatus('Sign in to load your private nutrition data.');return;}
+  $('signin').classList.add('hidden');$('dashboard').classList.remove('hidden');$('refresh').classList.remove('hidden');$('signout').classList.remove('hidden');
   const bounds=localDayBounds();$('dayLabel').textContent=bounds.label;
   setStatus('Loading today’s meal records…');
   const {data,error}=await sb.from('meals').select('id,meal,calories,protein,carbs,fat,fiber,logged_at').eq('user_id',session.user.id).gte('logged_at',bounds.start).lt('logged_at',bounds.end).order('logged_at',{ascending:false}).limit(200);
@@ -69,7 +69,7 @@
  }
  function escapeHtml(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
  $('google').addEventListener('click',async()=>{setStatus('Opening Google sign-in…');const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:new URL('dashboard.html',location.href).href}});if(error)setStatus(error.message,'error');});
- $('refresh').addEventListener('click',()=>load().catch(e=>setStatus('Could not load meals: '+(e.message||e),'error')));
+ $('refresh').addEventListener('click',()=>load().catch(e=>setStatus('Could not load meals: '+(e.message||e),'error')));\n $('signout').addEventListener('click',async()=>{const {error}=await sb.auth.signOut();if(error)setStatus('Could not sign out: '+error.message,'error');else load().catch(e=>setStatus(e.message||e,'error'));});
  sb.auth.onAuthStateChange((event)=>{if(['SIGNED_IN','INITIAL_SESSION','TOKEN_REFRESHED','SIGNED_OUT'].includes(event))setTimeout(()=>load().catch(e=>setStatus('Could not load meals: '+(e.message||e),'error')),0);});
  load().catch(e=>setStatus('Could not load dashboard: '+(e.message||e),'error'));
 })();
