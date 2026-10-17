@@ -37,7 +37,7 @@
 </head>
 <body>
 <main class="wrap">
-<header class="top"><a class="brand" href="index.html" style="color:inherit;text-decoration:none"><span class="mark">C</span><span>CollegeSchedule <span style="font-weight:500">/ Nutrition</span></span></a><span class="version">VERSION v3.1.14</span></header>
+<header class="top"><a class="brand" href="index.html" style="color:inherit;text-decoration:none"><span class="mark">C</span><span>CollegeSchedule <span style="font-weight:500">/ Nutrition</span></span></a><span class="version">VERSION v3.1.15</span></header>
 <section class="hero"><div><div class="eyebrow">HealthOS · Daily nutrition</div><h1>Your intake,<br>at a glance.</h1><p class="sub">Track today's calories and macros against your weight-gain targets. Nutrition values are taken from your logged meals.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button id="refresh" class="btn">Refresh data ↻</button></div></section>
 <div id="status" class="status" role="status">Connecting to public nutrition data…</div>
 <section id="dashboard">
@@ -82,7 +82,7 @@
 </details>
 <p class="small" id="linkNote">PUBLIC DATA: Anyone with this website can view the meal records shown here. Records are grouped by meal date in India Standard Time, regardless of user ID.</p>
 </section>
-<footer class="foot"><span>CollegeSchedule · HealthOS nutrition dashboard</span><span>Version v3.1.14</span></footer>
+<footer class="foot"><span>CollegeSchedule · HealthOS nutrition dashboard</span><span>Version v3.1.15</span></footer>
 </main>
 <script>
 (() => {
@@ -172,6 +172,7 @@
   };
   const portionTrack = document.getElementById('portionTrack');
   let activePortionIndex = 0;
+  let viewedPortionIndex = 0;
   function renderPortionGuide() {
     const now = new Date();
     const parts = new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Kolkata',weekday:'long',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(now);
@@ -196,6 +197,7 @@
       });
     }
     activePortionIndex=cards.findIndex(card=>card.active);
+    viewedPortionIndex=activePortionIndex;
     portionTrack.innerHTML=cards.map((card,index)=>'<article class="portion-slide'+(card.active?' active':'')+'" data-portion-index="'+index+'">'+
       (card.active?'<span class="meal-chip">Recommended now</span>':'<span class="meal-chip">'+card.slot+'</span>')+
       '<h3>'+card.slot[0].toUpperCase()+card.slot.slice(1)+' · '+card.day+'</h3>'+
@@ -206,13 +208,13 @@
   }
   document.getElementById('portionPrev').addEventListener('click',()=> {
     const slides=portionTrack.querySelectorAll('.portion-slide');
-    const index=Math.max(0,activePortionIndex-1);
-    slides[index]?.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+    viewedPortionIndex=Math.max(0,viewedPortionIndex-1);
+    slides[viewedPortionIndex]?.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
   });
   document.getElementById('portionNext').addEventListener('click',()=> {
     const slides=portionTrack.querySelectorAll('.portion-slide');
-    const index=Math.min(slides.length-1,activePortionIndex+1);
-    slides[index]?.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+    viewedPortionIndex=Math.min(slides.length-1,viewedPortionIndex+1);
+    slides[viewedPortionIndex]?.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
   });
 
   const setStatus = (message, kind='') =>const setStatus = (message, kind='') => { $('status').textContent=message; $('status').className='status'+(kind?' '+kind:''); };
