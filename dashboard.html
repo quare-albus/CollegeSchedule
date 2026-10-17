@@ -37,7 +37,7 @@
 </head>
 <body>
 <main class="wrap">
-<header class="top"><a class="brand" href="index.html" style="color:inherit;text-decoration:none"><span class="mark">C</span><span>CollegeSchedule <span style="font-weight:500">/ Nutrition</span></span></a><span class="version">VERSION v3.1.15</span></header>
+<header class="top"><a class="brand" href="index.html" style="color:inherit;text-decoration:none"><span class="mark">C</span><span>CollegeSchedule <span style="font-weight:500">/ Nutrition</span></span></a><span class="version">VERSION v3.1.16</span></header>
 <section class="hero"><div><div class="eyebrow">HealthOS · Daily nutrition</div><h1>Your intake,<br>at a glance.</h1><p class="sub">Track today's calories and macros against your weight-gain targets. Nutrition values are taken from your logged meals.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button id="refresh" class="btn">Refresh data ↻</button></div></section>
 <div id="status" class="status" role="status">Connecting to public nutrition data…</div>
 <section id="dashboard">
@@ -82,7 +82,7 @@
 </details>
 <p class="small" id="linkNote">PUBLIC DATA: Anyone with this website can view the meal records shown here. Records are grouped by meal date in India Standard Time, regardless of user ID.</p>
 </section>
-<footer class="foot"><span>CollegeSchedule · HealthOS nutrition dashboard</span><span>Version v3.1.15</span></footer>
+<footer class="foot"><span>CollegeSchedule · HealthOS nutrition dashboard</span><span>Version v3.1.16</span></footer>
 </main>
 <script>
 (() => {
@@ -217,7 +217,7 @@
     slides[viewedPortionIndex]?.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
   });
 
-  const setStatus = (message, kind='') =>const setStatus = (message, kind='') => { $('status').textContent=message; $('status').className='status'+(kind?' '+kind:''); };
+  const setStatus = (message, kind='') => { $('status').textContent=message; $('status').className='status'+(kind?' '+kind:''); };
   const fmt = n => Math.round(Number(n)||0).toLocaleString('en-IN');
   const dec = n => (Number(n)||0).toLocaleString('en-IN',{maximumFractionDigits:1});
   const pct = (n,t) => Math.max(0,Math.min(100,((Number(n)||0)/(t||1))*100));
