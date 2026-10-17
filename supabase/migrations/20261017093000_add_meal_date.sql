@@ -19,3 +19,6 @@ where id = 29
 
 alter table public.meals
   alter column meal_date set not null;
+
+create index if not exists meals_meal_date_idx
+  on public.meals (meal_date, logged_at desc);
