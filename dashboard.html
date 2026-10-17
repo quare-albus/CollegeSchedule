@@ -10,14 +10,23 @@
 *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink)}button{font:inherit;cursor:pointer}.wrap{width:min(1050px,100%);margin:auto;padding:22px 16px 44px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:30px}.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.03em}.mark{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:var(--green);color:#fff}.version{font-size:12px;font-weight:800;color:var(--green);background:var(--green-soft);padding:7px 10px;border-radius:999px}.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:11px;font-weight:800;color:var(--green)}h1{font-size:clamp(34px,6vw,54px);letter-spacing:-.06em;line-height:1;margin:10px 0}.sub{color:var(--muted);line-height:1.6;max-width:650px}.hero{display:flex;justify-content:space-between;gap:18px;align-items:flex-end;margin-bottom:24px}.btn{border:1px solid var(--line);border-radius:11px;background:white;padding:11px 14px;font-weight:750;color:var(--ink)}.primary{background:var(--green);color:white;border-color:var(--green)}.status{margin:18px 0;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:white;color:var(--muted);font-size:13px;line-height:1.5}.status.error{color:#8d3021;background:#fff0ed;border-color:#f1c7bf}.status.good{color:var(--green);background:var(--green-soft);border-color:#d1e1d3}.hidden{display:none!important}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:18px;min-width:0}.label{font-size:12px;color:var(--muted);font-weight:700}.value{font-size:clamp(24px,4vw,32px);letter-spacing:-.05em;font-weight:850;margin:9px 0 3px}.unit{font-size:12px;color:var(--muted)}.progress-card{margin-top:14px}.progress-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px}.progress{height:12px;background:#eceee7;border-radius:999px;overflow:hidden}.fill{height:100%;width:0;background:var(--green);border-radius:999px;transition:width .25s}.macro-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}.macro .value{font-size:24px}.macro-track{height:7px;background:#eceee7;border-radius:999px;margin-top:12px;overflow:hidden}.macro-track span{display:block;height:100%;width:0;background:var(--green);border-radius:999px}.meal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:28px 0 12px}.meal-head h2{font-size:22px;letter-spacing:-.04em;margin:0}.table-wrap{overflow-x:auto;background:white;border:1px solid var(--line);border-radius:16px}.table{width:100%;border-collapse:collapse;min-width:560px}.table th,.table td{text-align:left;padding:12px 14px;border-bottom:1px solid #f0f1eb;font-size:13px}.table th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.07em}.table tr:last-child td{border-bottom:0}.empty{text-align:center;color:var(--muted);padding:28px 16px;font-size:13px}.small{font-size:12px;color:var(--muted);line-height:1.6}.guidance-message{white-space:pre-line}.signin{max-width:440px;margin:30px auto}.signin h2{margin-top:0}.foot{border-top:1px solid var(--line);padding-top:16px;margin-top:34px;color:var(--muted);font-size:11px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 @media(max-width:700px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.macro-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{align-items:flex-start;flex-direction:column}.top{margin-bottom:24px}.card{padding:15px}.wrap{padding:16px 12px 32px}}
 
-.portion-card{margin:14px 0;background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px}
-.portion-title-row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-.portion-card h2{font-size:clamp(23px,4vw,30px);letter-spacing:-.04em;margin:8px 0 4px}
-.portion-list{list-style:none;margin:16px 0 12px;padding:0;display:grid;gap:0}
-.portion-list li{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;padding:12px 0;border-bottom:1px solid #f0f1eb}
+.portion-carousel{margin:14px 0}
+.portion-carousel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.portion-slide{flex:0 0 min(86%,390px);scroll-snap-align:center;background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;min-width:0;transition:border-color .2s,box-shadow .2s}
+.portion-track{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 14px;scrollbar-width:thin}
+.portion-slide.active{border:2px solid var(--green);background:#f3f8f2;box-shadow:0 8px 24px #23543c1a}
+.portion-slide h3{font-size:22px;letter-spacing:-.04em;margin:7px 0}
+.portion-slide .meal-chip{display:inline-block;background:#e8f0e9;color:var(--green);font-size:11px;font-weight:850;border-radius:999px;padding:5px 9px;text-transform:uppercase;letter-spacing:.06em}
+.portion-slide.active .meal-chip{background:var(--green);color:white}
+.portion-list{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:0}
+.portion-list li{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:10px 0;border-bottom:1px solid #e8ebe3}
 .portion-list li:last-child{border-bottom:0}
-.dish{font-weight:750;flex:1}
-.portion{color:var(--green);font-weight:750;text-align:right;max-width:55%}
+.dish{font-weight:750;flex:1;font-size:14px}
+.portion{color:var(--green);font-weight:750;text-align:right;max-width:55%;font-size:13px}
+.portion-nav{display:flex;gap:8px;align-items:center}
+.portion-nav .btn{padding:8px 11px}
+.portion-help{font-size:12px;color:var(--muted);line-height:1.5;margin:8px 2px 0}
+@media(max-width:520px){.portion-slide{flex-basis:88%;padding:15px}.portion-list li{gap:10px}.portion{max-width:52%;font-size:12px}.dish{font-size:13px}}
 .details-panel{margin-top:16px;border:1px solid var(--line);border-radius:16px;background:#fff;padding:14px 16px}
 .details-panel summary{cursor:pointer;font-weight:800;color:var(--green)}
 .details-panel .grid{margin-top:14px}
@@ -28,7 +37,7 @@
 </head>
 <body>
 <main class="wrap">
-<header class="top"><a class="brand" href="index.html" style="color:inherit;text-decoration:none"><span class="mark">C</span><span>CollegeSchedule <span style="font-weight:500">/ Nutrition</span></span></a><span class="version">VERSION v3.1.13</span></header>
+<header class="top"><a class="brand" href="index.html" style="color:inherit;text-decoration:none"><span class="mark">C</span><span>CollegeSchedule <span style="font-weight:500">/ Nutrition</span></span></a><span class="version">VERSION v3.1.14</span></header>
 <section class="hero"><div><div class="eyebrow">HealthOS · Daily nutrition</div><h1>Your intake,<br>at a glance.</h1><p class="sub">Track today's calories and macros against your weight-gain targets. Nutrition values are taken from your logged meals.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button id="refresh" class="btn">Refresh data ↻</button></div></section>
 <div id="status" class="status" role="status">Connecting to public nutrition data…</div>
 <section id="dashboard">
@@ -45,13 +54,14 @@
   </div>
 </article>
 
-<article class="portion-card" id="portionCard" aria-live="polite">
-  <div class="portion-title-row"><div class="eyebrow">Your mess menu · portion guide</div><span class="small" id="portionDate">Today</span></div>
-  <h2 id="portionTitle">What to eat next</h2>
-  <p class="small">Just the dishes and how much to take. No macro calculations needed.</p>
-  <ul class="portion-list" id="portionItems"><li><span class="dish">Loading today's menu…</span></li></ul>
-  <p class="small" id="portionNote"></p>
-</article>
+<section class="portion-carousel" id="portionCard" aria-live="polite">
+  <div class="portion-carousel-head">
+    <div><div class="eyebrow">Your mess menu · recommended portions</div><h2 style="margin:6px 0 3px">What to eat now</h2><p class="small" id="portionDate">Finding your current meal…</p></div>
+    <div class="portion-nav"><button class="btn" id="portionPrev" aria-label="Previous meal card">←</button><button class="btn" id="portionNext" aria-label="Next meal card">→</button></div>
+  </div>
+  <div class="portion-track" id="portionTrack"><article class="portion-slide"><h3>Loading menu…</h3></article></div>
+  <p class="portion-help">Swipe the cards sideways. The green-highlighted card is the meal for the current time in India: 8 AM–2 PM lunch, 2 PM–8 PM dinner, and 8 PM–8 AM breakfast for the next day.</p>
+</section>
 
 <details class="details-panel"><summary>Daily totals and food log (optional)</summary>
 <div class="grid">
@@ -72,7 +82,7 @@
 </details>
 <p class="small" id="linkNote">PUBLIC DATA: Anyone with this website can view the meal records shown here. Records are grouped by meal date in India Standard Time, regardless of user ID.</p>
 </section>
-<footer class="foot"><span>CollegeSchedule · HealthOS nutrition dashboard</span><span>Version v3.1.13</span></footer>
+<footer class="foot"><span>CollegeSchedule · HealthOS nutrition dashboard</span><span>Version v3.1.14</span></footer>
 </main>
 <script>
 (() => {
@@ -160,35 +170,52 @@
       ]
     }
   };
-  const portionCard = document.getElementById('portionCard');
+  const portionTrack = document.getElementById('portionTrack');
+  let activePortionIndex = 0;
   function renderPortionGuide() {
     const now = new Date();
     const parts = new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Kolkata',weekday:'long',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(now);
     const v = Object.fromEntries(parts.map(p=>[p.type,p.value]));
-    let day = v.weekday, hour = Number(v.hour), minute = Number(v.minute);
-    let dateToShow = now;
-    const mins = hour*60+minute;
-    let slot;
-    if (mins < 10*60+30) slot='breakfast';
-    else if (mins < 15*60+30) slot='lunch';
-    else if (mins < 21*60+30) slot='dinner';
-    else {
-      slot='breakfast';
-      const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-      day=days[(days.indexOf(day)+1)%7];
-      dateToShow = new Date(now.getTime()+24*60*60*1000);
-    }
-    const dateLabel = new Intl.DateTimeFormat('en-IN',{timeZone:'Asia/Kolkata',weekday:'long',day:'numeric',month:'short'}).format(dateToShow);
-    const options = menus[day][slot];
-    document.getElementById('portionTitle').textContent = slot[0].toUpperCase()+slot.slice(1)+' · '+day;
-    document.getElementById('portionDate').textContent = dateLabel;
-    document.getElementById('portionItems').innerHTML = options.map(([dish,portion]) =>
-      '<li><span class="dish">'+escapeHtml(dish)+'</span><span class="portion">'+escapeHtml(portion)+'</span></li>'
-    ).join('');
-    document.getElementById('portionNote').textContent = 'Use this as a simple mess-plate guide. The PPT lists dishes, not serving weights, so portions are practical estimates. Choose one option where “OR” appears; you do not need to take every alternative.';
-  }
+    const weekdays=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const todayIndex=weekdays.indexOf(v.weekday);
+    const mins=Number(v.hour)*60+Number(v.minute);
+    let targetDayOffset, targetSlot;
+    if (mins >= 8*60 && mins < 14*60) { targetDayOffset=0; targetSlot='lunch'; }
+    else if (mins >= 14*60 && mins < 20*60) { targetDayOffset=0; targetSlot='dinner'; }
+    else if (mins >= 20*60) { targetDayOffset=1; targetSlot='breakfast'; }
+    else { targetDayOffset=0; targetSlot='breakfast'; }
 
-  const setStatus = (message, kind='') => { $('status').textContent=message; $('status').className='status'+(kind?' '+kind:''); };
+    const cards=[];
+    for(let offset=0; offset<8; offset++){
+      const day=weekdays[(todayIndex+offset)%7];
+      const date=new Date(now.getTime()+offset*24*60*60*1000);
+      const dateLabel=new Intl.DateTimeFormat('en-IN',{timeZone:'Asia/Kolkata',weekday:'short',day:'numeric',month:'short'}).format(date);
+      ['breakfast','lunch','dinner'].forEach(slot=>{
+        const active=offset===targetDayOffset && slot===targetSlot;
+        cards.push({day,offset,slot,dateLabel,active,items:menus[day][slot]});
+      });
+    }
+    activePortionIndex=cards.findIndex(card=>card.active);
+    portionTrack.innerHTML=cards.map((card,index)=>'<article class="portion-slide'+(card.active?' active':'')+'" data-portion-index="'+index+'">'+
+      (card.active?'<span class="meal-chip">Recommended now</span>':'<span class="meal-chip">'+card.slot+'</span>')+
+      '<h3>'+card.slot[0].toUpperCase()+card.slot.slice(1)+' · '+card.day+'</h3>'+
+      '<p class="small">'+card.dateLabel+'</p><ul class="portion-list">'+card.items.map(([dish,portion])=>'<li><span class="dish">'+escapeHtml(dish)+'</span><span class="portion">'+escapeHtml(portion)+'</span></li>').join('')+'</ul></article>').join('');
+    const active=cards[activePortionIndex];
+    document.getElementById('portionDate').textContent='Highlighted: '+active.slot+' · '+active.dateLabel+' (IST)';
+    requestAnimationFrame(()=>portionTrack.querySelector('[data-portion-index="'+activePortionIndex+'"]')?.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'}));
+  }
+  document.getElementById('portionPrev').addEventListener('click',()=> {
+    const slides=portionTrack.querySelectorAll('.portion-slide');
+    const index=Math.max(0,activePortionIndex-1);
+    slides[index]?.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+  });
+  document.getElementById('portionNext').addEventListener('click',()=> {
+    const slides=portionTrack.querySelectorAll('.portion-slide');
+    const index=Math.min(slides.length-1,activePortionIndex+1);
+    slides[index]?.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+  });
+
+  const setStatus = (message, kind='') =>const setStatus = (message, kind='') => { $('status').textContent=message; $('status').className='status'+(kind?' '+kind:''); };
   const fmt = n => Math.round(Number(n)||0).toLocaleString('en-IN');
   const dec = n => (Number(n)||0).toLocaleString('en-IN',{maximumFractionDigits:1});
   const pct = (n,t) => Math.max(0,Math.min(100,((Number(n)||0)/(t||1))*100));
