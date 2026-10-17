@@ -33,11 +33,28 @@
 #nextMealCard{display:none!important}\n.loading-screen{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:#070d18;color:#3568b8;transition:opacity .25s,visibility .25s}\n.loading-screen.done{opacity:0;visibility:hidden;pointer-events:none}\n.loading-mark{display:grid;place-items:center;width:68px;height:68px;border-radius:22px;background:#3568b8;color:white;font-size:30px;font-weight:900;box-shadow:0 10px 35px #3568b833;animation:logo-pulse 1.2s ease-in-out infinite}\n.loading-ring{width:92px;height:92px;border:3px solid #bfdbfe;border-top-color:#3568b8;border-radius:50%;position:absolute;animation:logo-spin 1s linear infinite}\n.loading-label{font-size:13px;font-weight:750;letter-spacing:.04em;color:#35598f}\n@keyframes logo-spin{to{transform:rotate(360deg)}}@keyframes logo-pulse{50%{transform:scale(.92);box-shadow:0 5px 18px #3568b822}}\n@media(prefers-reduced-motion:reduce){.loading-ring,.loading-mark{animation:none}}
 @media(max-width:520px){.portion-card{padding:16px}.portion-list li{gap:10px}.portion{max-width:52%;font-size:13px}.dish{font-size:14px}}
 
+
+/* Tap-to-flip nutrition cards */
+.portion-slide{perspective:1000px;cursor:pointer;min-height:390px}
+.portion-flip{position:relative;min-height:390px;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.2,.7,.2,1)}
+.portion-slide.flipped .portion-flip{transform:rotateY(180deg)}
+.portion-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:14px;overflow:auto}
+.portion-front{background:var(--card)}
+.portion-back{transform:rotateY(180deg);background:#0d192a;padding:18px;border:1px solid #304967}
+.portion-back h3{margin:4px 0 8px;color:var(--ink)}
+.nutrition-note{font-size:11px;color:var(--muted);line-height:1.45;margin:4px 0 14px}
+.nutrition-total{font-size:26px;font-weight:850;color:#8fb5ed;margin:8px 0 2px}
+.nutrition-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid #263a54;font-size:13px}
+.nutrition-row:last-child{border-bottom:0}.nutrition-row strong{color:#dce9fb}.nutrition-row span:last-child{color:#8fb5ed;font-weight:800;text-align:right}
+.flip-hint{font-size:11px;color:var(--muted);margin-top:14px}
+@media(max-width:520px){.portion-slide{min-height:390px}.portion-flip{min-height:390px}.portion-back{padding:15px}}
+@media(prefers-reduced-motion:reduce){.portion-flip{transition:none}}
+
 </style>
 </head>
 <body>
 <main class="wrap">
-<header class="top"><a class="brand" href="index.html" style="color:inherit;text-decoration:none"><span class="mark">O</span><span>Organiser</span></a><span class="version">VERSION v3.1.19</span></header>
+<header class="top"><a class="brand" href="index.html" style="color:inherit;text-decoration:none"><span class="mark">O</span><span>Organiser</span></a><span class="version">VERSION v3.1.20</span></header>
 <section class="hero"><div><div class="eyebrow">Organiser · Daily nutrition</div><h1>Your intake,<br>at a glance.</h1><p class="sub">Your daily meal plan, with practical portions and nutrition totals in one place.</p></div></section>
 <div id="status" class="status" role="status">Connecting to public nutrition data…</div>
 <section id="dashboard">
@@ -82,7 +99,7 @@
 </details>
 <p class="small" id="linkNote">PUBLIC DATA: Anyone with this website can view the meal records shown here. Records are grouped by meal date in India Standard Time, regardless of user ID.</p>
 </section>
-<footer class="foot"><span>Organiser · Daily meal portions and nutrition</span><span>Version v3.1.19</span></footer>
+<footer class="foot"><span>Organiser · Daily meal portions and nutrition</span><span>Version v3.1.20</span></footer>
 </main>
 <script>
 (() => {
@@ -198,10 +215,48 @@
     }
     activePortionIndex=cards.findIndex(card=>card.active);
     viewedPortionIndex=activePortionIndex;
-    portionTrack.innerHTML=cards.map((card,index)=>'<article class="portion-slide'+(card.active?' active':'')+'" data-portion-index="'+index+'">'+
-      (card.active?'<span class="meal-chip">Highlighted meal</span>':'<span class="meal-chip">'+card.slot+'</span>')+
-      '<h3>'+card.slot[0].toUpperCase()+card.slot.slice(1)+' · '+card.day+'</h3>'+
-      '<p class="small">'+card.dateLabel+'</p><ul class="portion-list">'+card.items.map(([dish,portion])=>'<li><span class="dish">'+escapeHtml(dish)+'</span><span class="portion">'+escapeHtml(portion)+'</span></li>').join('')+'</ul></article>').join('');
+    function estimateDish(dish, portion) {
+      const d=(dish+' '+portion).toLowerCase();
+      let n={kcal:180,p:7,c:24,f:6,fiber:3};
+      if(/salad|kuchumber|vegetable|seasonal|beans salad/.test(d)) n={kcal:70,p:3,c:12,f:2,fiber:4};
+      if(/dal|rajma|chhole|chana|sambhar|sambar|lobia|kofta curry/.test(d)) n={kcal:240,p:12,c:32,f:7,fiber:8};
+      if(/rice|pulao|biryani|fried rice|jeera rice|khada rice/.test(d)) n={kcal:330,p:6,c:62,f:7,fiber:2};
+      if(/chapati|bread|bhatura|puri|paratha|toast/.test(d)) n={kcal:150,p:4,c:25,f:4,fiber:2};
+      if(/egg|omelette|bhurji|french toast/.test(d)) n={kcal:210,p:14,c:8,f:14,fiber:1};
+      if(/chicken|mutton|fish|cutlet|bacon|ham/.test(d)) n={kcal:300,p:28,c:8,f:18,fiber:1};
+      if(/paneer|kofta|mushroom|soya|chilli/.test(d)) n={kcal:260,p:13,c:20,f:14,fiber:4};
+      if(/milk|lassi|raita|curd|dahi|yogurt/.test(d)) n={kcal:140,p:7,c:14,f:6,fiber:0};
+      if(/kheer|halwa|gulab jamun|tukda|custard|jelly|jam|butter|chocolate/.test(d)) n={kcal:190,p:4,c:30,f:7,fiber:1};
+      if(/fruit/.test(d)) n={kcal:90,p:1,c:22,f:0,fiber:4};
+      if(/tea|coffee|drinking chocolate/.test(d)) n={kcal:90,p:3,c:12,f:3,fiber:0};
+      if(/choose one|optional|if wanted|if still hungry|skip if/.test(d)) n={kcal:n.kcal*0.5,p:n.p*0.5,c:n.c*0.5,f:n.f*0.5,fiber:n.fiber*0.5};
+      if(/2 eggs|two eggs/.test(d)) { n.kcal+=90; n.p+=7; n.f+=6; }
+      if(/150 g|120–150 g|300–350 g/.test(d)) { n.kcal*=1.2; n.p*=1.25; }
+      return n;
+    }
+    function nutritionFor(items) {
+      return items.reduce((sum,[dish,portion])=>{const n=estimateDish(dish,portion);Object.keys(sum).forEach(k=>sum[k]+=n[k]);return sum;},{kcal:0,p:0,c:0,f:0,fiber:0});
+    }
+    function nutritionBack(n) {
+      const targets=[['Protein',n.p,140,'g'],['Carbohydrates',n.c,632,'g'],['Fat',n.f,150,'g'],['Fibre',n.fiber,30,'g']];
+      return '<div class="portion-face portion-back"><span class="meal-chip">Estimated nutrition</span><h3>Nutrition breakdown</h3><div class="nutrition-total">'+Math.round(n.kcal).toLocaleString('en-IN')+' kcal</div><p class="nutrition-note">Approximate estimate for the full recommended card. Values vary by recipe and serving size.</p>'+
+        targets.map(([label,value,target,unit])=>'<div class="nutrition-row"><strong>'+label+'</strong><span>'+Math.round(value)+' '+unit+' · '+Math.round(value/target*100)+'% of daily target</span></div>').join('')+
+        '<p class="flip-hint">Tap the card to return to portions</p></div>';
+    }
+    portionTrack.innerHTML=cards.map((card,index)=>{
+      const n=nutritionFor(card.items);
+      return '<article class="portion-slide'+(card.active?' active':'')+'" data-portion-index="'+index+'" tabindex="0" role="button" aria-label="Tap to flip '+card.slot+' nutrition card">'+
+        '<div class="portion-flip"><div class="portion-face portion-front">'+
+        (card.active?'<span class="meal-chip">Highlighted meal</span>':'<span class="meal-chip">'+card.slot+'</span>')+
+        '<h3>'+card.slot[0].toUpperCase()+card.slot.slice(1)+' · '+card.day+'</h3><p class="small">'+card.dateLabel+'</p><ul class="portion-list">'+
+        card.items.map(([dish,portion])=>'<li><span class="dish">'+escapeHtml(dish)+'</span><span class="portion">'+escapeHtml(portion)+'</span></li>').join('')+
+        '</ul><p class="flip-hint">Tap card to see nutrition and daily-target percentages ↻</p></div>'+nutritionBack(n)+'</div></article>';
+    }).join('');
+    portionTrack.querySelectorAll('.portion-slide').forEach(slide=>{
+      const flip=()=>slide.classList.toggle('flipped');
+      slide.addEventListener('click',flip);
+      slide.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();flip();}});
+    });
     const active=cards[activePortionIndex];
     document.getElementById('portionDate').textContent='Highlighted: '+active.slot+' · '+active.dateLabel+' (IST)';
     requestAnimationFrame(()=>portionTrack.querySelector('[data-portion-index="'+activePortionIndex+'"]')?.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'}));
