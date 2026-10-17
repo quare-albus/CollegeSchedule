@@ -40,7 +40,7 @@
 <script>
 (() => {
  const URL='https://kqnqvrwsdaxmclqfagct.supabase.co';
- const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhbGciOiJIUzI1NiIsInJlZiI6ImtxbnF2cndzZGF4bWNscWZhZ3QiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTc4Mzg1NDMzMCwiZXhwIjoyMDk5NDMwMzMwfQ.WtuwAE2uRJmICptrWerfK03R4UoXbW4soqUVqy0Pde4';
+ const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtxbnF2cndzZGF4bWNscWZhZ2N0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM4NTQzMzAsImV4cCI6MjA5OTQzMDMzMH0.WtuwAE2uRJmICptrWerfK03R4UoXbW4soqUVqy0Pde4';
  const sb=window.supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
  const $=id=>document.getElementById(id);
  const setStatus=(message,kind='')=>{$('status').textContent=message;$('status').className='status'+(kind?' '+kind:'');};
