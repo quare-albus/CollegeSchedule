@@ -28,7 +28,7 @@
 </head>
 <body>
 <main class="wrap">
-<header class="top"><a class="brand" href="index.html" style="color:inherit;text-decoration:none"><span class="mark">C</span><span>CollegeSchedule <span style="font-weight:500">/ Nutrition</span></span></a><span class="version">VERSION v3.1.12</span></header>
+<header class="top"><a class="brand" href="index.html" style="color:inherit;text-decoration:none"><span class="mark">C</span><span>CollegeSchedule <span style="font-weight:500">/ Nutrition</span></span></a><span class="version">VERSION v3.1.13</span></header>
 <section class="hero"><div><div class="eyebrow">HealthOS · Daily nutrition</div><h1>Your intake,<br>at a glance.</h1><p class="sub">Track today's calories and macros against your weight-gain targets. Nutrition values are taken from your logged meals.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button id="refresh" class="btn">Refresh data ↻</button></div></section>
 <div id="status" class="status" role="status">Connecting to public nutrition data…</div>
 <section id="dashboard">
@@ -72,7 +72,7 @@
 </details>
 <p class="small" id="linkNote">PUBLIC DATA: Anyone with this website can view the meal records shown here. Records are grouped by meal date in India Standard Time, regardless of user ID.</p>
 </section>
-<footer class="foot"><span>CollegeSchedule · HealthOS nutrition dashboard</span><span>Version v3.1.12</span></footer>
+<footer class="foot"><span>CollegeSchedule · HealthOS nutrition dashboard</span><span>Version v3.1.13</span></footer>
 </main>
 <script>
 (() => {
@@ -166,6 +166,7 @@
     const parts = new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Kolkata',weekday:'long',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(now);
     const v = Object.fromEntries(parts.map(p=>[p.type,p.value]));
     let day = v.weekday, hour = Number(v.hour), minute = Number(v.minute);
+    let dateToShow = now;
     const mins = hour*60+minute;
     let slot;
     if (mins < 10*60+30) slot='breakfast';
@@ -175,8 +176,9 @@
       slot='breakfast';
       const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
       day=days[(days.indexOf(day)+1)%7];
+      dateToShow = new Date(now.getTime()+24*60*60*1000);
     }
-    const dateLabel = new Intl.DateTimeFormat('en-IN',{timeZone:'Asia/Kolkata',weekday:'long',day:'numeric',month:'short'}).format(now);
+    const dateLabel = new Intl.DateTimeFormat('en-IN',{timeZone:'Asia/Kolkata',weekday:'long',day:'numeric',month:'short'}).format(dateToShow);
     const options = menus[day][slot];
     document.getElementById('portionTitle').textContent = slot[0].toUpperCase()+slot.slice(1)+' · '+day;
     document.getElementById('portionDate').textContent = dateLabel;
