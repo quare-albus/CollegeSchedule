@@ -55,14 +55,14 @@
 </head>
 <body>
 <main class="wrap">
-<header class="top"><a class="brand" href="index.html" style="color:inherit;text-decoration:none"><span class="mark">O</span><span>Organiser</span></a><span class="version">VERSION v3.1.21</span></header>
+<header class="top"><a class="brand" href="index.html" style="color:inherit;text-decoration:none"><span class="mark">O</span><span>Organiser</span></a><span class="version">VERSION v3.1.22</span></header>
 <section class="hero"><div><div class="eyebrow">Organiser · Daily nutrition</div><h1>Your intake,<br>at a glance.</h1><p class="sub">Your daily meal plan, with practical portions and nutrition totals in one place.</p></div></section>
 <div id="status" class="status" role="status">Connecting to public nutrition data…</div>
 <section id="dashboard">
 <article class="card progress-card" id="nextMealCard" aria-live="polite">
   <div class="progress-head"><strong>Expected intake for your next meal</strong><span class="small" id="guidanceUpdated">Waiting for a meal log</span></div>
   <h2 id="nextMealTitle" style="margin:4px 0 8px;font-size:24px;letter-spacing:-.04em">Next meal guidance</h2>
-  <p class="small guidance-message" id="nextMealMessage">After each successful Telegram meal log, your suggested next-meal intake will appear here.</p>
+  <p class="small guidance-message" id="nextMealMessage">Telegram meal logging is paused. Next-meal guidance will not update automatically while the integration is disabled.</p>
   <div class="macro-grid">
     <article class="card macro"><div class="label">Calories</div><div class="value" id="nextCalories">—</div><div class="unit">kcal suggested</div></article>
     <article class="card macro"><div class="label">Protein</div><div class="value" id="nextProtein">—</div><div class="unit">grams suggested</div></article>
@@ -100,7 +100,7 @@
 </details>
 <p class="small" id="linkNote">PUBLIC DATA: Anyone with this website can view the meal records shown here. Records are grouped by meal date in India Standard Time, regardless of user ID.</p>
 </section>
-<footer class="foot"><span>Organiser · Daily meal portions and nutrition</span><span>Version v3.1.21</span></footer>
+<footer class="foot"><span>Organiser · Daily meal portions and nutrition</span><span>Version v3.1.22</span></footer>
 </main>
 <script>
 (() => {
@@ -310,7 +310,7 @@
       setStatus('Meal totals loaded, but next-meal guidance failed: '+guidanceError.message,'error');
     } else if (!guidance) {
       $('nextMealTitle').textContent='Waiting for your next Telegram meal log';
-      $('nextMealMessage').textContent='No recommendation has been uploaded yet. Log a meal with the Telegram bot and this card will update automatically.';
+      $('nextMealMessage').textContent='No recommendation is available yet. Telegram logging is paused, so new guidance will not update automatically.';
       $('guidanceUpdated').textContent='No guidance uploaded yet';
       ['nextCalories','nextProtein','nextCarbs','nextFat','nextFiber'].forEach(id=>$(id).textContent='—');
       setStatus('Public dashboard updated · '+rows.length+' meal record(s) loaded. Next-meal guidance will appear after your next successful Telegram log.','good');
