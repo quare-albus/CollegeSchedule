@@ -7,16 +7,28 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{color-scheme:light;--ink:#20251f;--muted:#6d746a;--paper:#f5f5f0;--card:#fff;--line:#e5e7df;--green:#23543c;--green-soft:#e8f0e9;--orange:#9a4f24;--orange-soft:#f8eee5;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink)}button{font:inherit;cursor:pointer}.wrap{width:min(1050px,100%);margin:auto;padding:22px 16px 44px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:30px}.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.03em}.mark{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:var(--green);color:#fff}.version{font-size:12px;font-weight:800;color:var(--green);background:var(--green-soft);padding:7px 10px;border-radius:999px}.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:11px;font-weight:800;color:var(--green)}h1{font-size:clamp(34px,6vw,54px);letter-spacing:-.06em;line-height:1;margin:10px 0}.sub{color:var(--muted);line-height:1.6;max-width:650px}.hero{display:flex;justify-content:space-between;gap:18px;align-items:flex-end;margin-bottom:24px}.btn{border:1px solid var(--line);border-radius:11px;background:white;padding:11px 14px;font-weight:750;color:var(--ink)}.primary{background:var(--green);color:white;border-color:var(--green)}.status{margin:18px 0;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:white;color:var(--muted);font-size:13px;line-height:1.5}.status.error{color:#8d3021;background:#fff0ed;border-color:#f1c7bf}.status.good{color:var(--green);background:var(--green-soft);border-color:#d1e1d3}.hidden{display:none!important}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:18px;min-width:0}.label{font-size:12px;color:var(--muted);font-weight:700}.value{font-size:clamp(24px,4vw,32px);letter-spacing:-.05em;font-weight:850;margin:9px 0 3px}.unit{font-size:12px;color:var(--muted)}.progress-card{margin-top:14px}.progress-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px}.progress{height:12px;background:#eceee7;border-radius:999px;overflow:hidden}.fill{height:100%;width:0;background:var(--green);border-radius:999px;transition:width .25s}.macro-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}.macro .value{font-size:24px}.macro-track{height:7px;background:#eceee7;border-radius:999px;margin-top:12px;overflow:hidden}.macro-track span{display:block;height:100%;width:0;background:var(--green);border-radius:999px}.meal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:28px 0 12px}.meal-head h2{font-size:22px;letter-spacing:-.04em;margin:0}.table-wrap{overflow-x:auto;background:white;border:1px solid var(--line);border-radius:16px}.table{width:100%;border-collapse:collapse;min-width:560px}.table th,.table td{text-align:left;padding:12px 14px;border-bottom:1px solid #f0f1eb;font-size:13px}.table th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.07em}.table tr:last-child td{border-bottom:0}.empty{text-align:center;color:var(--muted);padding:28px 16px;font-size:13px}.small{font-size:12px;color:var(--muted);line-height:1.6}.signin{max-width:440px;margin:30px auto}.signin h2{margin-top:0}.foot{border-top:1px solid var(--line);padding-top:16px;margin-top:34px;color:var(--muted);font-size:11px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink)}button{font:inherit;cursor:pointer}.wrap{width:min(1050px,100%);margin:auto;padding:22px 16px 44px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:30px}.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.03em}.mark{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:var(--green);color:#fff}.version{font-size:12px;font-weight:800;color:var(--green);background:var(--green-soft);padding:7px 10px;border-radius:999px}.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:11px;font-weight:800;color:var(--green)}h1{font-size:clamp(34px,6vw,54px);letter-spacing:-.06em;line-height:1;margin:10px 0}.sub{color:var(--muted);line-height:1.6;max-width:650px}.hero{display:flex;justify-content:space-between;gap:18px;align-items:flex-end;margin-bottom:24px}.btn{border:1px solid var(--line);border-radius:11px;background:white;padding:11px 14px;font-weight:750;color:var(--ink)}.primary{background:var(--green);color:white;border-color:var(--green)}.status{margin:18px 0;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:white;color:var(--muted);font-size:13px;line-height:1.5}.status.error{color:#8d3021;background:#fff0ed;border-color:#f1c7bf}.status.good{color:var(--green);background:var(--green-soft);border-color:#d1e1d3}.hidden{display:none!important}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:18px;min-width:0}.label{font-size:12px;color:var(--muted);font-weight:700}.value{font-size:clamp(24px,4vw,32px);letter-spacing:-.05em;font-weight:850;margin:9px 0 3px}.unit{font-size:12px;color:var(--muted)}.progress-card{margin-top:14px}.progress-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px}.progress{height:12px;background:#eceee7;border-radius:999px;overflow:hidden}.fill{height:100%;width:0;background:var(--green);border-radius:999px;transition:width .25s}.macro-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}.macro .value{font-size:24px}.macro-track{height:7px;background:#eceee7;border-radius:999px;margin-top:12px;overflow:hidden}.macro-track span{display:block;height:100%;width:0;background:var(--green);border-radius:999px}.meal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:28px 0 12px}.meal-head h2{font-size:22px;letter-spacing:-.04em;margin:0}.table-wrap{overflow-x:auto;background:white;border:1px solid var(--line);border-radius:16px}.table{width:100%;border-collapse:collapse;min-width:560px}.table th,.table td{text-align:left;padding:12px 14px;border-bottom:1px solid #f0f1eb;font-size:13px}.table th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.07em}.table tr:last-child td{border-bottom:0}.empty{text-align:center;color:var(--muted);padding:28px 16px;font-size:13px}.small{font-size:12px;color:var(--muted);line-height:1.6}.guidance-message{white-space:pre-line}.signin{max-width:440px;margin:30px auto}.signin h2{margin-top:0}.foot{border-top:1px solid var(--line);padding-top:16px;margin-top:34px;color:var(--muted);font-size:11px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 @media(max-width:700px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.macro-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{align-items:flex-start;flex-direction:column}.top{margin-bottom:24px}.card{padding:15px}.wrap{padding:16px 12px 32px}}
 </style>
 </head>
 <body>
 <main class="wrap">
-<header class="top"><a class="brand" href="index.html" style="color:inherit;text-decoration:none"><span class="mark">C</span><span>CollegeSchedule <span style="font-weight:500">/ Nutrition</span></span></a><span class="version">VERSION v3.1.10</span></header>
+<header class="top"><a class="brand" href="index.html" style="color:inherit;text-decoration:none"><span class="mark">C</span><span>CollegeSchedule <span style="font-weight:500">/ Nutrition</span></span></a><span class="version">VERSION v3.1.11</span></header>
 <section class="hero"><div><div class="eyebrow">HealthOS · Daily nutrition</div><h1>Your intake,<br>at a glance.</h1><p class="sub">Track today's calories and macros against your weight-gain targets. Nutrition values are taken from your logged meals.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button id="refresh" class="btn">Refresh data ↻</button></div></section>
 <div id="status" class="status" role="status">Connecting to public nutrition data…</div>
 <section id="dashboard">
+<article class="card progress-card" id="nextMealCard" aria-live="polite">
+  <div class="progress-head"><strong>Expected intake for your next meal</strong><span class="small" id="guidanceUpdated">Waiting for a meal log</span></div>
+  <h2 id="nextMealTitle" style="margin:4px 0 8px;font-size:24px;letter-spacing:-.04em">Next meal guidance</h2>
+  <p class="small guidance-message" id="nextMealMessage">After each successful Telegram meal log, your suggested next-meal intake will appear here.</p>
+  <div class="macro-grid">
+    <article class="card macro"><div class="label">Calories</div><div class="value" id="nextCalories">—</div><div class="unit">kcal suggested</div></article>
+    <article class="card macro"><div class="label">Protein</div><div class="value" id="nextProtein">—</div><div class="unit">grams suggested</div></article>
+    <article class="card macro"><div class="label">Carbohydrates</div><div class="value" id="nextCarbs">—</div><div class="unit">grams suggested</div></article>
+    <article class="card macro"><div class="label">Fat</div><div class="value" id="nextFat">—</div><div class="unit">grams suggested</div></article>
+    <article class="card macro"><div class="label">Fibre</div><div class="value" id="nextFiber">—</div><div class="unit">grams suggested</div></article>
+  </div>
+</article>
 <div class="grid">
 <article class="card"><div class="label">Calories consumed</div><div class="value" id="calories">—</div><div class="unit">kcal today</div></article>
 <article class="card"><div class="label">Calories remaining</div><div class="value" id="remaining">—</div><div class="unit">of 4,440 kcal</div></article>
@@ -34,7 +46,7 @@
 <div class="table-wrap"><table class="table"><thead><tr><th>Time</th><th>Meal / foods</th><th>Calories</th><th>Protein</th></tr></thead><tbody id="mealRows"><tr><td colspan="4" class="empty">Loading meals…</td></tr></tbody></table></div>
 <p class="small" id="linkNote">PUBLIC DATA: Anyone with this website can view the meal records shown here. Records are grouped by meal date in India Standard Time, regardless of user ID.</p>
 </section>
-<footer class="foot"><span>CollegeSchedule · HealthOS nutrition dashboard</span><span>Version v3.1.10</span></footer>
+<footer class="foot"><span>CollegeSchedule · HealthOS nutrition dashboard</span><span>Version v3.1.11</span></footer>
 </main>
 <script>
 (() => {
@@ -79,7 +91,32 @@
     $('calorieNote').textContent=kcal>4440?'You are '+fmt(kcal-4440)+' kcal above target.':fmt(4440-kcal)+' kcal left to reach today’s target.';
     macro('protein',p,140); macro('carbs',c,632); macro('fat',f,150); macro('fiber',fi,30);
     $('mealRows').innerHTML=rows.length ? rows.map(row=>'<tr><td>'+new Date(row.logged_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',timeZone:'Asia/Kolkata'})+'</td><td>'+escapeHtml(row.meal)+'</td><td>'+fmt(row.calories)+' kcal</td><td>'+dec(row.protein)+' g</td></tr>').join('') : '<tr><td colspan="4" class="empty">No public meal records logged today.</td></tr>';
-    setStatus('Public dashboard updated · '+rows.length+' meal record(s) loaded for today.','good');
+
+    const {data: guidance, error: guidanceError} = await sb.from('next_meal_guidance')
+      .select('meal_date,updated_at,logged_meal,next_meal,message,next_calories,next_protein,next_carbs,next_fat,next_fiber')
+      .eq('id',1).maybeSingle();
+    if (guidanceError) {
+      $('nextMealTitle').textContent='Guidance temporarily unavailable';
+      $('nextMealMessage').textContent='Meal totals loaded, but next-meal guidance could not be fetched: '+guidanceError.message;
+      $('guidanceUpdated').textContent='Could not refresh';
+      setStatus('Meal totals loaded, but next-meal guidance failed: '+guidanceError.message,'error');
+    } else if (!guidance) {
+      $('nextMealTitle').textContent='Waiting for your next Telegram meal log';
+      $('nextMealMessage').textContent='No recommendation has been uploaded yet. Log a meal with the Telegram bot and this card will update automatically.';
+      $('guidanceUpdated').textContent='No guidance uploaded yet';
+      ['nextCalories','nextProtein','nextCarbs','nextFat','nextFiber'].forEach(id=>$(id).textContent='—');
+      setStatus('Public dashboard updated · '+rows.length+' meal record(s) loaded. Next-meal guidance will appear after your next successful Telegram log.','good');
+    } else {
+      $('nextMealTitle').textContent=guidance.next_meal || 'Next meal';
+      $('nextMealMessage').textContent=guidance.message || 'Next-meal guidance uploaded.';
+      $('nextCalories').textContent=fmt(guidance.next_calories);
+      $('nextProtein').textContent=dec(guidance.next_protein)+' g';
+      $('nextCarbs').textContent=dec(guidance.next_carbs)+' g';
+      $('nextFat').textContent=dec(guidance.next_fat)+' g';
+      $('nextFiber').textContent=dec(guidance.next_fiber)+' g';
+      $('guidanceUpdated').textContent='Updated '+new Date(guidance.updated_at).toLocaleString('en-IN',{timeZone:'Asia/Kolkata',dateStyle:'medium',timeStyle:'short'});
+      setStatus('Public dashboard updated · '+rows.length+' meal record(s) loaded, guidance refreshed.','good');
+    }
   }
   $('refresh').addEventListener('click',()=>load().catch(e=>setStatus('Could not load meals: '+(e.message||e),'error')));
   load().catch(e=>setStatus('Could not load dashboard: '+(e.message||e)+'. Check the public read policy in Supabase.','error'));
